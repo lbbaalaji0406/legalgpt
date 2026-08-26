@@ -33,7 +33,10 @@ from typing import List, Dict
 # DuckDuckGo search — free, no API key needed
 # Install: pip install duckduckgo-search
 try:
-    from ddgs import DDGS
+    try:
+        from duckduckgo_search import DDGS
+    except ImportError:
+        from ddgs import DDGS
     DDGS_AVAILABLE = True
 except ImportError:
     DDGS_AVAILABLE = False
@@ -283,10 +286,10 @@ def fallback_web_search(query: str) -> list:
         # Returns list of dicts with act_name, section_number,
         # is_repealed, content — same format as ChromaDB chunks
     """
-    print("[Layer 5] 🌐 Local DB empty. Initiating Web Fallback Search...")
+    print("[Layer 5] [Web] Local DB empty. Initiating Web Fallback Search...")
 
     if not DDGS_AVAILABLE:
-        print("[Layer 5] ⚠️  duckduckgo-search not installed. Skipping.")
+        print("[Layer 5] WARNING: duckduckgo-search not installed. Skipping.")
         print("          Run: pip install duckduckgo-search")
         return []
 
@@ -327,52 +330,34 @@ def fallback_web_search(query: str) -> list:
         scrubbed_query = re.sub(r'\s+', ' ', scrubbed_query).strip()
 
         if scrubbed_query != query:
-            print(f"[Layer 5] 🔒 PII scrubbed from query before web search")
+            print(f"[Layer 5] [PII] PII scrubbed from query before web search")
 
-        # Target Indian legal sources via site: operators (pre-filter, not post-filter)
-        # DuckDuckGo supports site: operators natively — results come pre-filtered
-        DOMAIN_OPERATORS = [
-            "site:indiankanoon.org",
-            "site:indiacode.nic.in",
-            "site:livelaw.in",
-            "site:scconline.com",
-            "site:barandbench.com",
-        ]
-        site_filter = " OR ".join(DOMAIN_OPERATORS)
-        search_query = f"({site_filter}) {scrubbed_query}"
+        search_query = f"{scrubbed_query} Indian law site:indiankanoon.org OR site:indiacode.nic.in OR site:livelaw.in"
         print(f"[Layer 5] Searching: {search_query[:100]}...")
 
-        results = DDGS().text(search_query, max_results=5)
+        results = None
+        try:
+            results = list(DDGS().text(f"{scrubbed_query} Indian law", max_results=6))
+        except Exception as ddg_err:
+            print(f"[Layer 5] DDGS error: {ddg_err}")
 
-        if not results:
-            print("[Layer 5] No web results found.")
-            return []
-
-        # Post-filter to ensure only Indian legal domains pass through
+        # Prefer Indian legal sources if present, otherwise use top results
         INDIAN_DOMAINS = ("indiankanoon.org", "indiacode.nic.in", "scconline.com",
                           "manupatra.com", "barandbench.com", "livelaw.in",
-                          "supremecourtcaselaw.com")
-        filtered = []
-        for r in results:
-            href = r.get("href", "").lower()
-            if any(d in href for d in INDIAN_DOMAINS):
-                filtered.append(r)
-        results = filtered[:3] if filtered else results[:3]
+                          "supremecourtcaselaw.com", "lawctopus.com", "vakilsearch.com")
+        legal_results = [r for r in results if any(d in r.get("href", "").lower() for d in INDIAN_DOMAINS)]
+        final_results = legal_results[:4] if legal_results else results[:4]
 
-        if not results:
+        if not final_results:
+            print("[Layer 5] No matching web results.")
             return []
 
-        # Format results to match ChromaDB chunk structure exactly
-        # Layer 3 receives these as if they came from local database
-        # "act_name: Live Web Search" signals Layer 3 this is web data
         mock_chunks = []
-        for i, res in enumerate(results, 1):
+        for i, res in enumerate(final_results, 1):
             href = res.get('href', '')
-            # Classify source authority: indiankanoon/indiacode = primary, blogs/news = commentary
             is_primary = any(d in href.lower() for d in ["indiankanoon.org", "indiacode.nic.in", "scconline.com"])
             source_type = "primary" if is_primary else "commentary"
-            # Score by source authority — primary sources more trustworthy
-            SCORE_MAP = {"primary": 0.72, "commentary": 0.55}
+            SCORE_MAP = {"primary": 0.75, "commentary": 0.60}
             mock_chunks.append({
                 "act_name":       "Live Web Search",
                 "section_number": f"Source {i}",
@@ -384,14 +369,14 @@ def fallback_web_search(query: str) -> list:
                     f"SUMMARY: {res.get('body', '')}\n"
                     f"SOURCE: {href}"
                 ),
-                "relevance_score": SCORE_MAP.get(source_type, 0.55)
+                "relevance_score": SCORE_MAP.get(source_type, 0.60)
             })
 
-        print(f"[Layer 5] ✅ Web fallback found {len(mock_chunks)} results.")
+        print(f"[Layer 5] [Web] Web fallback found {len(mock_chunks)} results.")
         return mock_chunks
 
     except Exception as e:
-        print(f"[Layer 5] ⚠️  Web fallback failed: {e}")
+        print(f"[Layer 5] WARNING: Web fallback failed: {e}")
         return []
 
 

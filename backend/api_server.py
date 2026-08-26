@@ -15,16 +15,16 @@ Run:
     python api_server.py
 """
 
-import sys
-# Windows cp1252 terminal can't print emoji/Unicode arrows → crashes with 500 error
-# Force UTF-8 with errors='replace' so unprintable chars become '?' instead of crashing
+import sys, os, re
 if hasattr(sys.stdout, 'reconfigure'):
     sys.stdout.reconfigure(encoding='utf-8', errors='replace')
 
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+
 # Load .env from project root before any imports that need GROQ_API_KEY
 from dotenv import load_dotenv
-import os, re
 load_dotenv(os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", ".env"))
+load_dotenv(os.path.join(os.path.dirname(os.path.abspath(__file__)), ".env"))
 
 from fastapi import FastAPI, HTTPException, UploadFile, File, Header, Depends, Request
 from typing import Annotated
@@ -301,7 +301,9 @@ def _normalize_agent_response(result: dict, query: str = "", mode: str = None, s
         "elapsed_seconds":      result.get("elapsed_seconds", 0),
     }
     defaults.update(result)
-    defaults["response"] = result.get("response", "No response generated.")
+    raw_resp = result.get("response", "No response generated.")
+    cleaned_resp = re.sub(r'^\s*\{[\s\S]*?context_sufficient[\s\S]*?\}\s*', '', raw_resp).strip()
+    defaults["response"] = cleaned_resp if cleaned_resp else raw_resp
 
     # Populate frontend widget fields from triage state
     if session_id:
@@ -467,13 +469,14 @@ def _detect_crisis(query: str) -> str | None:
 
 
 def _is_direct_legal_query(query: str) -> bool:
-    """Check if query is a direct legal question that should skip Discovery."""
+    """Check if query is a direct legal concept/procedure question that should skip Discovery."""
     query_lower = query.strip().lower()
-    # Tier 1: Explicit legal patterns (acts, sections, procedures)
+    # Explicit legal patterns (acts, sections, generic procedures)
     if any(re.search(p, query_lower) for p in _DIRECT_LEGAL_PATTERNS):
-        return True
-    # Tier 2: Situational anchors (landlord, eviction, dowry, etc.)
-    if any(re.search(p, query_lower) for p in _SITUATIONAL_LEGAL_ANCHORS):
+        # If the user is describing their personal situation ("my landlord", "my salary", "i was fired"),
+        # it is a personal dispute that must go to Discovery & Strategy (Phase 1 & 2)!
+        if re.search(r"\b(my|i was|me|mine|we|our)\b", query_lower) and any(re.search(p, query_lower) for p in _SITUATIONAL_LEGAL_ANCHORS):
+            return False
         return True
     return False
 
@@ -546,15 +549,29 @@ def _is_rejection(query: str) -> bool:
 
 def _resolve_triage_choice(query: str, options: list) -> str:
     """
-    Check if user's query matches a triage option label or id.
+    Check if user's query matches a triage option label, title, or id.
     Returns the option id if matched, None otherwise.
     """
     q = query.strip().lower()
     for opt in options:
         opt_id = opt.get("id", "").lower()
         opt_label = opt.get("label", "").lower()
-        if q == opt_id or q == opt_label or q in opt_label:
+        opt_title = opt.get("title", "").lower()
+        if q == opt_id or (opt_id and opt_id in q):
             return opt.get("id")
+        if opt_label and (q == opt_label or q in opt_label or opt_label in q):
+            return opt.get("id")
+        if opt_title and (q == opt_title or q in opt_title or opt_title in q):
+            return opt.get("id")
+    # Fuzzy match on path letters
+    if "path a" in q or "path_a" in q or "legal notice" in q or "notice" in q:
+        return "path_a"
+    if "path b" in q or "path_b" in q or "lawsuit" in q or "court" in q or "sue" in q:
+        return "path_b"
+    if "path c" in q or "path_c" in q or "regulatory" in q or "police" in q or "complaint" in q:
+        return "path_c"
+    if "path d" in q or "path_d" in q or "mediation" in q or "settle" in q or "settlement" in q:
+        return "path_d"
     return None
 
 
@@ -1191,6 +1208,27 @@ async def chat_endpoint(
                 triage_state["discovery_profile"] = {}
                 return _save_and_return(resp, user_id, conv_id)
 
+            # Universal Advocate / IRAC check across all phases
+            user_lower = query.strip().lower()
+            is_advocate_request = any(kw == user_lower or kw in user_lower for kw in [
+                "advocate", "advocate mode", "⚖ advocate mode", "irac", "deep legal analysis", "deep legal"
+            ])
+            if is_advocate_request and IRAC_AVAILABLE:
+                orig_q = triage_state.get("original_query")
+                if not orig_q or len(orig_q) < 10:
+                    history = get_session_history(session_id)
+                    user_turns = [t.get("content", "") for t in history if t.get("role") == "user" and len(t.get("content", "")) > 20]
+                    orig_q = user_turns[0] if user_turns else query
+                irac_agent = IRACAgent()
+                irac_result = await irac_agent.run(
+                    orig_q,
+                    triage_state.get("discovery_profile") or {},
+                    triage_state.get("options_shown") or []
+                )
+                triage_state["current_mode"] = "idle"
+                _populate_frontend_widgets(irac_result, session_id)
+                return _save_and_return(irac_result, user_id, conv_id)
+
             # ═══════════════════════════════════════════════
             # PHASE 0: INITIAL CLASSIFICATION (idle)
             # ═══════════════════════════════════════════════
@@ -1433,38 +1471,38 @@ async def chat_endpoint(
 
                     if mode == "document":
                         # Route directly to document drafting interview
-                        doc_type = detect_document_type(triage_state.get("original_query", query))
-                        doc_family = map_doc_type_to_family(doc_type) if doc_type else None
-                        if doc_type or doc_family:
-                            fields = generate_field_questions(
-                                doc_family or "letter", doc_type or "legal_document",
-                                triage_state.get("original_query", query)
-                            )
-                            display_name = DOCUMENT_SCHEMAS.get(doc_type, {}).get("display_name",
-                                           doc_type.replace("_", " ").title() if doc_type else "Legal Document")
-                            if not fields:
-                                fields = [{"key": "details", "label": "Describe your situation", "example": ""}]
+                        orig_q = triage_state.get("original_query", query)
+                        doc_type = detect_document_type(orig_q) or triage_state.get("doc_type") or "legal_notice"
+                        doc_family = map_doc_type_to_family(doc_type) or triage_state.get("doc_family") or "letter"
+                        
+                        fields = generate_field_questions(
+                            doc_family, doc_type,
+                            orig_q
+                        )
+                        display_name = DOCUMENT_SCHEMAS.get(doc_type, {}).get("display_name",
+                                       doc_type.replace("_", " ").title() if doc_type else "Legal Notice")
+                        if not fields:
+                            fields = [
+                                {"key": "sender_name", "label": "Your Full Name & Address", "example": "Rahul Sharma, Flat 101..."},
+                                {"key": "recipient_name", "label": "Opponent/Landlord Full Name & Address", "example": "Ramesh Gupta, Landlord..."},
+                                {"key": "demand_details", "label": "Specific Demand & Amount", "example": "Immediate refund of Rs. 2,50,000 security deposit and possession of premises"},
+                                {"key": "compliance_days", "label": "Deadline to comply (e.g. 7 or 15 days)", "example": "7 days"}
+                            ]
 
-                            question = state.start_interview(
-                                doc_type or "legal_document",
-                                problem_description=triage_state.get("original_query", query),
-                                doc_family=doc_family or "letter",
-                                dynamic_fields=fields
-                            )
-                            total = len(fields)
-                            intro = (
-                                f"I'll draft a **{display_name}** for you.\n\n"
-                                f"I need **{total} pieces of information**. "
-                                f"Let's go through them one at a time.\n\n"
-                                f"{question}"
-                            )
-                            return _save_and_return(_interview_response(state, intro), user_id, conv_id)
-
-                        # No doc type detected — treat as pathfinder instead
-                        # Add preamble so pathfinder knows it's a fallback
-                        mode = "pathfinder"
-                        request.mode = "pathfinder"
-                        triage_state["_fallback_note"] = "document_to_pathfinder"
+                        question = state.start_interview(
+                            doc_type,
+                            problem_description=orig_q,
+                            doc_family=doc_family,
+                            dynamic_fields=fields
+                        )
+                        total = len(fields)
+                        intro = (
+                            f"I'll draft a formal **{display_name}** for you.\n\n"
+                            f"I need **{total} pieces of information** to ground the legal notice. "
+                            f"Let's go through them one at a time.\n\n"
+                            f"{question}"
+                        )
+                        return _save_and_return(_interview_response(state, intro), user_id, conv_id)
 
                     if mode == "pathfinder":
                         original = triage_state.get("original_query", query)

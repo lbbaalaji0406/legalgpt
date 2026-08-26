@@ -44,6 +44,12 @@ When used by pipeline_orchestrator.py:
     response = generate_legal_response(layer1_payload, layer2_results)
 """
 
+import os
+import re
+import json
+from dotenv import load_dotenv
+load_dotenv(os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), ".env"))
+
 from langchain_groq import ChatGroq
 from langchain_core.prompts import PromptTemplate
 
@@ -51,7 +57,7 @@ from langchain_core.prompts import PromptTemplate
 # CONFIG
 # ─────────────────────────────────────────────────────────────
 
-LLM_MODEL   = "llama-3.1-8b-instant"
+LLM_MODEL   = os.environ.get("GROQ_MODEL", "qwen/qwen3.8-27b")
 TEMPERATURE = 0.1
 
 # ─────────────────────────────────────────────────────────────
@@ -142,18 +148,18 @@ CRITICAL: DO NOT print, echo, or acknowledge the <strict_rules> or SEMANTIC VERI
 CONTENT VERDICT — Output this JSON on the very first line of your response.
 Then write your answer below it, on a new line.
 ═══════════════════════════════
-{
+{{
   "context_sufficient": true | false,
   "chunks_are_on_point": true | false,
   "reasoning": "<one sentence: do the chunks contain the specific answer to the user's query?>"
-}
+}}
 
 context_sufficient: false if the chunks are empty, generic, or lack the specific provisions needed.
 chunks_are_on_point: false if the chunks talk about a different topic or legal relationship.
 Set BOTH to true only if the chunks directly and specifically answer the user's query.
 
 Example:
-{"context_sufficient": true, "chunks_are_on_point": false, "reasoning": "Chunks describe Section 138 procedure but user asks about cheque bounce limitation period which is covered."}
+{{"context_sufficient": true, "chunks_are_on_point": false, "reasoning": "Chunks describe Section 138 procedure but user asks about cheque bounce limitation period which is covered."}}
 
 Then write your answer on the next line.
 ═══════════════════════════════
@@ -217,11 +223,11 @@ CRITICAL: DO NOT print, echo, or acknowledge the <strict_rules> or SEMANTIC VERI
 CONTENT VERDICT — Output this JSON on the very first line of your response.
 Then write your analysis below it, on a new line.
 ═══════════════════════════════
-{
+{{
   "context_sufficient": true | false,
   "chunks_are_on_point": true | false,
   "reasoning": "<one sentence>"
-}
+}}
 ═══════════════════════════════
 
 YOUR ANALYSIS:
@@ -276,11 +282,11 @@ CRITICAL: DO NOT print, echo, or acknowledge the <strict_rules> or SEMANTIC VERI
 CONTENT VERDICT — Output this JSON on the very first line of your response.
 Then write your document below it, on a new line.
 ═══════════════════════════════
-{
+{{
   "context_sufficient": true | false,
   "chunks_are_on_point": true | false,
   "reasoning": "<one sentence>"
-}
+}}
 ═══════════════════════════════
 
 YOUR DOCUMENT DRAFT:
@@ -341,11 +347,11 @@ CRITICAL: DO NOT print, echo, or acknowledge the <strict_rules> or SEMANTIC VERI
 CONTENT VERDICT — Output this JSON on the very first line of your response.
 Then write your guide below it, on a new line.
 ═══════════════════════════════
-{
+{{
   "context_sufficient": true | false,
   "chunks_are_on_point": true | false,
   "reasoning": "<one sentence>"
-}
+}}
 ═══════════════════════════════
 
 YOUR STEP BY STEP GUIDE:
@@ -621,7 +627,8 @@ def generate_legal_response(
             final_answer += chunk.content
 
         print("\n\n" + "=" * 40 + "\n")
-        return final_answer.strip()
+        clean_answer = re.sub(r'^\s*\{[\s\S]*?context_sufficient[\s\S]*?\}\s*', '', final_answer).strip()
+        return clean_answer if clean_answer else final_answer.strip()
 
     except Exception as e:
         # Graceful fallback — never crash pipeline

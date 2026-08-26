@@ -1,0 +1,168 @@
+﻿/* ═══════════════════════════════════════════════════════
+   SAULGPT — VetoCard.css
+   Legal Scrutiny & Veto Alerts
+   ═══════════════════════════════════════════════════════ */
+
+.veto-card {
+  border-radius: var(--radius-md, 8px);
+  margin: 12px 0;
+  padding: 14px 16px;
+  background: var(--bg-surface, #221A13);
+  border: 1px solid var(--border, rgba(201,168,76,0.18));
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.veto-serious {
+  border-left: 4px solid var(--accent-red, #C44A4A);
+  background: rgba(196, 74, 74, 0.08);
+}
+
+.veto-warning {
+  border-left: 4px solid var(--gold, #C9A84C);
+  background: rgba(201, 168, 76, 0.08);
+}
+
+.veto-info {
+  border-left: 4px solid var(--accent-teal, #7EB8C4);
+  background: rgba(126, 184, 196, 0.08);
+}
+
+.veto-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  cursor: pointer;
+}
+
+.veto-title-group {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.veto-icon {
+  font-size: 20px;
+}
+
+.veto-title {
+  font-family: var(--font-display, 'Cinzel', serif);
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  color: var(--parchment, #F2E8D0);
+}
+
+.veto-subtitle {
+  font-size: 12px;
+  color: var(--ink-dim, #9A8E7A);
+}
+
+.veto-controls {
+  display: flex;
+  gap: 8px;
+}
+
+.veto-toggle-btn {
+  background: transparent;
+  border: none;
+  color: var(--ink-dim, #9A8E7A);
+  font-size: 12px;
+  cursor: pointer;
+}
+
+.veto-content {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-top: 4px;
+}
+
+.veto-message {
+  font-size: 14px;
+  line-height: 1.5;
+  color: var(--ink, #E8DCC8);
+}
+
+.veto-warnings-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.veto-warning-item {
+  font-size: 13px;
+  color: var(--ink-dim, #9A8E7A);
+  padding-left: 14px;
+  position: relative;
+}
+
+.veto-warning-item::before {
+  content: •;
+  position: absolute;
+  left: 0;
+  color: var(--gold, #C9A84C);
+}
+
+.veto-remap-box {
+  background: rgba(0, 0, 0, 0.2);
+  border: 1px dashed var(--border-dim, rgba(201,168,76,0.08));
+  border-radius: var(--radius-sm, 4px);
+  padding: 8px 12px;
+}
+
+.veto-remap-title {
+  font-size: 11px;
+  font-family: var(--font-display, 'Cinzel', serif);
+  color: var(--gold-dim, #8A6E2E);
+  margin-bottom: 4px;
+}
+
+.veto-remap-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.veto-remap-item {
+  font-size: 12px;
+  color: var(--ink, #E8DCC8);
+}
+
+.veto-actions {
+  display: flex;
+  gap: 8px;
+  margin-top: 6px;
+}
+
+.veto-btn {
+  padding: 6px 12px;
+  border-radius: var(--radius-sm, 4px);
+  font-family: var(--font-display, 'Cinzel', serif);
+  font-size: 11px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.veto-btn-primary {
+  background: var(--gold, #C9A84C);
+  color: #1a1a1a;
+  border: none;
+  font-weight: 600;
+}
+
+.veto-btn-secondary {
+  background: transparent;
+  border: 1px solid var(--border, rgba(201,168,76,0.18));
+  color: var(--ink-dim, #9A8E7A);
+}
+
+.veto-collapsed-hint {
+  font-size: 12px;
+  color: var(--ink-faint, #5A5045);
+  font-style: italic;
+}

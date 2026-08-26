@@ -122,7 +122,7 @@ def _ensure_field_llm():
         from langchain_groq import ChatGroq
         import os
         llm = ChatGroq(
-            model="llama-3.1-8b-instant",
+            model=os.environ.get("GROQ_MODEL", "qwen/qwen3.8-27b"),
             api_key=os.environ.get("GROQ_API_KEY"),
             temperature=0.1,
             max_tokens=1024,

@@ -23,9 +23,9 @@ When used by pipeline_orchestrator.py:
 
 import re
 
-# Groq LLM — replaces Ollama + bart-large-mnli
-# Get free API key at: console.groq.com → API Keys
 import os
+from dotenv import load_dotenv
+load_dotenv(os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), ".env"))
 GROQ_API_KEY = os.environ.get("GROQ_API_KEY")
 
 # ─────────────────────────────────────────────────────────────
@@ -59,7 +59,7 @@ def _ensure_llm():
     from langchain_groq import ChatGroq
     from langchain_core.prompts import PromptTemplate
     _reformulate_llm = ChatGroq(
-        model_name="llama-3.1-8b-instant",
+        model_name=os.environ.get("GROQ_MODEL", "qwen/qwen3.8-27b"),
         api_key=GROQ_API_KEY,
         temperature=0.1
     )
@@ -325,26 +325,12 @@ def analyze_query(user_query: str, conversation_history: list = None) -> dict:
         # default to unknown and continue
         lang = "unknown"
 
-    # ── Step 2a: Fast keyword-based non-legal pre-check ──
-    # Catches obvious non-legal queries without waiting for LLM
-    query_lower = user_query.strip().lower()
-    NON_LEGAL_PATTERNS = [
-        "weather", "cook", "recipe", "sport", "cricket", "football",
-        "hello", "hi ", "hey", "how are you", "what's up", "good morning",
-        "good evening", "good night", "thank you", "thanks", "bye",
-        "tell me a joke", "joke", "sing", "dance", "movie", "song",
-        "game", "play", "eat", "food", "drink", "music", "art",
-        "how old", "how tall", "capital of", "population",
-    ]
-    is_non_legal_keyword = any(p in query_lower for p in NON_LEGAL_PATTERNS)
-
-    # ── Step 2b: Classification ──
-    # Non-legal queries are caught in api_server.py (binary gate) before
+    # ── Step 2: Classification ──
+    # Non-legal queries are filtered in api_server.py (Binary Gate LLM) before
     # reaching the pipeline. By the time we get here, it's always legal.
-    # Hardcoded values — no LLM call needed.
-    print("[2/5] Classification: hardcoded legal (gate handled upstream)")
+    print("[2/5] Classification: legal (gate handled upstream)")
 
-    is_non_legal = True if is_non_legal_keyword else False
+    is_non_legal = False
     web_fallback_recommended = False
 
     # BOUNCER PERMANENTLY DISABLED

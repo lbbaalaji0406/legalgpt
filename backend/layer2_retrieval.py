@@ -201,38 +201,31 @@ def retrieve_with_hybrid_logic(payload: dict, k: int = TOP_K) -> list:
         return []
 
     # Check if we have an explicit citation to prioritize
-    # If user mentioned "Section 15" filter ChromaDB by section_number
-    # This gives exact match priority over semantic similarity
+    # If user mentioned "Section 138" fetch all matching chunks directly from ChromaDB
     semantic_results_raw = []
+    target_sec_num = None
 
     if citations:
-        # Extract number from citation e.g. "SECTION 15" → "15"
-        sec_match = re.search(r'\d+', citations[0])
+        sec_match = re.search(r'\d+[A-Za-z]*', citations[0])
         if sec_match:
-            sec_num = sec_match.group()
-            print(f"[Layer 2] Citation filter: section_number = {sec_num}")
+            target_sec_num = sec_match.group()
+            print(f"[Layer 2] Citation filter: section_number = {target_sec_num}")
             try:
-                # First try with citation filter
-                filtered = collection.query(
-                    query_embeddings=[query_embedding],
-                    n_results=min(top_k, collection_count),
-                    where={"section_number": sec_num}
-                )
-                semantic_results_raw.extend(
-                    zip(
-                        filtered["documents"][0],
-                        filtered["metadatas"][0]
-                    )
-                )
+                # Fetch all chunks with this exact section number across collection
+                citation_chunks = collection.get(where={"section_number": str(target_sec_num)})
+                if citation_chunks and citation_chunks.get("documents"):
+                    for doc, meta in zip(citation_chunks["documents"], citation_chunks["metadatas"]):
+                        semantic_results_raw.append((doc, meta))
+                    print(f"[Layer 2] Direct citation chunks retrieved: {len(citation_chunks['documents'])}")
             except Exception as e:
-                print(f"[Layer 2] Citation filter failed: {e} — running without filter")
+                print(f"[Layer 2] Citation filter failed: {e}")
 
     # Always run broad semantic search too
-    # Combines with citation results for better coverage
+    # Combines with citation results for broad coverage
     try:
         broad = collection.query(
             query_embeddings=[query_embedding],
-            n_results=min(top_k, collection_count)
+            n_results=min(max(top_k * 2, 8), collection_count)
         )
         for doc, meta in zip(broad["documents"][0], broad["metadatas"][0]):
             semantic_results_raw.append((doc, meta))
@@ -243,8 +236,6 @@ def retrieve_with_hybrid_logic(payload: dict, k: int = TOP_K) -> list:
     print(f"[Layer 2] Semantic raw results: {len(semantic_results_raw)}")
 
     # ── TECHNIQUE 2: BM25 Keyword Search ──
-    # Catches exact keyword matches semantic search may miss
-    # Especially useful for exact section numbers and act names
     print("[2/3] Running BM25 keyword search...")
 
     bm25, bm25_docs, bm25_metas = build_bm25_index()
@@ -254,12 +245,11 @@ def retrieve_with_hybrid_logic(payload: dict, k: int = TOP_K) -> list:
         tokenized_query = keyword_query.lower().split()
         scores = bm25.get_scores(tokenized_query)
 
-        # Get top 20 scoring documents
         top_indices = sorted(
             range(len(scores)),
             key=lambda i: scores[i],
             reverse=True
-        )[:top_k]
+        )[:max(top_k * 2, 8)]
 
         for idx in top_indices:
             if scores[idx] > 0:
@@ -272,8 +262,6 @@ def retrieve_with_hybrid_logic(payload: dict, k: int = TOP_K) -> list:
     print(f"[Layer 2] BM25 raw results: {len(bm25_results_raw)}")
 
     # ── COMBINE AND DEDUPLICATE ──
-    # Merge semantic and BM25 results
-    # Deduplicate by full content string — only merges exact duplicates
     combined = {}
 
     for doc, meta in semantic_results_raw:
@@ -302,27 +290,65 @@ def retrieve_with_hybrid_logic(payload: dict, k: int = TOP_K) -> list:
 
     if not all_results:
         print("[Layer 2] WARNING: No results found in DB.")
-        print("[Layer 2] Check: DB path, collection name, embedding model.")
         return []
 
-    # ── TECHNIQUE 3: CrossEncoder Reranker ──
-    # Scores every combined result against original query
-    # Much more accurate than raw embedding similarity
+    # ── TECHNIQUE 3: CrossEncoder Reranker with Exact Citation Boosting ──
     print("[3/3] Reranking with CrossEncoder...")
 
     pairs  = [(semantic_query, r["content"]) for r in all_results]
     scores = reranker.predict(pairs)
 
-    # Sort by reranker score descending
-    ranked = sorted(
-        zip(scores, all_results),
-        key=lambda x: x[0],
-        reverse=True
-    )
+    # Detect primary target act mentions in query to give strong affinity
+    q_lower = (semantic_query + " " + keyword_query).lower()
+    
+    matched_target_act = None
+    if "negotiable" in q_lower or "cheque" in q_lower or "nia" in q_lower or "promissory" in q_lower:
+        matched_target_act = "nia"
+    elif "fir" in q_lower or "crpc" in q_lower or "bnss" in q_lower or "bail" in q_lower or "anticipatory" in q_lower:
+        matched_target_act = "crpc"
+    elif "marriage" in q_lower or "divorce" in q_lower or "hindu marriage" in q_lower or "hma" in q_lower or "restitution" in q_lower:
+        matched_target_act = "hma"
+    elif "cpc" in q_lower or "civil procedure" in q_lower or "written statement" in q_lower or "injunction" in q_lower:
+        matched_target_act = "cpc"
+    elif "motor" in q_lower or "mva" in q_lower or "vehicle" in q_lower or "traffic" in q_lower:
+        matched_target_act = "mva"
+    elif "evidence" in q_lower or "iea" in q_lower or "bsa" in q_lower or "witness" in q_lower:
+        matched_target_act = "iea"
+    elif "industrial" in q_lower or "workman" in q_lower or "ida" in q_lower or "retrenchment" in q_lower or "layoff" in q_lower:
+        matched_target_act = "ida"
+    elif "ipc" in q_lower or "penal code" in q_lower or "bns" in q_lower or "murder" in q_lower or "theft" in q_lower or "extortion" in q_lower:
+        matched_target_act = "ipc"
 
-    # Build final top k results
+    boosted_ranked = []
+    for score, r in zip(scores, all_results):
+        adjusted_score = float(score)
+        sec = str(r.get("section_number", "")).strip()
+        act = str(r.get("act_name", "")).lower()
+        content = r.get("content", "")
+
+        # 1. Exact section citation boost
+        if target_sec_num and sec == str(target_sec_num):
+            adjusted_score += 12.0
+            # Prefer substantive chunks over short 1-line amendment notes
+            if len(content) > 120:
+                adjusted_score += 8.0
+
+        # 2. Target act affinity boost / penalty
+        if matched_target_act:
+            if matched_target_act in act:
+                adjusted_score += 25.0
+            else:
+                adjusted_score -= 15.0  # Penalize chunks from completely unrelated acts
+
+        boosted_ranked.append((adjusted_score, r))
+
+    # Sort by adjusted score descending
+    ranked = sorted(boosted_ranked, key=lambda x: x[0], reverse=True)
+
+    # Build final top k results (default min 5 for complete legal context)
+    effective_k = max(top_k, 5)
     top_results = []
-    for score, result in ranked[:top_k]:
+    for score, result in ranked[:effective_k]:
         top_results.append({
             "content":         result["content"],
             "act_name":        result["act_name"],

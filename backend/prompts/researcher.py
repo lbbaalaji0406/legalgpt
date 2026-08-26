@@ -86,20 +86,46 @@ Provide step-by-step procedure:
 # CITATION HANDLING
 # ============================================================
 
-IPC_TO_BNS_MAP = """When citing old IPC sections, note the new BNS equivalents:
-- Section 302 IPC → Section 103 BNS (Murder)
-- Section 307 IPC → Section 109 BNS (Attempt to murder)
-- Section 376 IPC → Section 64 BNS (Rape)
-- Section 420 IPC → Section 318 BNS (Cheating)
-- Section 498A IPC → Section 85 BNS (Cruelty)
+IPC_TO_BNS_MAP = """When citing old IPC sections, note the new Bharatiya Nyaya Sanhita (BNS) 2023 equivalents:
+- Section 302 IPC (Murder) → Section 103 BNS
+- Section 307 IPC (Attempt to murder) → Section 109 BNS
+- Section 304 IPC (Culpable homicide) → Section 105 BNS
+- Section 304B IPC (Dowry death) → Section 80 BNS
+- Section 376 IPC (Rape) → Section 64 BNS
+- Section 376D IPC (Gang rape) → Section 70 BNS
+- Section 420 IPC (Cheating) → Section 318 BNS
+- Section 406 IPC (Criminal breach of trust) → Section 316 BNS
+- Section 498A IPC (Cruelty by husband/relatives) → Section 85 BNS
+- Section 379 IPC (Theft) → Section 303 BNS
+- Snatching (New provision) → Section 304 BNS
+- Section 384 IPC (Extortion) → Section 308 BNS
+- Section 506 IPC (Criminal intimidation) → Section 351 BNS
+- Section 499/500 IPC (Defamation) → Section 356 BNS
+- Section 323/325 IPC (Hurt / Grievous hurt) → Section 115 / 117 BNS
+- Section 468/471 IPC (Forgery) → Section 336 / 340 BNS
+- Section 120B IPC (Criminal conspiracy) → Section 61 BNS
+- Section 354 IPC (Assault on woman) → Section 74 BNS
+
+Always mention when law has changed prominently."""
+
+CRPC_TO_BNSS_MAP = """When citing old CrPC sections, note the new Bharatiya Nagarik Suraksha Sanhita (BNSS) 2023 equivalents:
+- Section 154 CrPC (FIR in cognizable cases) → Section 173 BNSS
+- Section 41A CrPC (Notice of appearance) → Section 35 BNSS
+- Section 164 CrPC (Recording statements / confessions) → Section 183 BNSS
+- Section 167 CrPC (Remand / detention) → Section 187 BNSS
+- Section 173 CrPC (Police report / chargesheet) → Section 193 BNSS
+- Section 437 / 439 CrPC (Regular bail) → Section 480 / 483 BNSS
+- Section 438 CrPC (Anticipatory bail) → Section 482 BNSS
+- Section 144 CrPC (Urgent nuisance / public order) → Section 163 BNSS
+- Section 125 CrPC (Maintenance for wife & children) → Section 144 BNSS
 
 Always mention when law has changed."""
 
-CRPC_TO_BNSS_MAP = """When citing old CrPC sections, note the new BNSS equivalents:
-- Section 438 CrPC → Section 482 BNSS (Anticipatory bail)
-- Section 164 CrPC → Section 122 BNSS (Recording statements)
-
-Always mention when law has changed."""
+EVIDENCE_TO_BSA_MAP = """When citing Indian Evidence Act (IEA) 1872, note Bharatiya Sakshya Adhiniyam (BSA) 2023 equivalents:
+- Section 65B IEA (Admissibility of electronic records) → Section 63 BSA
+- Section 45 IEA (Expert opinion) → Section 39 BSA
+- Section 114A IEA (Presumption of absence of consent) → Section 119 BSA
+- Section 27 IEA (Discovery of fact based on information) → Section 23 BSA"""
 
 
 # ============================================================

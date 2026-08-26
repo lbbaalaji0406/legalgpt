@@ -88,15 +88,6 @@ class ResearcherAgent:
         else:
             retrieved_docs = []
 
-        # Relative relevance threshold — discard noise where all scores are low and flat
-        if retrieved_docs:
-            scores = [r.get("relevance_score", 0) for r in retrieved_docs]
-            max_s = max(scores)
-            min_s = min(scores)
-            spread = max_s - min_s
-            if max_s < 0.5 and spread < 0.15:
-                retrieved_docs = []
-
         if not retrieved_docs and fallback_web_search:
             retrieved_docs = fallback_web_search(query)
 
@@ -109,6 +100,10 @@ class ResearcherAgent:
             validated = validate_legal_response(response, retrieved_docs)
             response = validated.get("response", response)
         
+        import re
+        clean_resp = re.sub(r'^\s*\{[\s\S]*?context_sufficient[\s\S]*?\}\s*', '', response).strip()
+        response = clean_resp if clean_resp else response
+
         return {
             "response": response,
             "mode_used": mode,

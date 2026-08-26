@@ -53,7 +53,7 @@ from langchain_core.prompts import PromptTemplate
 GROQ_API_KEY = os.environ.get("GROQ_API_KEY")
 if not GROQ_API_KEY:
     raise ValueError("GROQ_API_KEY not set in environment or .env file")
-SCOPING_MODEL = "llama-3.1-8b-instant"   # fast — this is a routing call
+SCOPING_MODEL = os.environ.get("GROQ_MODEL", "qwen/qwen3.8-27b")   # fast — this is a routing call
 
 scoping_llm = ChatGroq(
     model       = SCOPING_MODEL,

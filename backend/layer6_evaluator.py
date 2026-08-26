@@ -44,6 +44,9 @@ except ImportError:
     print("            Run: pip install python-docx")
 
 # Groq for structured JSON evaluation
+from dotenv import load_dotenv
+load_dotenv(os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), ".env"))
+
 from langchain_groq import ChatGroq
 from langchain_core.prompts import PromptTemplate
 
@@ -52,15 +55,21 @@ from langchain_core.prompts import PromptTemplate
 # ─────────────────────────────────────────────────────────────
 
 GROQ_API_KEY = os.environ.get("GROQ_API_KEY")
-EVAL_MODEL       = "llama-3.1-8b-instant"
-MAX_CHUNK_CHARS  = 5000   # safe limit per Groq call
-OVERLAP_CHARS    = 200    # overlap between chunks for context continuity
+EVAL_MODEL       = os.environ.get("EVAL_MODEL", "openai/gpt-oss-120b")
+MAX_CHUNK_CHARS  = 25000  # Evaluates up to 4,000 words in one pass without artificial splitting
+OVERLAP_CHARS    = 500    # Overlap between chunks for context continuity
 
-eval_llm = ChatGroq(
+_primary_eval = ChatGroq(
     model       = EVAL_MODEL,
     api_key     = GROQ_API_KEY,
     temperature = 0.1       # analytical — not creative
 )
+_fallback_eval = ChatGroq(
+    model       = "qwen/qwen3.8-27b",
+    api_key     = GROQ_API_KEY,
+    temperature = 0.1
+)
+eval_llm = _primary_eval.with_fallbacks([_fallback_eval])
 
 # ─────────────────────────────────────────────────────────────
 # TEXT EXTRACTION
@@ -95,10 +104,11 @@ def extract_text_from_pdf(file_bytes: bytes) -> str:
                 if page_text.strip():
                     text_parts.append(f"[Page {page_num}]\n{page_text}")
 
-        if not text_parts:
+        if not text_parts or sum(len(p) for p in text_parts) < 30:
             raise ValueError(
-                "No text extracted. This may be a scanned image PDF "
-                "that requires OCR, which is not currently supported."
+                "This document appears to be a scanned image or photo PDF without a selectable text layer. "
+                "To evaluate your contract, please copy and paste the text directly into the chat "
+                "or re-save the PDF with OCR enabled (e.g., via Google Docs or Adobe Acrobat)."
             )
 
         return "\n\n".join(text_parts)
@@ -211,7 +221,14 @@ def chunk_document(text: str) -> list:
 EVALUATION_PROMPT = PromptTemplate(
     input_variables=["document_text", "chunk_info"],
     template="""You are an elite Indian Legal Contract Evaluator with 20 years of experience.
-Your job is to find every possible flaw, loophole, and missing protection in this document.
+Your job is to objectively analyze the legal validity, enforceability, and commercial balance of this document under Indian law.
+
+STATUTORY KNOWLEDGE BASE:
+- Section 27 of the Indian Contract Act, 1872: "Agreement in restraint of trade, void" (post-employment non-compete is void ab initio).
+- Section 28 of the Indian Contract Act, 1872: Agreements in restraint of legal proceedings are void.
+- Section 74 of the Indian Contract Act, 1872: Compensation for breach of contract / penalty vs liquidated damages.
+- Section 12(5) of the Arbitration and Conciliation Act, 1996: Unilateral appointment of an arbitrator by one party is ineligible.
+- Bharatiya Nyaya Sanhita (BNS 2023), Bharatiya Nagarik Suraksha Sanhita (BNSS 2023), and Bharatiya Sakshya Adhiniyam (BSA 2023) came into force on July 1, 2024, replacing IPC 1860, CrPC 1973, and Evidence Act 1872.
 
 {chunk_info}
 
@@ -221,31 +238,32 @@ DOCUMENT TEXT:
 Analyze this document and return a JSON object with EXACTLY this structure:
 {{
     "risk_score": "High" or "Medium" or "Low",
-    "risk_reasoning": "One sentence explaining the risk score",
+    "risk_reasoning": "One concise sentence explaining the overall risk assessment",
     "critical_flaws": [
-        "Specific flaw 1 with the exact clause or section it affects",
-        "Specific flaw 2 with details"
+        "Specific severe flaw or illegal clause with the exact clause/section it affects (leave empty [] if no severe flaws)"
     ],
     "missing_clauses": [
-        "Missing clause 1 — what it should say",
-        "Missing clause 2 — what it should say"
+        "Standard protective clause missing from this document that should be added (leave empty [] if all standard clauses are present)"
     ],
     "repealed_laws_cited": [
-        "Any IPC/CrPC/Evidence Act citations found — now replaced by BNS/BNSS/BSA"
+        "Any old IPC/CrPC/Evidence Act citations found for post-July 2024 transactions (leave empty [] if none)"
     ],
     "suggested_edits": [
-        "Specific improvement 1 — exact recommended language",
-        "Specific improvement 2"
+        "Specific improvement or balanced redline language"
     ],
     "positive_aspects": [
-        "What the document does well"
+        "What the document does well (e.g. balanced notice, clear IP terms, mutual arbitration, standard compliance)"
     ]
 }}
 
+RISK SCORE CALIBRATION:
+- "High": The document contains VOID, ILLEGAL, UNCONSCIONABLE, or EXTREMELY PREDATORY terms (e.g. post-employment non-compete, penalty bonds, confession of judgment, unilateral arbitrator, criminal prosecution waivers).
+- "Medium": The document is LEGALLY VALID, but has notable commercial imbalances or secondary omissions (e.g. short notice, ambiguous milestone acceptance, missing non-solicitation).
+- "Low": The document is LEGALLY SOUND, MUTUAL, FAIR, AND BALANCED with standard protections in place. Do NOT mark a fair, balanced contract as High risk simply because minor drafting polish is possible.
+
 STRICT RULES:
-- Every flaw must cite the specific problematic clause/section
-- If this is a chunk of a larger document, only evaluate what you see
-- Under Indian law context only
+- If this is a chunk of a larger document, do NOT report standard clauses (like Governing Law or Arbitration) as missing if they appear in other sections.
+- Under Indian law context only.
 - Output ONLY the JSON object. No explanation. No preamble.
 """
 )
@@ -260,18 +278,21 @@ CHUNK EVALUATIONS:
 Merge these into a single comprehensive evaluation JSON with EXACTLY this structure:
 {{
     "risk_score": "High" or "Medium" or "Low",
-    "risk_reasoning": "Combined reasoning across all sections",
-    "critical_flaws": ["deduplicated combined list of all critical flaws"],
-    "missing_clauses": ["deduplicated combined list of all missing clauses"],
+    "risk_reasoning": "Combined reasoning across the entire document",
+    "critical_flaws": ["deduplicated list of genuine critical/illegal flaws"],
+    "missing_clauses": ["deduplicated list of genuinely missing clauses across the whole contract"],
     "repealed_laws_cited": ["all repealed law citations found"],
-    "suggested_edits": ["deduplicated combined list of all suggested edits"],
+    "suggested_edits": ["deduplicated list of suggested edits"],
     "positive_aspects": ["combined positive aspects"]
 }}
 
-Rules:
-- If ANY chunk is "High" risk, the overall score is "High"
-- Remove duplicate findings
-- Output ONLY the JSON object.
+RECONCILIATION & SCORING RULES:
+1. Reconcile Cross-Section Clauses: If a clause (such as Governing Law, Force Majeure, IP Assignment, Arbitration, or Severability) is present in ANY chunk or praised in positive_aspects, REMOVE it from missing_clauses and critical_flaws.
+2. Weighted Risk Score:
+   - "High" ONLY if there are genuine illegal, void, or severe unconscionable terms present in the contract.
+   - "Medium" if the contract is legally valid but has commercial gaps or unilateral risks.
+   - "Low" if the contract as a whole is balanced, legally sound, and contains standard protections.
+3. Output ONLY the JSON object.
 """
 )
 

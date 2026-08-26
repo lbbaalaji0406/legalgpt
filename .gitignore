@@ -21,7 +21,9 @@ saulgpt-ui/node_modules/
 
 # Environment
 .env
-.env.local
+.env.*
+*.env
+backend/.env
 
 # Database
 *.sqlite3

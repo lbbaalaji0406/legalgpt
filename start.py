@@ -36,25 +36,44 @@ def is_frontend_running():
     except:
         return False
 
+def get_python_exe():
+    root = os.path.dirname(os.path.abspath(__file__))
+    venv_py = os.path.join(root, '.venv', 'Scripts', 'python.exe')
+    if os.path.exists(venv_py):
+        return venv_py
+    return sys.executable
+
 def start_backend():
     log("[1/2] Starting Backend API...", YELLOW)
-    # Change to backend directory and run
-    os.chdir(os.path.join(os.path.dirname(__file__), 'backend'))
+    root = os.path.dirname(os.path.abspath(__file__))
+    py_exe = get_python_exe()
+    backend_dir = os.path.join(root, 'backend')
     subprocess.Popen(
-        [sys.executable, 'api_server.py'],
+        [py_exe, 'api_server.py'],
+        cwd=backend_dir,
         creationflags=subprocess.CREATE_NEW_CONSOLE if sys.platform == 'win32' else 0
     )
 
 def start_frontend():
     log("[2/2] Starting Frontend...", YELLOW)
-    os.chdir(os.path.join(os.path.dirname(__file__), 'saulgpt-ui'))
+    root = os.path.dirname(os.path.abspath(__file__))
+    frontend_dir = os.path.join(root, 'saulgpt-ui')
+    # Prepend winget node path to PATH if present
+    env = os.environ.copy()
+    node_winget = os.path.expandvars(r'%LOCALAPPDATA%\Microsoft\WinGet\Packages\OpenJS.NodeJS.LTS_Microsoft.Winget.Source_8wekyb3d8bbwe\node-v24.19.0-win-x64')
+    if os.path.exists(node_winget):
+        env['PATH'] = f"{node_winget};{env.get('PATH', '')}"
     subprocess.Popen(
-        ['npm', 'run', 'dev'],
+        ['npm.cmd' if sys.platform == 'win32' else 'npm', 'run', 'dev'],
+        cwd=frontend_dir,
+        env=env,
+        shell=True if sys.platform == 'win32' else False,
         creationflags=subprocess.CREATE_NEW_CONSOLE if sys.platform == 'win32' else 0
     )
 
 def main():
-    os.chdir(os.path.dirname(__file__))
+    root = os.path.dirname(os.path.abspath(__file__))
+    os.chdir(root)
     
     print("\n" + "="*50)
     print("  SaulGPT - Starting All Services")

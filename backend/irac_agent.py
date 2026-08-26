@@ -13,7 +13,7 @@ import time
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 
-from agents.llm_client import get_triage_llm, get_drafter_llm
+from agents.llm_client import get_advocate_llm
 from langchain_core.messages import HumanMessage, SystemMessage
 from prompts.irac import IRAC_SYSTEM_PROMPT
 from layer2_retrieval import retrieve_with_hybrid_logic
@@ -27,7 +27,7 @@ class IRACAgent:
     """
 
     def __init__(self):
-        self.llm = get_drafter_llm()
+        self.llm = get_advocate_llm()
         self.name = "IRAC"
 
     async def run(self, query: str, discovery_profile: dict = None,

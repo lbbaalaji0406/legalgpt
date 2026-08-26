@@ -3,6 +3,7 @@ title SaulGPT
 color 0a
 chcp 65001 >nul
 set PYTHONIOENCODING=utf-8
+set "PATH=%LOCALAPPDATA%\Microsoft\WinGet\Packages\OpenJS.NodeJS.LTS_Microsoft.Winget.Source_8wekyb3d8bbwe\node-v24.19.0-win-x64;%USERPROFILE%\.local\bin;%PATH%"
 rem GROQ_API_KEY is loaded from .env file in the project root by python-dotenv
 
 echo ===============================================
