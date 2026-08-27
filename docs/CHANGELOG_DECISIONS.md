@@ -15,6 +15,7 @@ This document provides a transparent, chronological record of every architectura
 7. **[ADR-007] Security & DevOps: API Key Isolation & Automated Git CI/CD**
 8. **[ADR-008] Master Document Families: Word-Boundary Regex & Schema Disambiguation**
 9. **[ADR-009] Document Export: Browser-Side Multi-Family Court-Grade PDF Engine**
+10. **[ADR-010] Interview Drafter: Eliminating Numeric Field Interruption Loops**
 
 ---
 
@@ -141,3 +142,18 @@ This document provides a transparent, chronological record of every architectura
   4. Added automated page breaks with `(continued)` headers and dynamic `Page X of Y` footers.
 * **The Why**:
   Provides instant, client-ready legal briefs in PDF format directly in the browser with zero backend rendering overhead or server disk retention.
+
+---
+
+### [ADR-010] Interview Drafter: Eliminating Numeric Field Interruption Loops
+* **Component**: `backend/api_server.py` (`_classify_interruption`)
+* **Date**: 2026-08-27
+* **Status**: ✅ Implemented & Verified
+* **The Problem**:
+  In `_classify_interruption`, any query under 5 characters was treated as a clarification request (`len(q) < 5 -> "clarification"`). When a user answered simple numeric fields (e.g., Age = `"18"` or `"19"`, Duration = `"11"`, Deposit = `"50k"`), the server misclassified the answer as an interruption question asking *"Why is this needed?"*, explaining the field and re-asking the same step in an infinite loop.
+* **The Decision & Change**:
+  1. Removed the blanket `< 5` character clarification check.
+  2. Explicitly exempted numeric strings (`q.isdigit()`) and direct alphanumeric answers from the interruption classifier.
+  3. Enforced word-boundary regex on true interruption keywords (*"why do you need"*, *"what is the purpose"*, *"what if"*).
+* **The Why**:
+  Guarantees that direct user answers (age, dates, sums, names) progress seamlessly through all steps of the drafting interview without getting stuck.
