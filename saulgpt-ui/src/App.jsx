@@ -11,15 +11,14 @@ import { scanForTerms, getCategories, GLOSSARY } from "./LegalGlossary";
 import AuthPage from "./AuthPage";
 import ConversationsSidebar from "./ConversationsSidebar";
 
-function getOrCreateSessionId() {
+function generateSessionId(convId = null) {
+  if (convId) return `session_conv_${convId}`;
   const stored = localStorage.getItem("saulgpt_session_id");
   if (stored) return stored;
   const newId = `session_${Math.random().toString(36).slice(2, 9)}_${Date.now().toString(36)}`;
   localStorage.setItem("saulgpt_session_id", newId);
   return newId;
 }
-
-const SESSION_ID = getOrCreateSessionId();
 
 const MODES = {
   analysis:   { label: "Case Analysis",     icon: "⚖️",  color: "#C9A84C" },
@@ -324,6 +323,11 @@ export default function App() {
     const n = Number(saved);
     return !isNaN(n) && n > 0 ? n : null;
   });
+  const [sessionId, setSessionId] = useState(() => {
+    const saved = localStorage.getItem("saulgpt_conv_id");
+    const n = saved ? Number(saved) : null;
+    return generateSessionId(n && !isNaN(n) ? n : null);
+  });
   const [showSidebar, setShowSidebar] = useState(false);
   const [authLoading, setAuthLoading] = useState(false);
   const [refreshTrigger, setRefreshTrigger] = useState(0);
@@ -331,18 +335,15 @@ export default function App() {
   const bottomRef  = useRef(null);
   const inputRef   = useRef(null);
   const fileRef    = useRef(null);
-  const convRef    = useRef(convId);  // ref to prevent stale overwrites
+  const convRef    = useRef(convId);
 
-  // Keep convRef in sync with convId
   useEffect(() => { convRef.current = convId; }, [convId]);
 
-  // Persist conv_id and guest messages across refresh
   useEffect(() => {
     if (convId) localStorage.setItem("saulgpt_conv_id", String(convId));
     else localStorage.removeItem("saulgpt_conv_id");
   }, [convId]);
 
-  // Load persisted conversation messages on mount (page refresh recovery)
   useEffect(() => {
     const saved = localStorage.getItem("saulgpt_conv_id");
     const savedToken = localStorage.getItem("saulgpt_token");
@@ -350,8 +351,10 @@ export default function App() {
       const n = Number(saved);
       if (!isNaN(n) && n > 0) {
         api().get(`/api/conversations/${n}`).then(({ data }) => {
-          if (!convRef.current || convRef.current !== n) return; // stale — user clicked New Chat
+          if (!convRef.current || convRef.current !== n) return;
           setConvId(n);
+          const sid = generateSessionId(n);
+          setSessionId(sid);
           setMessages([]);
           const msgs = (data.messages || []).map(m => ({
             role: m.role,
@@ -362,15 +365,14 @@ export default function App() {
         }).catch(() => {});
       }
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   useEffect(() => {
-    // Only persist guest messages (unauthenticated sessions)
     if (!token && messages.length > 0) {
-      localStorage.setItem("saulgpt_guest_messages", JSON.stringify(messages.slice(-6)));
-    }
-    if (token) {
+      try {
+        localStorage.setItem("saulgpt_guest_messages", JSON.stringify(messages));
+      } catch {}
+    } else if (!token && messages.length === 0) {
       localStorage.removeItem("saulgpt_guest_messages");
     }
   }, [messages, token]);
@@ -380,32 +382,14 @@ export default function App() {
   }, [messages, loading]);
 
   useEffect(() => {
-    if (inputRef.current) {
-      inputRef.current.style.height = "auto";
-      inputRef.current.style.height = `${inputRef.current.scrollHeight}px`;
-    }
-  }, [input]);
-
-  // Sync auth state across tabs (logout from one tab → logout from all)
-  useEffect(() => {
-    function handleStorage(e) {
-      if (e.key === "saulgpt_token" && !e.newValue) {
-        setToken(null);
-        setUser(null);
-        setMessages([]);
-        setConvId(null);
-      }
-    }
-    window.addEventListener("storage", handleStorage);
-    return () => window.removeEventListener("storage", handleStorage);
-  }, []);
+    if (!loading && !interviewActive) inputRef.current?.focus();
+  }, [loading, interviewActive]);
 
   function api() {
     const headers = {};
     const currentToken = localStorage.getItem("saulgpt_token");
     if (currentToken) headers.Authorization = `Bearer ${currentToken}`;
     const instance = axios.create({ headers });
-    // 401 interceptor: token expired → logout
     instance.interceptors.response.use(
       res => res,
       err => {
@@ -419,41 +403,38 @@ export default function App() {
   }
 
   function handleAuth(newToken, newUser) {
-    setAuthLoading(true);
     setToken(newToken);
     setUser(newUser);
-    // Guest session takeover: bulk-import guest messages to DB in one call
-    if (messages.length > 0 && !convId) {
-      const turns = messages.map(m => ({
-        role: m.role,
-        content: m.content,
-        meta: m.meta ? JSON.stringify(m.meta) : null,
-      }));
-      api().post("/api/conversations/migrate", { turns }).then(({ data }) => {
-        setConvId(data.conv_id);
-        localStorage.removeItem("saulgpt_guest_messages");
-      }).catch(() => {}).finally(() => setAuthLoading(false));
-    } else {
-      setAuthLoading(false);
-    }
+    localStorage.setItem("saulgpt_token", newToken);
+    localStorage.setItem("saulgpt_user", JSON.stringify(newUser));
   }
 
   function logout() {
     localStorage.removeItem("saulgpt_token");
     localStorage.removeItem("saulgpt_user");
     localStorage.removeItem("saulgpt_conv_id");
+    localStorage.removeItem("saulgpt_session_id");
     setToken(null);
     setUser(null);
     setMessages([]);
     setConvId(null);
+    setSessionId(generateSessionId());
   }
 
   async function loadConversation(id) {
     try {
+      if (sessionId) {
+        api().delete(`/api/draft/state/${sessionId}`).catch(() => {});
+      }
       setMessages([]);
       setShowSuggestions(false);
+      setInterviewActive(false);
+      setForceMode(null);
       setLoading(true);
       setConvId(id);
+      const nextSid = generateSessionId(id);
+      setSessionId(nextSid);
+      localStorage.setItem("saulgpt_session_id", nextSid);
 
       const { data } = await api().get(`/api/conversations/${id}`);
 
@@ -462,6 +443,7 @@ export default function App() {
         content: m.content,
         meta: m.meta ? (typeof m.meta === "string" ? JSON.parse(m.meta) : m.meta) : undefined,
       })));
+      setRefreshTrigger(prev => prev + 1);
     } catch (e) {
       console.error("Failed to load conversation:", e);
       setMessages([{ role: "assistant", content: "Failed to load conversation." }]);
@@ -472,8 +454,14 @@ export default function App() {
 
   async function newConversation() {
     try {
+      if (sessionId) {
+        api().delete(`/api/draft/state/${sessionId}`).catch(() => {});
+        api().delete(`/api/history/${sessionId}`).catch(() => {});
+      }
       setMessages([]);
       setConvId(null);
+      setInterviewActive(false);
+      setForceMode(null);
       setShowSuggestions(true);
       setLoading(true);
 
@@ -481,11 +469,18 @@ export default function App() {
 
       if (data.conv_id) {
         setConvId(data.conv_id);
+        const nextSid = generateSessionId(data.conv_id);
+        setSessionId(nextSid);
+        localStorage.setItem("saulgpt_session_id", nextSid);
         setRefreshTrigger(prev => prev + 1);
       }
     } catch (e) {
       console.error("Failed to create conversation:", e);
-      setShowSuggestions(false);
+      const freshSid = generateSessionId();
+      setSessionId(freshSid);
+      localStorage.setItem("saulgpt_session_id", freshSid);
+      setConvId(null);
+      setShowSuggestions(true);
     } finally {
       setLoading(false);
     }
@@ -493,8 +488,11 @@ export default function App() {
 
   function deleteConversation(id) {
     api().delete(`/api/conversations/${id}`).then(() => {
-      if (convId === id) { setConvId(null); setMessages([]); }
-      setRefreshTrigger(prev => prev + 1);
+      if (convId === id) {
+        newConversation();
+      } else {
+        setRefreshTrigger(prev => prev + 1);
+      }
     }).catch(() => {});
   }
 
@@ -511,14 +509,13 @@ export default function App() {
     try {
       const payload = {
         query: text,
-        session_id: SESSION_ID,
+        session_id: sessionId,
       };
       if (forceMode) payload.mode = forceMode;
       if (convId) payload.conv_id = convId;
 
       const { data } = await api().post("/api/chat", payload);
 
-      // Track conv_id if returned from backend (newly created conversation)
       if (data.conv_id) setConvId(data.conv_id);
 
       const isInterview = data.status === "interviewing";
@@ -603,18 +600,13 @@ export default function App() {
   }
 
   async function clearChat() {
-    try {
-      await api().delete(`/api/history/${SESSION_ID}`);
-      await api().delete(`/api/draft/state/${SESSION_ID}`);
-    } catch {}
-    setMessages([]);
-    setInterviewActive(false);
-    setShowSuggestions(true);
-    setForceMode(null);
+    await newConversation();
   }
 
   function cancelInterview() {
-    api().delete(`/api/draft/state/${SESSION_ID}`).catch(() => {});
+    if (sessionId) {
+      api().delete(`/api/draft/state/${sessionId}`).catch(() => {});
+    }
     setInterviewActive(false);
     setMessages(prev => [
       ...prev,
@@ -674,6 +666,9 @@ export default function App() {
           <div className="header-inner">
             <button className="sidebar-toggle" onClick={() => setShowSidebar(s => !s)} title="Chat History">
               ☰
+            </button>
+            <button className="sidebar-toggle" onClick={newConversation} title="New Chat" style={{ marginLeft: "-4px", fontSize: "16px", fontWeight: "bold" }}>
+              +
             </button>
 
             <div className="logo">

@@ -16,6 +16,7 @@ This document provides a transparent, chronological record of every architectura
 8. **[ADR-008] Master Document Families: Word-Boundary Regex & Schema Disambiguation**
 9. **[ADR-009] Document Export: Browser-Side Multi-Family Court-Grade PDF Engine**
 10. **[ADR-010] Interview Drafter: Eliminating Numeric Field Interruption Loops**
+11. **[ADR-011] UI State Machine: Dynamic Session Scoping & Multi-Conversation Switching**
 
 ---
 
@@ -157,3 +158,19 @@ This document provides a transparent, chronological record of every architectura
   3. Enforced word-boundary regex on true interruption keywords (*"why do you need"*, *"what is the purpose"*, *"what if"*).
 * **The Why**:
   Guarantees that direct user answers (age, dates, sums, names) progress seamlessly through all steps of the drafting interview without getting stuck.
+
+---
+
+### [ADR-011] UI State Machine: Dynamic Session Scoping & Multi-Conversation Switching
+* **Component**: `saulgpt-ui/src/App.jsx` (`newConversation`, `loadConversation`, `sessionId`)
+* **Date**: 2026-08-27
+* **Status**: ✅ Implemented & Verified
+* **The Problem**:
+  `SESSION_ID` was a static constant in localStorage that never changed. When clicking the `+` New Chat button or switching between chats in the sidebar, the backend triage and interview state machines remained bound to the old static session ID, causing stale drafts to bleed into new conversations and preventing clean conversation switching.
+* **The Decision & Change**:
+  1. Replaced the static constant with dynamic stateful session IDs scoped per conversation (`session_conv_${conv_id}` or fresh timestamped IDs).
+  2. Updated `newConversation()` to reset draft state, create a new conversation ID in SQLite via `POST /api/conversations`, clear UI messages, and refresh the sidebar list.
+  3. Updated `loadConversation(id)` to load message history from `GET /api/conversations/${id}`, bind `sessionId` to `session_conv_${id}`, and reset suggestion/drafting flags.
+  4. Added a dedicated top-header `+` (New Chat) quick button alongside the `☰` toggle for immediate 1-click access.
+* **The Why**:
+  Guarantees clean, isolated conversation histories and instant switching between simultaneous legal consultations without state bleeding.
