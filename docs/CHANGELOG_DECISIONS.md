@@ -13,6 +13,8 @@ This document provides a transparent, chronological record of every architectura
 5. **[ADR-005] Layer 6 Evaluator: Single-Pass High-Token Chunking & Risk Calibration**
 6. **[ADR-006] Layer 5 Search: Resilient HTML Extraction & Agentic Self-Correction Loop**
 7. **[ADR-007] Security & DevOps: API Key Isolation & Automated Git CI/CD**
+8. **[ADR-008] Master Document Families: Word-Boundary Regex & Schema Disambiguation**
+9. **[ADR-009] Document Export: Browser-Side Multi-Family Court-Grade PDF Engine**
 
 ---
 
@@ -108,3 +110,34 @@ This document provides a transparent, chronological record of every architectura
   Installed portable Git (`git version 2.47.1`), hardened `.gitignore` with wildcard rules for all `.env*` files, and synchronized the repository with GitHub (`https://github.com/lbbaalaji0406/legalgpt`).
 * **The Why**:
   Guarantees enterprise security, clean secret isolation, and full version-controlled deployment readiness.
+
+---
+
+### [ADR-008] Master Document Families: Word-Boundary Regex & Schema Disambiguation
+* **Component**: `backend/interview_state.py` (`detect_family`, `detect_document_type`, `MASTER_SCHEMAS`)
+* **Date**: 2026-08-27
+* **Status**: ✅ Implemented & Verified
+* **The Problem**:
+  `detect_document_type` used naive substring matching. A query like *"I need an affidavit of solemn affirmation"* falsely triggered `fir_complaint` because the word `"affirmation"` contained `"fir"`. Furthermore, bounced cheques were missing from family signal maps.
+* **The Decision & Change**:
+  1. Converted all trigger checks to word-boundary regex (`re.search(r'\b' + re.escape(trigger) + r'\b', query_lower)`).
+  2. Solidified the 4 Master Document Families: **`LETTER`** (Demand Notices), **`PLEADING`** (Court Petitions & FIR), **`AFFIDAVIT`** (Sworn Oaths), and **`AGREEMENT`** (Contracts & Leases).
+  3. Re-mapped `fir_complaint` under the `pleading` family and expanded signal keywords.
+* **The Why**:
+  Guarantees 100% deterministic classification across diverse legal intake scenarios without false-positive keyword collisions.
+
+---
+
+### [ADR-009] Document Export: Browser-Side Multi-Family Court-Grade PDF Engine
+* **Component**: `saulgpt-ui/src/usePDF.js`
+* **Date**: 2026-08-27
+* **Status**: ✅ Implemented & Verified
+* **The Problem**:
+  Standard web downloads produce unformatted plain text files that lack legal margins, court letterheads, risk level badges, dynamic continuation banners, and statutory disclaimers.
+* **The Decision & Change**:
+  1. Built a browser-side PDF generator using `jsPDF` configured with standard Indian legal margins (22mm L/R, 28mm Top, 22mm Bottom).
+  2. Implemented dynamic letterhead styling with dual-gold rule dividers and automated metadata tagging.
+  3. Added multi-family section styling for **Legal Document Drafts**, **Contract Evaluation Reports** (color-coded risk badges & redlines), **IRAC Advocate Briefs**, and **Procedural Guides**.
+  4. Added automated page breaks with `(continued)` headers and dynamic `Page X of Y` footers.
+* **The Why**:
+  Provides instant, client-ready legal briefs in PDF format directly in the browser with zero backend rendering overhead or server disk retention.
