@@ -430,13 +430,14 @@ def generate_document_spec(
 
 def detect_document_type(query: str) -> Optional[str]:
     """
-    Legacy keyword-based document type detection.
+    Word-boundary regex keyword document type detection.
     Checked first; if no match, returns None for LLM-based detection.
     """
     query_lower = query.lower()
     for doc_type, triggers in DOCUMENT_TRIGGERS.items():
-        if any(trigger in query_lower for trigger in triggers):
-            return doc_type
+        for trigger in triggers:
+            if re.search(r'\b' + re.escape(trigger) + r'\b', query_lower):
+                return doc_type
     return None
 
 
@@ -445,7 +446,7 @@ FAMILY_MAP = {
     "legal_notice":      "letter",
     "cheque_bounce":     "letter",
     "employment_notice": "letter",
-    "fir_complaint":     "letter",
+    "fir_complaint":     "pleading",
     "rental_agreement":  "agreement",
 }
 
@@ -461,19 +462,24 @@ def detect_family(query: str) -> Optional[str]:
     """
     FAMILY_SIGNALS = {
         "letter":    ["legal notice", "notice to", "send a notice", "eviction", "cheque bounce",
-                      "demand notice", "termination notice", "complaint to police", "fir"],
+                      "bounced cheque", "dishonour", "dishonored", "demand notice", "termination notice",
+                      "recovery of dues", "unpaid salary"],
         "pleading":  ["suit", "petition", "plaint", "written statement", "complaint before",
-                      "file a case", "file a suit", "appeal", "application before"],
+                      "file a case", "file a suit", "appeal", "application before", "fir",
+                      "police complaint", "criminal complaint", "injunction"],
         "affidavit": ["affidavit", "sworn statement", "undertaking on oath",
-                      "declaration under oath", "solemn affirmation"],
+                      "declaration under oath", "solemn affirmation", "deponent"],
         "agreement": ["agreement", "contract", "deed", "mou", "memorandum of understanding",
-                      "settlement", "lease deed", "sale deed", "partnership deed"],
+                      "settlement", "lease deed", "sale deed", "partnership deed", "lease agreement",
+                      "nda", "non-disclosure", "tenancy agreement"],
     }
     query_lower = query.lower()
     scores = {}
     for family, signals in FAMILY_SIGNALS.items():
-        scores[family] = sum(1 for s in signals if s in query_lower)
-    if max(scores.values(), default=0) > 0:
+        score = sum(1 for s in signals if re.search(r'\b' + re.escape(s) + r'\b', query_lower))
+        if score > 0:
+            scores[family] = score
+    if scores:
         return max(scores, key=scores.get)
     return None
 
