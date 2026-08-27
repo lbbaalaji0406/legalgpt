@@ -109,7 +109,18 @@ class ResearcherAgent:
             response = generate_legal_response(layer1_result, retrieved_docs, mode, triage_context=triage_context, conversation_history=history)
         else:
             response = f"I've found information related to: {query}"
-        
+
+        # ── Agentic Self-Correction Loop ──
+        # If local DB chunks lacked the specific provisions (e.g., Constitution DB has Rights but query asked for Duties),
+        # automatically fallback to live web search and regenerate!
+        if ("I do not have enough specific legal context" in response or "do not directly apply" in response) and fallback_web_search:
+            print("[Researcher] Local DB lacked specific provisions. Auto-triggering Layer 5 Web Search Fallback...")
+            web_docs = fallback_web_search(layer1_result.get("search_optimized_query") or query)
+            if web_docs:
+                retrieved_docs = web_docs
+                if generate_legal_response:
+                    response = generate_legal_response(layer1_result, retrieved_docs, mode, triage_context=triage_context, conversation_history=history)
+
         if validate_legal_response:
             validated = validate_legal_response(response, retrieved_docs)
             response = validated.get("response", response)
