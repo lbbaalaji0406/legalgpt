@@ -778,24 +778,27 @@ def _classify_interruption(query: str, state=None) -> Optional[str]:
     """
     q = query.lower().strip()
 
-    # ── Fast path: keywords ──
-    # Short queries (< 5 chars) that aren't yes/no/ok are likely clarification
-    if len(q) < 5 and q not in ("yes", "no", "ok", "sure", "y", "n", "1", "2"):
-        return "clarification"
+    # Digits and short direct answers are ALWAYS field values, never interruptions
+    if q.isdigit() or re.match(r"^\d+[\s\w]*$", q):
+        return None
 
-    if any(q.startswith(s) for s in _INTERRUPT_PUSHBACK):
-        return "pushback"
+    # ── Fast path: keywords with word boundaries ──
+    for s in _INTERRUPT_PUSHBACK:
+        if re.search(r'\b' + re.escape(s) + r'\b', q):
+            return "pushback"
 
-    if any(s in q for s in _INTERRUPT_HYPOTHETICAL):
-        return "hypothetical"
+    for s in _INTERRUPT_HYPOTHETICAL:
+        if re.search(r'\b' + re.escape(s) + r'\b', q):
+            return "hypothetical"
 
-    if any(q.startswith(s) for s in _INTERRUPT_CLARIFICATION):
-        return "clarification"
+    for s in _INTERRUPT_CLARIFICATION:
+        if re.search(r'\b' + re.escape(s) + r'\b', q) and len(q) > 3:
+            return "clarification"
 
     # ── Fallback: LLM classification for queries that look non-answer ──
     # Skip if it looks like a straightforward field value (contains number or is very short)
     _LOOKS_LIKE_ANSWER = r"^(?:\d{1,4}[-/.]?\w*|\d+\s*(?:jan|feb|mar|apr|may|jun|jul|aug|sep|oct|nov|dec)|rs\.?\s*\d+|₹\d+)"
-    if not re.match(_LOOKS_LIKE_ANSWER, q, re.IGNORECASE) and len(q) > 5:
+    if not re.match(_LOOKS_LIKE_ANSWER, q, re.IGNORECASE) and len(q) > 10:
         try:
             from interview_state import _ensure_field_llm
             llm = _ensure_field_llm()
