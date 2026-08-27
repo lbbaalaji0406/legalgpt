@@ -332,44 +332,108 @@ def fallback_web_search(query: str) -> list:
         if scrubbed_query != query:
             print(f"[Layer 5] [PII] PII scrubbed from query before web search")
 
-        search_query = f"{scrubbed_query} Indian law site:indiankanoon.org OR site:indiacode.nic.in OR site:livelaw.in"
+        # Clean conversational filler to form a high-precision legal search query
+        clean_keywords = re.sub(
+            r'(?i)\b(i|my|me|we|us|what are|what is|tell me about|how to|a seller on|sent me a|and refused|what)\b',
+            ' ',
+            scrubbed_query
+        )
+        clean_keywords = re.sub(r'\s+', ' ', clean_keywords).strip()
+        search_query = f"{clean_keywords} Indian law"
         print(f"[Layer 5] Searching: {search_query[:100]}...")
 
-        results = None
+        results = []
+        
+        # Primary: Direct HTML DuckDuckGo Search (fast, reliable, no package breaking changes)
         try:
-            results = list(DDGS().text(f"{scrubbed_query} Indian law", max_results=6))
-        except Exception as ddg_err:
-            print(f"[Layer 5] DDGS error: {ddg_err}")
+            ddg_headers = {
+                "User-Agent": (
+                    "Mozilla/5.0 (Windows NT 10.0; Win64; x64) "
+                    "AppleWebKit/537.36 (KHTML, like Gecko) "
+                    "Chrome/120.0.0.0 Safari/537.36"
+                ),
+                "Accept": "text/html,application/xhtml+xml",
+                "Accept-Language": "en-IN,en;q=0.9",
+            }
+            resp = requests.post(
+                "https://html.duckduckgo.com/html/",
+                data={"q": search_query},
+                headers=ddg_headers,
+                timeout=8
+            )
+            if resp.status_code == 200:
+                soup = BeautifulSoup(resp.text, "html.parser")
+                for div in soup.find_all("div", class_="result"):
+                    a_title = div.find("a", class_="result__a")
+                    a_snippet = div.find("a", class_="result__snippet") or div.find("div", class_="result__snippet")
+                    a_url = div.find("a", class_="result__url")
+                    if a_title:
+                        t = a_title.get_text(strip=True)
+                        s = a_snippet.get_text(strip=True) if a_snippet else ""
+                        u = a_url.get_text(strip=True) if a_url else a_title.get("href", "")
+                        if t and (s or u):
+                            results.append({"title": t, "body": s, "href": u})
+        except Exception as html_err:
+            print(f"[Layer 5] Direct HTML search error: {html_err}")
+
+        # Secondary: DDGS package fallback if available
+        if not results and DDGS_AVAILABLE:
+            try:
+                results = list(DDGS().text(search_query, max_results=6))
+            except Exception as ddg_err:
+                print(f"[Layer 5] DDGS error: {ddg_err}")
+
+        if not results:
+            print("[Layer 5] No matching web results.")
+            return []
 
         # Prefer Indian legal sources if present, otherwise use top results
         INDIAN_DOMAINS = ("indiankanoon.org", "indiacode.nic.in", "scconline.com",
                           "manupatra.com", "barandbench.com", "livelaw.in",
-                          "supremecourtcaselaw.com", "lawctopus.com", "vakilsearch.com")
-        legal_results = [r for r in results if any(d in r.get("href", "").lower() for d in INDIAN_DOMAINS)]
+                          "supremecourtcaselaw.com", "lawctopus.com", "vakilsearch.com", "legalserviceindia.com", "juristco.com", "lawcurb.com")
+        legal_results = [r for r in results if any(d in r.get("href", "").lower() or d in r.get("body", "").lower() for d in INDIAN_DOMAINS)]
         final_results = legal_results[:4] if legal_results else results[:4]
-
-        if not final_results:
-            print("[Layer 5] No matching web results.")
-            return []
 
         mock_chunks = []
         for i, res in enumerate(final_results, 1):
             href = res.get('href', '')
             is_primary = any(d in href.lower() for d in ["indiankanoon.org", "indiacode.nic.in", "scconline.com"])
             source_type = "primary" if is_primary else "commentary"
-            SCORE_MAP = {"primary": 0.75, "commentary": 0.60}
+            SCORE_MAP = {"primary": 0.85, "commentary": 0.75}
+
+            # Attempt to fetch rich body text from the article page
+            body_content = res.get('body', '')
+            if href.startswith('http') and i <= 2:
+                try:
+                    page_resp = requests.get(
+                        href,
+                        headers={"User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64)"},
+                        timeout=3.5
+                    )
+                    if page_resp.status_code == 200:
+                        page_soup = BeautifulSoup(page_resp.text, "html.parser")
+                        for tag in page_soup(["script", "style", "nav", "header", "footer"]):
+                            tag.decompose()
+                        paras = [p.get_text(strip=True) for p in page_soup.find_all("p") if len(p.get_text(strip=True)) > 40]
+                        if paras:
+                            extracted_text = " \n".join(paras[:6])
+                            if len(extracted_text) > 150:
+                                body_content = extracted_text[:1500]
+                except Exception:
+                    pass
+
             mock_chunks.append({
-                "act_name":       "Live Web Search",
-                "section_number": f"Source {i}",
+                "act_name":       "Live Web Search (Indian Law)",
+                "section_number": f"Web Source {i}",
                 "is_repealed":    False,
-                "law_type":       "Web Result",
+                "law_type":       "Web Search Legal Intelligence",
                 "source_type":    source_type,
                 "content": (
-                    f"TITLE: {res.get('title', '')}\n"
-                    f"SUMMARY: {res.get('body', '')}\n"
-                    f"SOURCE: {href}"
+                    f"TOPIC / TITLE: {res.get('title', '')}\n"
+                    f"LEGAL SUMMARY & PROVISIONS: {body_content}\n"
+                    f"SOURCE REFERENCE: {href}"
                 ),
-                "relevance_score": SCORE_MAP.get(source_type, 0.60)
+                "relevance_score": SCORE_MAP.get(source_type, 0.75)
             })
 
         print(f"[Layer 5] [Web] Web fallback found {len(mock_chunks)} results.")

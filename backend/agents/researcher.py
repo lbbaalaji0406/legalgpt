@@ -83,13 +83,27 @@ class ResearcherAgent:
         else:
             layer1_result = {"original_query": query}
         
-        if retrieve_with_hybrid_logic:
+        web_fallback_hint = layer1_result.get("web_fallback_recommended", False)
+
+        if web_fallback_hint:
+            print("[Researcher] LLM flagged query as outside local DB acts. Triggering web fallback directly.")
+            retrieved_docs = []
+        elif retrieve_with_hybrid_logic:
             retrieved_docs = retrieve_with_hybrid_logic(layer1_result, k=5)
         else:
             retrieved_docs = []
 
+        # Relative relevance check — if local DB returned only weak noise (< 0.45), fallback to web
+        if retrieved_docs:
+            scores = [r.get("relevance_score", 0) for r in retrieved_docs]
+            max_s = max(scores) if scores else 0
+            if max_s < 0.45:
+                print(f"[Researcher] Local DB results are low relevance (max={max_s:.4f}). Triggering fallback_web_search.")
+                retrieved_docs = []
+
         if not retrieved_docs and fallback_web_search:
-            retrieved_docs = fallback_web_search(query)
+            search_query = layer1_result.get("search_optimized_query") or query
+            retrieved_docs = fallback_web_search(search_query)
 
         if generate_legal_response:
             response = generate_legal_response(layer1_result, retrieved_docs, mode, triage_context=triage_context, conversation_history=history)
