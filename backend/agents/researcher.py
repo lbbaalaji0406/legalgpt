@@ -102,7 +102,7 @@ class ResearcherAgent:
                 retrieved_docs = []
 
         if not retrieved_docs and fallback_web_search:
-            search_query = layer1_result.get("search_optimized_query") or query
+            search_query = layer1_result.get("keyword_synonyms") or layer1_result.get("search_optimized_query") or query
             retrieved_docs = fallback_web_search(search_query)
 
         if generate_legal_response:
@@ -111,11 +111,19 @@ class ResearcherAgent:
             response = f"I've found information related to: {query}"
 
         # ── Agentic Self-Correction Loop ──
-        # If local DB chunks lacked the specific provisions (e.g., Constitution DB has Rights but query asked for Duties),
-        # automatically fallback to live web search and regenerate!
-        if ("I do not have enough specific legal context" in response or "do not directly apply" in response) and fallback_web_search:
+        # If local DB chunks lacked the specific provisions, automatically fallback to live web search and regenerate!
+        needs_web_fallback = (
+            '"context_sufficient": false' in response.lower()
+            or "i do not have enough specific legal context" in response.lower()
+            or "do not directly apply" in response.lower()
+            or "कानूनी विश्लेषण प्रस्तुत करना संभव नहीं" in response
+            or "प्रासंगिक धारा या विवरण नहीं मिला" in response
+            or "पर्याप्त संदर्भ नहीं" in response
+        )
+        if needs_web_fallback and fallback_web_search:
             print("[Researcher] Local DB lacked specific provisions. Auto-triggering Layer 5 Web Search Fallback...")
-            web_docs = fallback_web_search(layer1_result.get("search_optimized_query") or query)
+            search_q = layer1_result.get("keyword_synonyms") or layer1_result.get("search_optimized_query") or query
+            web_docs = fallback_web_search(search_q)
             if web_docs:
                 retrieved_docs = web_docs
                 if generate_legal_response:

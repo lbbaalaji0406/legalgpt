@@ -379,8 +379,8 @@ def analyze_query(user_query: str, conversation_history: list = None) -> dict:
     reformulated = reformulate_query(user_query)
     hyde_paragraph = reformulated.get("hyde_paragraph", user_query)
     keyword_synonyms = reformulated.get("keyword_synonyms", user_query)
-    # search_optimized_query kept for backward compat — uses hyde_paragraph
-    search_optimized_query = hyde_paragraph
+    # search_optimized_query uses clean keywords for web search and vector lookup
+    search_optimized_query = keyword_synonyms if keyword_synonyms else hyde_paragraph
 
     # ── Return Structured Payload ──
     # This dict is the INPUT to Layer 2 Retrieval
