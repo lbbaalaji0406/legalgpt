@@ -69,8 +69,19 @@ class RelationalGNNEngine(nn.Module):
 
         self.entity_embeddings = nn.Embedding(num_entities, self.embedding_dim)
         self.relation_embeddings = nn.Embedding(num_relations, self.embedding_dim)
-        nn.init.xavier_uniform_(self.entity_embeddings.weight)
-        nn.init.xavier_uniform_(self.relation_embeddings.weight)
+
+        weights_path = os.path.join(os.path.dirname(__file__), "data", "gnn_weights.pt")
+        if os.path.exists(weights_path):
+            try:
+                ckpt = torch.load(weights_path)
+                self.entity_embeddings.load_state_dict(ckpt["entity_embeddings"])
+                self.relation_embeddings.load_state_dict(ckpt["relation_embeddings"])
+                print("[GNN Engine] Loaded pre-trained relational embeddings (gnn_weights.pt).")
+            except Exception as e:
+                print(f"[GNN Engine] Initialized with Xavier uniform ({e}).")
+        else:
+            nn.init.xavier_uniform_(self.entity_embeddings.weight)
+            nn.init.xavier_uniform_(self.relation_embeddings.weight)
 
     def _load_triples(self):
         if os.path.exists(TRIPLES_PATH):
