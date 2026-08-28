@@ -21,6 +21,7 @@ This document provides a transparent, chronological record of every architectura
 13. **[ADR-013] Chat History: Conversation Restoral & Deep-Meta State Hydration**
 14. **[ADR-014] UI Layering: Backdrop Stacking Context & Click Event Propagation**
 15. **[ADR-015] Pleading Family: Order VII CPC Triad of Survival & Mid-Interview Interruption Handling**
+16. **[ADR-016] Bilingual Query Reformulation & Countryside Regional Legal Intelligence**
 
 ---
 
@@ -240,3 +241,18 @@ This document provides a transparent, chronological record of every architectura
   4. Verified stateful mid-interview interruption handling: user questions are answered contextually before seamlessly resuming the exact pending step.
 * **The Why**:
   Produces court-grade civil plaints and petitions ready for immediate filing in Indian District Courts, High Courts, and Tribunals that survive Order 7 Rule 11 rejection scrutiny.
+
+---
+
+### [ADR-016] Bilingual Query Reformulation & Countryside Regional Legal Intelligence
+* **Component**: `backend/layer1_understanding.py` (`reformulate_query`), `backend/layer3_reasoning.py`, `backend/api_server.py`
+* **Date**: 2026-08-28
+* **Status**: ✅ Implemented & Verified
+* **The Problem**:
+  When users submitted complex countryside agricultural or land disputes in regional Hindi/Hinglish (e.g. *encroachment of ancestral agricultural land, destruction of standing sugarcane crop, lathi assault by local dabangs, and police refusal to register an FIR*), Layer 1 left the raw Hindi text intact in `hyde_paragraph`. Because ChromaDB uses English sentence embeddings, cross-lingual vector search failed (similarity score `-4.03`), causing the model to return *"I do not have enough specific legal context"*.
+* **The Decision & Change**:
+  1. Upgraded `reformulate_query` to detect Devanagari characters (`[\u0900-\u097F]`) and translate the factual narrative into high-density English statutory legal embeddings (`agricultural land encroachment, criminal trespass BNS 329 IPC 447, voluntarily causing hurt BNS 115 IPC 323, Section 145/147 CrPC, Section 173 BNSS 154 CrPC, Order 39 CPC injunction`).
+  2. Added Hindi personal grievance indicators (*हमारे, दबंग, मारपीट, कब्जा, धमकी, थाने, फसल, मेड़*) to `_is_direct_legal_query`.
+  3. Enforced the **Language Matching Protocol** in Layer 3: when queries are received in Hindi/Hinglish, SaulGPT generates authoritative, empathetic, court-accurate responses in fluent Hindi (Devanagari).
+* **The Why**:
+  Democratizes legal intelligence across India, enabling rural citizens and non-English speakers to receive senior-counsel-level guidance and statutory remedies in their native language.

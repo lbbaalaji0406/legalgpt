@@ -65,6 +65,7 @@ Social media, ombudsman, HR escalation, CPGRAMS/1915, MLA/councillor, media, cre
 - Grievances with info: populate swot_analysis + options + limitation/jurisdiction.
 - Grievances missing info: is_intake_needed=true, clarifying_question, swot=null, options=null.
 - Allow_explanation_trigger: always true for grievances with options.
+- Language Protocol: If user query is in Hindi / Hinglish or regional language, output clarifying_question, titles, descriptions, and SWOT in natural, fluent Hindi (Devanagari) matching their language!
 
 ## Output Schema
 

@@ -140,9 +140,27 @@ def reformulate_query(query: str) -> dict:
           - hyde_paragraph: str — full sentence(s) for ChromaDB embedding
           - keyword_synonyms: str — clean keywords for BM25 tokenization
     """
+    has_devanagari = bool(re.search(r'[\u0900-\u097F]', query))
     is_vague = _is_vague_query(query)
 
-    if is_vague:
+    if has_devanagari:
+        template = """You are an Indian legal search query optimizer. Output ONLY valid JSON with two fields.
+
+Analyze this user query about Indian law provided in Hindi/Hinglish/regional language.
+
+Generate:
+{{
+  "hyde_paragraph": "Translate and summarize the core factual dispute and legal questions into 2-3 formal English textbook sentences that match Indian statutory law. Mention applicable legal concepts (e.g. agricultural land encroachment, criminal trespass BNS 329 IPC 447, voluntarily causing hurt BNS 115 IPC 323, criminal intimidation BNS 351 IPC 506, refusal to register FIR Section 173 BNSS 154 CrPC, application before Magistrate Section 175(3) BNSS 156(3) CrPC, temporary injunction stay order Order 39 CPC).",
+  "keyword_synonyms": "Extract 6-10 key English legal search terms, space-separated. No stop words."
+}}
+
+CRITICAL:
+- hyde_paragraph must be strictly in formal English so it matches English statutory embeddings in ChromaDB.
+- keyword_synonyms must contain NO stop words.
+
+User Query: {query}
+JSON:"""
+    elif is_vague:
         template = """You are a legal search query optimizer. Output ONLY valid JSON with two fields.
 
 Analyze this user query about Indian law.

@@ -471,11 +471,23 @@ def _detect_crisis(query: str) -> str | None:
 def _is_direct_legal_query(query: str) -> bool:
     """Check if query is a direct legal concept/procedure question that should skip Discovery."""
     query_lower = query.strip().lower()
+    
+    # Check for personal grievance indicators in Hindi/Hinglish
+    _HINDI_GRIEVANCE_PATTERNS = [
+        r"(हमारे|मेरी|मेरा|मेरे|हमारा|हमे|हमें|मुझको|मुझे)",
+        r"(दबंग|मारपीट|कब्जा|कब्ज़ा|धमकी|तोड़कर|बर्बाद|लड़ाई|झगड़ा|लाठी|पिस्तौल)",
+        r"(थाने|पुलिस|दरोगा|चौकी|रिपोर्ट|एफआईआर|शिकायत)",
+        r"(खेत|जमीन|ज़मीन|फसल|मेड़|पुश्तैनी|हिस्सा|बंटवारा|तहसील|गांव)",
+        r"(किराया|मालिक|मकान|सैलरी|वेतन|नौकरी|धोखा|पैसे)",
+    ]
+    if any(re.search(p, query_lower) for p in _HINDI_GRIEVANCE_PATTERNS):
+        return False
+
     # Explicit legal patterns (acts, sections, generic procedures)
     if any(re.search(p, query_lower) for p in _DIRECT_LEGAL_PATTERNS):
         # If the user is describing their personal situation ("my landlord", "my salary", "i was fired"),
         # it is a personal dispute that must go to Discovery & Strategy (Phase 1 & 2)!
-        if re.search(r"\b(my|i was|me|mine|we|our)\b", query_lower) and any(re.search(p, query_lower) for p in _SITUATIONAL_LEGAL_ANCHORS):
+        if re.search(r"\b(my|i was|me|mine|we|our|my father|our village|my land)\b", query_lower) or any(re.search(p, query_lower) for p in _SITUATIONAL_LEGAL_ANCHORS):
             return False
         return True
     return False
