@@ -23,25 +23,25 @@ import "./UrgencyBanner.css";
 
 export default function UrgencyBanner({ meta }) {
   // Extract urgency data from meta
-  const urgencyFlags = meta?.urgency_flags || [];
-  const limitationDays = meta?.limitation_days;
+  const urgencyFlags = Array.isArray(meta?.urgency_flags) ? meta.urgency_flags : [];
+  const limitationDays = typeof meta?.limitation_days === "number" && !isNaN(meta.limitation_days) ? meta.limitation_days : null;
   const limitationExpiry = meta?.limitation_expiry;
   const urgencyReason = meta?.urgency_reason;
   const scrutiny = meta?.scrutiny;
 
   // Determine if we should show the banner
-  const hasUrgency = urgencyFlags?.length > 0
-    || (limitationDays !== undefined && limitationDays < 90)
-    || (scrutiny?.severity === "serious" && scrutiny?.limitation_info);
+  const hasUrgency = urgencyFlags.length > 0
+    || (limitationDays !== null && limitationDays < 90)
+    || (scrutiny?.severity === "serious" && Boolean(scrutiny?.limitation_info));
 
   if (!hasUrgency) return null;
 
   // Calculate urgency level
-  const isCritical = (limitationDays !== undefined && limitationDays < 30)
+  const isCritical = (limitationDays !== null && limitationDays < 30)
     || urgencyFlags.includes("immediate_filing_required")
     || urgencyFlags.includes("bail_hearing_pending");
 
-  const isWarning = (limitationDays !== undefined && limitationDays < 90 && limitationDays >= 30)
+  const isWarning = (limitationDays !== null && limitationDays < 90 && limitationDays >= 30)
     || urgencyFlags.includes("notice_period_expiring")
     || urgencyFlags.includes("evidence_deadline");
 
@@ -51,7 +51,7 @@ export default function UrgencyBanner({ meta }) {
     : "⚠️ LIMITATION ALERT";
 
   const message = urgencyReason || (
-    limitationDays !== undefined
+    limitationDays !== null
       ? `Only **${limitationDays} days** remaining before this claim becomes time-barred under the Limitation Act, 1963.`
       : "Action required within the statutory limitation period."
   );
