@@ -17,6 +17,7 @@ This document provides a transparent, chronological record of every architectura
 9. **[ADR-009] Document Export: Browser-Side Multi-Family Court-Grade PDF Engine**
 10. **[ADR-010] Interview Drafter: Eliminating Numeric Field Interruption Loops**
 11. **[ADR-011] UI State Machine: Dynamic Session Scoping & Multi-Conversation Switching**
+12. **[ADR-012] Strategy Engine: Universal Path Choice Resolution & Seamless Triage Execution**
 
 ---
 
@@ -174,3 +175,18 @@ This document provides a transparent, chronological record of every architectura
   4. Added a dedicated top-header `+` (New Chat) quick button alongside the `☰` toggle for immediate 1-click access.
 * **The Why**:
   Guarantees clean, isolated conversation histories and instant switching between simultaneous legal consultations without state bleeding.
+
+---
+
+### [ADR-012] Strategy Engine: Universal Path Choice Resolution & Seamless Triage Execution
+* **Component**: `backend/api_server.py` (`_resolve_triage_choice`, `_handle_strategy_choice`)
+* **Date**: 2026-08-28
+* **Status**: ✅ Implemented & Verified
+* **The Problem**:
+  When a user reloaded a conversation from chat history or clicked a strategy option card (e.g. *"Path A: Issue Legal Notice (RPAD)"*, *"Path B: Approach Labour Commissioner"*, *"Path C: File Summary Suit under Order 37 CPC"*), the in-memory triage mode was `"idle"`. Because the strategy matcher was only executed when `current_mode == "strategy"`, clicking any option was treated as a brand new legal query, causing the bot to repeat its initial empathy response instead of launching the drafting interview or generating the procedural roadmap.
+* **The Decision & Change**:
+  1. Implemented `_handle_strategy_choice` to unify the execution of both drafting routes (`Path A` / Legal Notices) and procedural filing guides (`Path B`/`Path C`/`Path D`).
+  2. Added a **Universal Strategy Intercept** at the top of the pipeline that catches path clicks across all sessions and states, automatically recovering the underlying grievance from conversation history if needed.
+  3. Upgraded `_resolve_triage_choice` with regex pattern matching for `"Path A"`, `"Path B"`, `"Option 1"`, `"Option 2"`, numbers (`"1"`, `"2"`), and descriptive action titles.
+* **The Why**:
+  Guarantees that clicking any strategic path card or typing a path choice instantly launches the corresponding action (document draft or statutory filing roadmap) across new, existing, or reloaded conversations.

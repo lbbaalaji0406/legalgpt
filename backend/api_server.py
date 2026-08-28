@@ -547,30 +547,35 @@ def _is_rejection(query: str) -> bool:
     return any(p in q for p in _REJECTION_PATTERNS)
 
 
-def _resolve_triage_choice(query: str, options: list) -> str:
+def _resolve_triage_choice(query: str, options: list = None) -> Optional[str]:
     """
     Check if user's query matches a triage option label, title, or id.
     Returns the option id if matched, None otherwise.
     """
     q = query.strip().lower()
-    for opt in options:
-        opt_id = opt.get("id", "").lower()
-        opt_label = opt.get("label", "").lower()
-        opt_title = opt.get("title", "").lower()
-        if q == opt_id or (opt_id and opt_id in q):
-            return opt.get("id")
-        if opt_label and (q == opt_label or q in opt_label or opt_label in q):
-            return opt.get("id")
-        if opt_title and (q == opt_title or q in opt_title or opt_title in q):
-            return opt.get("id")
-    # Fuzzy match on path letters
-    if "path a" in q or "path_a" in q or "legal notice" in q or "notice" in q:
+    if options:
+        for opt in options:
+            opt_id = opt.get("id", "").lower()
+            opt_label = opt.get("label", "").lower()
+            opt_title = opt.get("title", "").lower()
+            if q == opt_id or (opt_id and opt_id in q):
+                return opt.get("id")
+            if opt_label and (q == opt_label or q in opt_label or opt_label in q):
+                return opt.get("id")
+            if opt_title and (q == opt_title or q in opt_title or opt_title in q):
+                return opt.get("id")
+
+    # Match path A / Notice / Option 1
+    if re.search(r'\b(path\s*a|path_a|option\s*1)\b', q) or (q in ("1", "a", "path a", "option 1")) or "legal notice" in q or "draft notice" in q or "issue notice" in q or "issue legal notice" in q:
         return "path_a"
-    if "path b" in q or "path_b" in q or "lawsuit" in q or "court" in q or "sue" in q:
+    # Match path B / Lawsuit / Labour Commissioner / Court / Option 2
+    if re.search(r'\b(path\s*b|path_b|option\s*2)\b', q) or (q in ("2", "b", "path b", "option 2")) or "labour commissioner" in q or "labor commissioner" in q or "lawsuit" in q or "court" in q or "sue" in q:
         return "path_b"
-    if "path c" in q or "path_c" in q or "regulatory" in q or "police" in q or "complaint" in q:
+    # Match path C / Summary Suit / Regulatory / Police / Option 3
+    if re.search(r'\b(path\s*c|path_c|option\s*3)\b', q) or (q in ("3", "c", "path c", "option 3")) or "summary suit" in q or "order 37" in q or "police" in q or "complaint" in q:
         return "path_c"
-    if "path d" in q or "path_d" in q or "mediation" in q or "settle" in q or "settlement" in q:
+    # Match path D / Mediation / Settlement / Option 4
+    if re.search(r'\b(path\s*d|path_d|option\s*4)\b', q) or (q in ("4", "d", "path d", "option 4")) or "mediation" in q or "settle" in q or "settlement" in q:
         return "path_d"
     return None
 
@@ -612,6 +617,84 @@ def _interview_response(state, response_text):
         "struck_down_warnings": [],
         "elapsed_seconds":      0,
     }
+
+
+async def _handle_strategy_choice(choice: str, query: str, session_id: str, triage_state: dict, user_id, conv_id, state, request):
+    """Handles execution of user-selected strategy path (Drafting vs Procedural Roadmap)."""
+    triage_state["chosen_path"] = choice
+    triage_state["is_triaged"] = True
+    mode = _get_route_to(choice, triage_state.get("options_shown", []))
+
+    # If user selected legal notice / drafting path
+    if "notice" in query.lower() or "draft" in query.lower() or choice == "path_a" or mode == "document":
+        orig_q = triage_state.get("original_query")
+        if not orig_q or len(orig_q) < 10:
+            history = get_session_history(session_id)
+            user_turns = [t.get("content", "") for t in history if t.get("role") == "user" and len(t.get("content", "")) > 15]
+            if not user_turns and conv_id:
+                msgs = get_messages(conv_id)
+                user_turns = [m.get("content", "") for m in msgs if m.get("role") == "user" and len(m.get("content", "")) > 15]
+            orig_q = user_turns[0] if user_turns else query
+
+        doc_type = detect_document_type(orig_q) or triage_state.get("doc_type") or "legal_notice"
+        doc_family = map_doc_type_to_family(doc_type) or triage_state.get("doc_family") or "letter"
+
+        fields = generate_field_questions(
+            doc_family, doc_type,
+            orig_q
+        )
+        display_name = DOCUMENT_SCHEMAS.get(doc_type, {}).get("display_name",
+                       doc_type.replace("_", " ").title() if doc_type else "Legal Notice")
+        if not fields:
+            fields = [
+                {"key": "sender_name", "label": "Your Full Name & Address", "example": "Rahul Sharma, Flat 101..."},
+                {"key": "recipient_name", "label": "Opponent/Employer/Landlord Full Name & Address", "example": "XYZ Corp, Bangalore..."},
+                {"key": "demand_details", "label": "Specific Demand & Amount", "example": "Immediate payment of Rs. 3,50,000 unpaid salary for 3 months"},
+                {"key": "compliance_days", "label": "Deadline to comply (e.g. 7 or 15 days)", "example": "15 days"}
+            ]
+
+        question = state.start_interview(
+            doc_type,
+            problem_description=orig_q,
+            doc_family=doc_family,
+            dynamic_fields=fields
+        )
+        total = len(fields)
+        intro = (
+            f"I'll draft a formal **{display_name}** for you.\n\n"
+            f"I need **{total} pieces of information** to ground the legal notice. "
+            f"Let's go through them one at a time.\n\n"
+            f"{question}"
+        )
+        return _save_and_return(_interview_response(state, intro), user_id, conv_id)
+
+    # Otherwise, it's a procedural path (Labour Commissioner, Summary Suit, Police Complaint, Consumer Forum)
+    orig_q = triage_state.get("original_query")
+    if not orig_q or len(orig_q) < 10:
+        history = get_session_history(session_id)
+        user_turns = [t.get("content", "") for t in history if t.get("role") == "user" and len(t.get("content", "")) > 15]
+        if not user_turns and conv_id:
+            msgs = get_messages(conv_id)
+            user_turns = [m.get("content", "") for m in msgs if m.get("role") == "user" and len(m.get("content", "")) > 15]
+        orig_q = user_turns[0] if user_turns else query
+
+    triage_state["current_mode"] = "idle"
+    roadmap_query = (
+        f"Client Grievance: {orig_q}\n"
+        f"Chosen Legal Action: {query}\n\n"
+        f"Provide a comprehensive, authoritative Step-by-Step Procedural Roadmap for this chosen legal action under Indian Law. "
+        f"Include: (1) Competent Forum / Court Jurisdiction, (2) Statutory Limitation Period, "
+        f"(3) Mandatory Documents & Evidence Checklist, (4) Exact Filing Process & Court Fee, and (5) Next Steps."
+    )
+    result = run_saulgpt_pipeline(
+        user_query=roadmap_query,
+        session_id=session_id,
+        mode="pathfinder"
+    )
+    if session_id:
+        _populate_frontend_widgets(result, session_id)
+    result["interview_active"] = False
+    return _save_and_return(result, user_id, conv_id)
 
 
 # ── Confirmation detection patterns ──
@@ -1231,6 +1314,11 @@ async def chat_endpoint(
                 triage_state["current_mode"] = "idle"
                 _populate_frontend_widgets(irac_result, session_id)
                 return _save_and_return(irac_result, user_id, conv_id)
+
+            # Universal Strategy Path Selection check (handles direct clicks, loaded chats, or idle state)
+            path_choice = _resolve_triage_choice(query, triage_state.get("options_shown", []))
+            if path_choice and (current_mode in ("idle", "strategy") or "path" in query.lower() or "option" in query.lower() or "notice" in query.lower() or "labour" in query.lower() or "court" in query.lower() or "suit" in query.lower()):
+                return await _handle_strategy_choice(path_choice, query, session_id, triage_state, user_id, conv_id, state, request)
 
             # ═══════════════════════════════════════════════
             # PHASE 0: INITIAL CLASSIFICATION (idle)
