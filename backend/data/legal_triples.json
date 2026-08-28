@@ -1004,5 +1004,40 @@
     "tail": "Violation_Dark_Patterns_Guidelines_2023",
     "desc": "The CCPA Commissioner has the authority to impose penalties of up to Rs. 10 Lakhs for violations of the Dark Patterns Guidelines.",
     "weight": 0.88
+  },
+  {
+    "head": "DPDP_Act_2023_S33",
+    "relation": "empowers",
+    "tail": "Data_Protection_Board_of_India",
+    "desc": "Section 33 of the DPDP Act 2023 empowers the Data Protection Board of India to impose financial penalties on Data Fiduciaries.",
+    "weight": 0.95
+  },
+  {
+    "head": "DPDP_Act_2023_S33",
+    "relation": "prescribes_penalty_for",
+    "tail": "Failure_to_take_reasonable_security_safe",
+    "desc": "The section prescribes penalties up to Rs. 250 Crores for Data Fiduciaries who fail to take reasonable security safeguards to prevent personal data breaches.",
+    "weight": 0.92
+  },
+  {
+    "head": "DPDP_Act_2023_S33",
+    "relation": "escalate_to_SP",
+    "tail": "TDSAT",
+    "desc": "Appeals against orders passed by the Data Protection Board under this section lie before the Telecom Disputes Settlement and Appellate Tribunal (TDSAT).",
+    "weight": 0.9
+  },
+  {
+    "head": "DPDP_Act_2023_S33",
+    "relation": "requires_filing_within",
+    "tail": "60_days",
+    "desc": "Any appeal against the Board's order must be filed within 60 days of the order being passed.",
+    "weight": 0.88
+  },
+  {
+    "head": "DPDP_Act_2023_S33",
+    "relation": "sets_penalty_cap_at",
+    "tail": "250_Crores_INR",
+    "desc": "The maximum financial penalty that can be imposed under this section for specified violations is 250 Crores Rupees.",
+    "weight": 0.88
   }
 ]

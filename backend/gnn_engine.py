@@ -70,18 +70,26 @@ class RelationalGNNEngine(nn.Module):
         self.entity_embeddings = nn.Embedding(num_entities, self.embedding_dim)
         self.relation_embeddings = nn.Embedding(num_relations, self.embedding_dim)
 
+        nn.init.xavier_uniform_(self.entity_embeddings.weight)
+        nn.init.xavier_uniform_(self.relation_embeddings.weight)
+
         weights_path = os.path.join(os.path.dirname(__file__), "data", "gnn_weights.pt")
         if os.path.exists(weights_path):
             try:
                 ckpt = torch.load(weights_path)
-                self.entity_embeddings.load_state_dict(ckpt["entity_embeddings"])
-                self.relation_embeddings.load_state_dict(ckpt["relation_embeddings"])
-                print("[GNN Engine] Loaded pre-trained relational embeddings (gnn_weights.pt).")
+                saved_e = ckpt["entity_embeddings"]["weight"]
+                saved_r = ckpt["relation_embeddings"]["weight"]
+                
+                # Copy overlapping entity weights
+                min_e = min(num_entities, saved_e.shape[0])
+                self.entity_embeddings.weight.data[:min_e] = saved_e[:min_e]
+                
+                # Copy overlapping relation weights
+                min_r = min(num_relations, saved_r.shape[0])
+                self.relation_embeddings.weight.data[:min_r] = saved_r[:min_r]
+                print(f"[GNN Engine] Loaded pre-trained embeddings ({min_e}/{num_entities} entities, {min_r}/{num_relations} relations preserved).")
             except Exception as e:
                 print(f"[GNN Engine] Initialized with Xavier uniform ({e}).")
-        else:
-            nn.init.xavier_uniform_(self.entity_embeddings.weight)
-            nn.init.xavier_uniform_(self.relation_embeddings.weight)
 
     def _load_triples(self):
         if os.path.exists(TRIPLES_PATH):
