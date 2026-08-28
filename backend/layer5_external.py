@@ -441,8 +441,13 @@ def fallback_web_search(query: str) -> list:
 
         print(f"[Layer 5] [Web] Web fallback found {len(mock_chunks)} results.")
         
-        # ── CONTINUOUS LEARNING: Auto-ingest rich web results into ChromaDB ──
+        # ── CONTINUOUS LEARNING: Auto-ingest into ChromaDB & Expand GNN Triples ──
         _auto_ingest_web_chunks_into_chromadb(mock_chunks)
+        try:
+            from auto_triplifier import auto_expand_knowledge_graph_from_web
+            auto_expand_knowledge_graph_from_web(mock_chunks)
+        except Exception as e:
+            print(f"[Layer 5] Auto-triplifier trigger error: {e}")
         
         return mock_chunks
 

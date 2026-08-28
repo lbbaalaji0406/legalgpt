@@ -976,5 +976,33 @@
     "relation": "struck_down_right_to_know",
     "tail": "ADR_v_UOI_2024",
     "detail": "Unconstitutional under Article 19(1)(a) right to information"
+  },
+  {
+    "head": "Dark_Patterns_Guidelines_2023",
+    "relation": "issued_under",
+    "tail": "Section_18_Consumer_Protection_Act_2019",
+    "desc": "The Central Consumer Protection Authority issued the mandatory guidelines for preventing dark patterns under the statutory authority of Section 18 of the Consumer Protection Act, 2019.",
+    "weight": 0.95
+  },
+  {
+    "head": "Dark_Patterns_Guidelines_2023",
+    "relation": "prohibits",
+    "tail": "Deceptive_Dark_Patterns",
+    "desc": "The guidelines strictly prohibit thirteen specific deceptive practices, including False Urgency, Basket Sneaking, Forced Action, and Drip Pricing, by e-commerce platforms.",
+    "weight": 0.92
+  },
+  {
+    "head": "Violation_Dark_Patterns_Guidelines_2023",
+    "relation": "criminal_offence",
+    "tail": "Section_21_Consumer_Protection_Act_2019",
+    "desc": "Violations of the Dark Patterns Guidelines are subject to penalties under Section 21 of the Consumer Protection Act, 2019.",
+    "weight": 0.9
+  },
+  {
+    "head": "CCPA_Commissioner",
+    "relation": "imposes_penalty_for",
+    "tail": "Violation_Dark_Patterns_Guidelines_2023",
+    "desc": "The CCPA Commissioner has the authority to impose penalties of up to Rs. 10 Lakhs for violations of the Dark Patterns Guidelines.",
+    "weight": 0.88
   }
 ]

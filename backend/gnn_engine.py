@@ -194,6 +194,10 @@ class RelationalGNNEngine(nn.Module):
 # Singleton Instance
 gnn_engine = RelationalGNNEngine()
 
+def get_gnn_engine() -> RelationalGNNEngine:
+    global gnn_engine
+    return gnn_engine
+
 if __name__ == "__main__":
     print(f"[GNN] Total Indexed Entities: {len(gnn_engine.entity2id)}")
     print(f"[GNN] Total Indexed Relations: {len(gnn_engine.relation2id)}")
