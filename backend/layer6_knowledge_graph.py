@@ -371,16 +371,11 @@ class LegalKnowledgeGraph:
                 }
         return {}
 
-    def expand_context(self, layer2_results: List[Dict]) -> Dict:
-        insights = {
-            "act_replacements":       [],
-            "section_mappings":       [],
-            "constitutional_context": [],
-            "struck_down_warnings":   [],
-            "procedure_chains":       []
-        }
+    def expand_context(self, layer2_results: List[Dict]) -> List[str]:
+        flat_insights = []
         seen_acts     = set()
         seen_sections = set()
+        seed_nodes    = []
 
         for res in layer2_results:
             raw_act     = res.get("act_name", "")
@@ -390,38 +385,42 @@ class LegalKnowledgeGraph:
 
             if canonical_act not in seen_acts:
                 seen_acts.add(canonical_act)
+                seed_nodes.append(canonical_act)
                 repl = self.get_act_replacement(canonical_act)
                 if repl:
-                    insights["act_replacements"].append(
-                        f"⚠️  LAW UPDATE: {repl['old_act']} has been replaced "
+                    flat_insights.append(
+                        f"[LAW UPDATE] {repl['old_act']} has been replaced "
                         f"by {repl['new_act']} (effective {repl['date']}). "
                         f"Please refer to current legislation."
                     )
                 const_ctx = self.get_constitutional_context(canonical_act)
-                insights["constitutional_context"].extend(const_ctx)
+                flat_insights.extend(const_ctx)
 
             if section_node not in seen_sections:
                 seen_sections.add(section_node)
+                seed_nodes.append(section_node)
                 struck = self.get_struck_down_info(section_node)
                 if struck:
-                    insights["struck_down_warnings"].append(
-                        f"🚨 WARNING: {struck['section']} is {struck['status']} "
+                    flat_insights.append(
+                        f"[STRUCK DOWN WARNING] {struck['section']} is {struck['status']} "
                         f"in {struck['case']}. It is no longer valid law."
                     )
                 related = self.get_related_sections(canonical_act, raw_section)
                 for rel in related:
-                    insights["section_mappings"].append(
+                    flat_insights.append(
                         f"Related: {rel['source']} {rel['relation']} {rel['target']}"
                     )
 
-        return {
-            "insights":        insights,
-            "has_warnings":    bool(insights["act_replacements"] or
-                                   insights["struck_down_warnings"]),
-            "has_context":     bool(insights["constitutional_context"] or
-                                   insights["section_mappings"]),
-            "total_insights":  sum(len(v) for v in insights.values())
-        }
+        # ─── GNN MULTI-HOP PATHWAY DISCOVERY ───
+        try:
+            from gnn_engine import gnn_engine
+            gnn_prompt = gnn_engine.format_pathways_for_prompt(seed_nodes)
+            if gnn_prompt:
+                flat_insights.append(gnn_prompt)
+        except Exception as e:
+            print(f"[Graph] GNN pathway discovery note: {e}")
+
+        return flat_insights
 
 # Singleton instance
 legal_graph = LegalKnowledgeGraph()

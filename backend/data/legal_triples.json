@@ -1,0 +1,980 @@
+[
+  {
+    "head": "IPC",
+    "relation": "replaced_by",
+    "tail": "BNS",
+    "detail": "Effective July 1, 2024"
+  },
+  {
+    "head": "CrPC",
+    "relation": "replaced_by",
+    "tail": "BNSS",
+    "detail": "Effective July 1, 2024"
+  },
+  {
+    "head": "IEA",
+    "relation": "replaced_by",
+    "tail": "BSA",
+    "detail": "Effective July 1, 2024"
+  },
+  {
+    "head": "Consumer_Protection_Act_1986",
+    "relation": "replaced_by",
+    "tail": "Consumer_Protection_Act_2019",
+    "detail": "Replaced"
+  },
+  {
+    "head": "Companies_Act_1956",
+    "relation": "replaced_by",
+    "tail": "Companies_Act_2013",
+    "detail": "Replaced"
+  },
+  {
+    "head": "Arbitration_Act_1940",
+    "relation": "replaced_by",
+    "tail": "Arbitration_and_Conciliation_Act_1996",
+    "detail": "Replaced"
+  },
+  {
+    "head": "FERA_1973",
+    "relation": "replaced_by",
+    "tail": "FEMA_1999",
+    "detail": "Replaced"
+  },
+  {
+    "head": "MRTP_Act_1969",
+    "relation": "replaced_by",
+    "tail": "Competition_Act_2002",
+    "detail": "Replaced"
+  },
+  {
+    "head": "Constitution",
+    "relation": "overrides",
+    "tail": "IPC",
+    "detail": "Supreme Lex Loci"
+  },
+  {
+    "head": "Constitution",
+    "relation": "overrides",
+    "tail": "CrPC",
+    "detail": "Supreme Lex Loci"
+  },
+  {
+    "head": "Constitution",
+    "relation": "overrides",
+    "tail": "BNS",
+    "detail": "Supreme Lex Loci"
+  },
+  {
+    "head": "Constitution",
+    "relation": "overrides",
+    "tail": "BNSS",
+    "detail": "Supreme Lex Loci"
+  },
+  {
+    "head": "Constitution",
+    "relation": "overrides",
+    "tail": "CPC",
+    "detail": "Supreme Lex Loci"
+  },
+  {
+    "head": "Article_14",
+    "relation": "guarantees",
+    "tail": "Equal_Protection",
+    "detail": "Equality before law"
+  },
+  {
+    "head": "Article_19_1_a",
+    "relation": "guarantees",
+    "tail": "Free_Speech",
+    "detail": "Freedom of Speech and Expression"
+  },
+  {
+    "head": "Free_Speech",
+    "relation": "subject_to",
+    "tail": "Article_19_2",
+    "detail": "Reasonable restrictions"
+  },
+  {
+    "head": "Article_20_1",
+    "relation": "guarantees",
+    "tail": "No_Ex_Post_Facto_Law",
+    "detail": "Protection against retroactive criminal law"
+  },
+  {
+    "head": "Article_20_2",
+    "relation": "guarantees",
+    "tail": "No_Double_Jeopardy",
+    "detail": "Protection against double trial"
+  },
+  {
+    "head": "Article_20_3",
+    "relation": "guarantees",
+    "tail": "Right_Against_Self_Incrimination",
+    "detail": "Cannot be compelled to be witness against self"
+  },
+  {
+    "head": "Article_21",
+    "relation": "guarantees",
+    "tail": "Right_to_Life_and_Liberty",
+    "detail": "Fundamental right to life"
+  },
+  {
+    "head": "Article_21",
+    "relation": "encompasses",
+    "tail": "Right_to_Fair_Trial",
+    "detail": "Due process of law"
+  },
+  {
+    "head": "Article_21",
+    "relation": "encompasses",
+    "tail": "Right_to_Privacy",
+    "detail": "Puttaswamy 2017"
+  },
+  {
+    "head": "Article_21",
+    "relation": "overrides",
+    "tail": "CrPC_41",
+    "detail": "Arrest powers must conform to Art 21"
+  },
+  {
+    "head": "Article_21",
+    "relation": "overrides",
+    "tail": "BNSS_35",
+    "detail": "Arrest powers subject to Art 21"
+  },
+  {
+    "head": "Article_22",
+    "relation": "guarantees",
+    "tail": "Arrest_Safeguards",
+    "detail": "Right to consult lawyer & 24hr magistrate production"
+  },
+  {
+    "head": "Article_32",
+    "relation": "empowers",
+    "tail": "Supreme_Court_Writs",
+    "detail": "Constitutional Remedies before SC"
+  },
+  {
+    "head": "Article_226",
+    "relation": "empowers",
+    "tail": "High_Court_Writs",
+    "detail": "Writ jurisdiction before High Court"
+  },
+  {
+    "head": "Article_300A",
+    "relation": "protects",
+    "tail": "Right_to_Property",
+    "detail": "No deprivation of property without authority of law"
+  },
+  {
+    "head": "IPC_302",
+    "relation": "replaced_by",
+    "tail": "BNS_103",
+    "detail": "Murder punishment"
+  },
+  {
+    "head": "IPC_302",
+    "relation": "requires_definition_from",
+    "tail": "IPC_300",
+    "detail": "Murder definition"
+  },
+  {
+    "head": "IPC_302",
+    "relation": "distinguished_from",
+    "tail": "IPC_299",
+    "detail": "Culpable homicide not amounting to murder"
+  },
+  {
+    "head": "IPC_302",
+    "relation": "lesser_offence",
+    "tail": "IPC_304",
+    "detail": "Punishment for culpable homicide"
+  },
+  {
+    "head": "BNS_103",
+    "relation": "requires_definition_from",
+    "tail": "BNS_101",
+    "detail": "Murder defined in BNS"
+  },
+  {
+    "head": "IPC_378",
+    "relation": "replaced_by",
+    "tail": "BNS_303",
+    "detail": "Theft definition"
+  },
+  {
+    "head": "IPC_379",
+    "relation": "replaced_by",
+    "tail": "BNS_303_2",
+    "detail": "Theft punishment"
+  },
+  {
+    "head": "IPC_383",
+    "relation": "replaced_by",
+    "tail": "BNS_308",
+    "detail": "Extortion definition"
+  },
+  {
+    "head": "IPC_384",
+    "relation": "replaced_by",
+    "tail": "BNS_308_2",
+    "detail": "Extortion punishment"
+  },
+  {
+    "head": "IPC_390",
+    "relation": "replaced_by",
+    "tail": "BNS_309",
+    "detail": "Robbery definition"
+  },
+  {
+    "head": "IPC_392",
+    "relation": "replaced_by",
+    "tail": "BNS_309_4",
+    "detail": "Robbery punishment"
+  },
+  {
+    "head": "IPC_415",
+    "relation": "defines",
+    "tail": "IPC_420",
+    "detail": "Cheating definition to punishment"
+  },
+  {
+    "head": "IPC_420",
+    "relation": "replaced_by",
+    "tail": "BNS_318",
+    "detail": "Cheating and dishonestly inducing delivery"
+  },
+  {
+    "head": "IPC_405",
+    "relation": "defines",
+    "tail": "IPC_406",
+    "detail": "Criminal breach of trust"
+  },
+  {
+    "head": "IPC_406",
+    "relation": "replaced_by",
+    "tail": "BNS_316",
+    "detail": "Punishment for criminal breach of trust"
+  },
+  {
+    "head": "IPC_463",
+    "relation": "defines",
+    "tail": "IPC_465",
+    "detail": "Forgery definition to punishment"
+  },
+  {
+    "head": "IPC_465",
+    "relation": "replaced_by",
+    "tail": "BNS_336",
+    "detail": "Punishment for forgery"
+  },
+  {
+    "head": "IPC_468",
+    "relation": "replaced_by",
+    "tail": "BNS_338",
+    "detail": "Forgery for purpose of cheating"
+  },
+  {
+    "head": "IPC_471",
+    "relation": "replaced_by",
+    "tail": "BNS_340",
+    "detail": "Using forged document as genuine"
+  },
+  {
+    "head": "IPC_319",
+    "relation": "defines",
+    "tail": "IPC_323",
+    "detail": "Simple hurt"
+  },
+  {
+    "head": "IPC_323",
+    "relation": "replaced_by",
+    "tail": "BNS_115",
+    "detail": "Punishment for voluntarily causing hurt"
+  },
+  {
+    "head": "IPC_324",
+    "relation": "replaced_by",
+    "tail": "BNS_118",
+    "detail": "Voluntarily causing hurt by dangerous weapon"
+  },
+  {
+    "head": "IPC_320",
+    "relation": "defines",
+    "tail": "IPC_325",
+    "detail": "Grievous hurt"
+  },
+  {
+    "head": "IPC_325",
+    "relation": "replaced_by",
+    "tail": "BNS_117",
+    "detail": "Punishment for grievous hurt"
+  },
+  {
+    "head": "IPC_441",
+    "relation": "defines",
+    "tail": "IPC_447",
+    "detail": "Criminal trespass"
+  },
+  {
+    "head": "IPC_447",
+    "relation": "replaced_by",
+    "tail": "BNS_329",
+    "detail": "Punishment for criminal trespass"
+  },
+  {
+    "head": "IPC_425",
+    "relation": "defines",
+    "tail": "IPC_427",
+    "detail": "Mischief and property damage"
+  },
+  {
+    "head": "IPC_427",
+    "relation": "replaced_by",
+    "tail": "BNS_324",
+    "detail": "Punishment for mischief"
+  },
+  {
+    "head": "IPC_503",
+    "relation": "defines",
+    "tail": "IPC_506",
+    "detail": "Criminal intimidation"
+  },
+  {
+    "head": "IPC_506",
+    "relation": "replaced_by",
+    "tail": "BNS_351",
+    "detail": "Punishment for criminal intimidation"
+  },
+  {
+    "head": "IPC_498A",
+    "relation": "replaced_by",
+    "tail": "BNS_85",
+    "detail": "Cruelty by husband or relatives"
+  },
+  {
+    "head": "IPC_498A",
+    "relation": "replaced_by",
+    "tail": "BNS_86",
+    "detail": "Cruelty definition in BNS"
+  },
+  {
+    "head": "IPC_498A",
+    "relation": "governed_by",
+    "tail": "Arnesh_Kumar_2014",
+    "detail": "Mandatory S.41A Notice prior to arrest"
+  },
+  {
+    "head": "IPC_304B",
+    "relation": "replaced_by",
+    "tail": "BNS_80",
+    "detail": "Dowry death"
+  },
+  {
+    "head": "IPC_354",
+    "relation": "replaced_by",
+    "tail": "BNS_74",
+    "detail": "Assault to outrage modesty"
+  },
+  {
+    "head": "IPC_354D",
+    "relation": "replaced_by",
+    "tail": "BNS_78",
+    "detail": "Stalking"
+  },
+  {
+    "head": "IPC_375",
+    "relation": "replaced_by",
+    "tail": "BNS_63",
+    "detail": "Rape definition"
+  },
+  {
+    "head": "IPC_376",
+    "relation": "replaced_by",
+    "tail": "BNS_64",
+    "detail": "Rape punishment"
+  },
+  {
+    "head": "IPC_499",
+    "relation": "defines",
+    "tail": "IPC_500",
+    "detail": "Defamation"
+  },
+  {
+    "head": "IPC_500",
+    "relation": "replaced_by",
+    "tail": "BNS_356",
+    "detail": "Punishment for defamation"
+  },
+  {
+    "head": "IPC_120A",
+    "relation": "defines",
+    "tail": "IPC_120B",
+    "detail": "Criminal conspiracy"
+  },
+  {
+    "head": "IPC_120B",
+    "relation": "replaced_by",
+    "tail": "BNS_61",
+    "detail": "Punishment for criminal conspiracy"
+  },
+  {
+    "head": "FIR",
+    "relation": "filed_under",
+    "tail": "CrPC_154",
+    "detail": "First Information Report"
+  },
+  {
+    "head": "CrPC_154",
+    "relation": "replaced_by",
+    "tail": "BNSS_173",
+    "detail": "Registration of information for cognizable offences"
+  },
+  {
+    "head": "Zero_FIR",
+    "relation": "mandated_under",
+    "tail": "BNSS_173_1",
+    "detail": "Mandatory registration irrespective of jurisdiction"
+  },
+  {
+    "head": "Police_Refusal_FIR",
+    "relation": "escalate_to_SP",
+    "tail": "CrPC_154_3",
+    "detail": "Representation in writing to Superintendent of Police"
+  },
+  {
+    "head": "CrPC_154_3",
+    "relation": "replaced_by",
+    "tail": "BNSS_173_4",
+    "detail": "SP escalation under BNSS"
+  },
+  {
+    "head": "SP_Refusal",
+    "relation": "apply_to_Magistrate",
+    "tail": "CrPC_156_3",
+    "detail": "Application to Judicial Magistrate to direct FIR"
+  },
+  {
+    "head": "CrPC_156_3",
+    "relation": "replaced_by",
+    "tail": "BNSS_175_3",
+    "detail": "Magistrate order for investigation under BNSS"
+  },
+  {
+    "head": "CrPC_156_3",
+    "relation": "empowers_magistrate",
+    "tail": "FIR_Registration_Order",
+    "detail": "Court order to register FIR"
+  },
+  {
+    "head": "FIR",
+    "relation": "triggers",
+    "tail": "Police_Investigation",
+    "detail": "Investigation stage"
+  },
+  {
+    "head": "Police_Investigation",
+    "relation": "leads_to",
+    "tail": "Chargesheet",
+    "detail": "Police report"
+  },
+  {
+    "head": "Chargesheet",
+    "relation": "filed_under",
+    "tail": "CrPC_173",
+    "detail": "Final police report"
+  },
+  {
+    "head": "CrPC_173",
+    "relation": "replaced_by",
+    "tail": "BNSS_193",
+    "detail": "Report of police officer on completion of investigation"
+  },
+  {
+    "head": "Chargesheet",
+    "relation": "leads_to",
+    "tail": "Magistrate_Cognizance",
+    "detail": "Taking of cognizance under CrPC 190 / BNSS 210"
+  },
+  {
+    "head": "Magistrate_Cognizance",
+    "relation": "leads_to",
+    "tail": "Trial",
+    "detail": "Criminal trial"
+  },
+  {
+    "head": "Trial",
+    "relation": "leads_to",
+    "tail": "Judgment",
+    "detail": "Acquittal or Conviction"
+  },
+  {
+    "head": "Judgment",
+    "relation": "appealable_in",
+    "tail": "Appeal",
+    "detail": "Appellate Court"
+  },
+  {
+    "head": "Land_Breach_of_Peace",
+    "relation": "governed_by",
+    "tail": "CrPC_145",
+    "detail": "Procedure where dispute concerning land causes peace breach"
+  },
+  {
+    "head": "CrPC_145",
+    "relation": "replaced_by",
+    "tail": "BNSS_164",
+    "detail": "Executive Magistrate inquiry under BNSS"
+  },
+  {
+    "head": "CrPC_145",
+    "relation": "empowers_SDM",
+    "tail": "Possession_Restoration",
+    "detail": "Restores possession to party forcibly dispossessed within 2 months"
+  },
+  {
+    "head": "CrPC_145_3",
+    "relation": "preserves_perishable_crops",
+    "tail": "Crop_Protection_Order",
+    "detail": "Attachment and sale of standing crops"
+  },
+  {
+    "head": "Right_of_Way_Dispute",
+    "relation": "governed_by",
+    "tail": "CrPC_147",
+    "detail": "Dispute concerning right of use of land or water"
+  },
+  {
+    "head": "CrPC_147",
+    "relation": "replaced_by",
+    "tail": "BNSS_166",
+    "detail": "Right of way dispute under BNSS"
+  },
+  {
+    "head": "Illegal_FIR",
+    "relation": "quashing_petition",
+    "tail": "CrPC_482",
+    "detail": "Inherent power of High Court"
+  },
+  {
+    "head": "CrPC_482",
+    "relation": "replaced_by",
+    "tail": "BNSS_528",
+    "detail": "High Court inherent powers to prevent abuse of process"
+  },
+  {
+    "head": "BNSS_528",
+    "relation": "filed_before",
+    "tail": "High_Court",
+    "detail": "High Court jurisdiction"
+  },
+  {
+    "head": "CrPC_41",
+    "relation": "replaced_by",
+    "tail": "BNSS_35",
+    "detail": "When police may arrest without warrant"
+  },
+  {
+    "head": "CrPC_41A",
+    "relation": "replaced_by",
+    "tail": "BNSS_35_3",
+    "detail": "Notice of appearance before police officer"
+  },
+  {
+    "head": "CrPC_57",
+    "relation": "replaced_by",
+    "tail": "BNSS_58",
+    "detail": "Person arrested not to be detained more than 24 hours"
+  },
+  {
+    "head": "CrPC_167",
+    "relation": "replaced_by",
+    "tail": "BNSS_187",
+    "detail": "Remand procedure and default statutory bail"
+  },
+  {
+    "head": "CrPC_436",
+    "relation": "replaced_by",
+    "tail": "BNSS_478",
+    "detail": "Bail in bailable offences as matter of right"
+  },
+  {
+    "head": "CrPC_437",
+    "relation": "replaced_by",
+    "tail": "BNSS_479",
+    "detail": "Bail in non-bailable offences"
+  },
+  {
+    "head": "CrPC_438",
+    "relation": "replaced_by",
+    "tail": "BNSS_482",
+    "detail": "Direction for grant of bail to person apprehending arrest (Anticipatory Bail)"
+  },
+  {
+    "head": "CrPC_439",
+    "relation": "replaced_by",
+    "tail": "BNSS_483",
+    "detail": "Special powers of High Court or Court of Session regarding bail"
+  },
+  {
+    "head": "Wife_Maintenance",
+    "relation": "filed_under",
+    "tail": "CrPC_125",
+    "detail": "Order for maintenance of wives, children and parents"
+  },
+  {
+    "head": "CrPC_125",
+    "relation": "replaced_by",
+    "tail": "BNSS_144",
+    "detail": "Maintenance application under BNSS"
+  },
+  {
+    "head": "BNSS_144",
+    "relation": "empowers_court",
+    "tail": "Interim_Maintenance_Order",
+    "detail": "Monthly allowance and interim expenses"
+  },
+  {
+    "head": "CPC_Suit",
+    "relation": "triggers",
+    "tail": "CPC_Summons",
+    "detail": "Issuance of summons to defendant"
+  },
+  {
+    "head": "CPC_Summons",
+    "relation": "leads_to_30_to_90_days",
+    "tail": "CPC_Written_Statement",
+    "detail": "Written statement filing under Order 8 Rule 1"
+  },
+  {
+    "head": "CPC_Written_Statement",
+    "relation": "leads_to",
+    "tail": "CPC_Trial",
+    "detail": "Framing of issues & trial"
+  },
+  {
+    "head": "CPC_Trial",
+    "relation": "leads_to",
+    "tail": "CPC_Decree",
+    "detail": "Civil Court judgment and decree"
+  },
+  {
+    "head": "CPC_Decree",
+    "relation": "first_appeal",
+    "tail": "CPC_Appeal_S96",
+    "detail": "First appeal on facts and law"
+  },
+  {
+    "head": "CPC_Appeal_S96",
+    "relation": "second_appeal_on_substantial_law",
+    "tail": "CPC_Second_Appeal_S100",
+    "detail": "Second appeal to High Court"
+  },
+  {
+    "head": "Defective_Plaint",
+    "relation": "mandatory_rejection",
+    "tail": "Order_7_Rule_11_CPC",
+    "detail": "Rejection of plaint for lack of cause, limitation or fee"
+  },
+  {
+    "head": "Order_7_Rule_11_CPC",
+    "relation": "checks_limitation",
+    "tail": "Limitation_Act_1963",
+    "detail": "Barred by any law"
+  },
+  {
+    "head": "Order_7_Rule_11_CPC",
+    "relation": "checks_valuation",
+    "tail": "Court_Fees_Act_1870",
+    "detail": "Plaint insufficiently stamped"
+  },
+  {
+    "head": "Stay_Order_Request",
+    "relation": "temporary_injunction",
+    "tail": "Order_39_Rule_1_2_CPC",
+    "detail": "Temporary injunctions and interlocutory orders"
+  },
+  {
+    "head": "Order_39_Rule_1_2_CPC",
+    "relation": "requires",
+    "tail": "Prima_Facie_Case",
+    "detail": "First mandatory injunction prong"
+  },
+  {
+    "head": "Order_39_Rule_1_2_CPC",
+    "relation": "requires",
+    "tail": "Balance_of_Convenience",
+    "detail": "Second mandatory injunction prong"
+  },
+  {
+    "head": "Order_39_Rule_1_2_CPC",
+    "relation": "requires",
+    "tail": "Irreparable_Injury",
+    "detail": "Third mandatory injunction prong"
+  },
+  {
+    "head": "Debt_Recovery_Suit",
+    "relation": "summary_suit",
+    "tail": "Order_37_CPC",
+    "detail": "Summary procedure on bills of exchange and debts"
+  },
+  {
+    "head": "ADR_Settlement",
+    "relation": "mediation_arbitration_lok_adalat",
+    "tail": "Section_89_CPC",
+    "detail": "Settlement of disputes outside the Court"
+  },
+  {
+    "head": "HMA_13_1_i",
+    "relation": "civil_ground_for_divorce",
+    "tail": "Adultery_Ground",
+    "detail": "Voluntary sexual intercourse outside marriage"
+  },
+  {
+    "head": "HMA_13_1_ia",
+    "relation": "ground_for_divorce",
+    "tail": "Cruelty_Ground",
+    "detail": "Treated spouse with cruelty"
+  },
+  {
+    "head": "HMA_13_1_ib",
+    "relation": "2_year_desertion_ground",
+    "tail": "Desertion_Ground",
+    "detail": "Deserted for continuous period not less than 2 years"
+  },
+  {
+    "head": "HMA_13B",
+    "relation": "provides_for",
+    "tail": "Mutual_Consent_Divorce",
+    "detail": "Joint petition for divorce by mutual consent"
+  },
+  {
+    "head": "Mutual_Consent_Divorce",
+    "relation": "6_month_cooling_off_waiver",
+    "tail": "Amardeep_Singh_2017",
+    "detail": "SC bench allows waiver of 6-month statutory waiting period"
+  },
+  {
+    "head": "HMA_24",
+    "relation": "provides_for",
+    "tail": "Interim_Maintenance_Pendente_Lite",
+    "detail": "Maintenance during trial proceedings & expenses"
+  },
+  {
+    "head": "HMA_25",
+    "relation": "provides_for",
+    "tail": "Permanent_Alimony",
+    "detail": "Permanent alimony and maintenance"
+  },
+  {
+    "head": "HMA_9",
+    "relation": "provides_for",
+    "tail": "Restitution_of_Conjugal_Rights",
+    "detail": "Decree for restitution"
+  },
+  {
+    "head": "HSA_6",
+    "relation": "guarantees",
+    "tail": "Daughters_Coparcenary_By_Birth",
+    "detail": "Equal coparcenary rights for daughters from birth"
+  },
+  {
+    "head": "Daughters_Coparcenary_By_Birth",
+    "relation": "supreme_court_benchmark",
+    "tail": "Vineeta_Sharma_2020",
+    "detail": "Landmark SC ruling giving retrospective coparcenary rights to daughters"
+  },
+  {
+    "head": "HSA_8",
+    "relation": "governs_self_acquired",
+    "tail": "Class_I_Legal_Heirs_Succession",
+    "detail": "Son, Daughter, Widow, Mother take equally"
+  },
+  {
+    "head": "HSA_30",
+    "relation": "empowers_coparcener",
+    "tail": "Testamentary_Will_of_Undivided_Share",
+    "detail": "Coparcener can execute will over undivided share"
+  },
+  {
+    "head": "Ancestral_Property_Dispute",
+    "relation": "remedy_before_civil_court",
+    "tail": "Partition_Suit",
+    "detail": "Suit for partition and separate possession"
+  },
+  {
+    "head": "Domestic_Violence",
+    "relation": "application_to_Magistrate",
+    "tail": "PWDVA_2005_S12",
+    "detail": "Application to Magistrate under DV Act"
+  },
+  {
+    "head": "PWDVA_2005_S12",
+    "relation": "protection_orders",
+    "tail": "PWDVA_S18",
+    "detail": "Protection orders prohibiting acts of violence"
+  },
+  {
+    "head": "PWDVA_2005_S12",
+    "relation": "residence_orders",
+    "tail": "PWDVA_S19",
+    "detail": "Residence orders restraining dispossession"
+  },
+  {
+    "head": "PWDVA_2005_S12",
+    "relation": "monetary_relief",
+    "tail": "PWDVA_S20",
+    "detail": "Monetary reliefs for medical & maintenance expenses"
+  },
+  {
+    "head": "PWDVA_2005_S12",
+    "relation": "temporary_custody",
+    "tail": "PWDVA_S21",
+    "detail": "Custody orders for children"
+  },
+  {
+    "head": "Cheque_Dishonour",
+    "relation": "criminal_offence",
+    "tail": "NI_Act_138",
+    "detail": "Dishonour of cheque for insufficiency of funds"
+  },
+  {
+    "head": "NI_Act_138",
+    "relation": "requires_15_day_legal_notice",
+    "tail": "NI_Act_138_b",
+    "detail": "Demand notice within 30 days of dishonour memo"
+  },
+  {
+    "head": "NI_Act_138_b",
+    "relation": "30_day_magistrate_complaint_limitation",
+    "tail": "NI_Act_142",
+    "detail": "Complaint before Magistrate within 1 month of cause"
+  },
+  {
+    "head": "Non_Compete_Clause",
+    "relation": "void_in_restraint_of_trade",
+    "tail": "Contract_Act_S27",
+    "detail": "Every agreement in restraint of trade is void"
+  },
+  {
+    "head": "Contract_Act_S27",
+    "relation": "supreme_court_voidance_ruling",
+    "tail": "Percept_DMark_2006",
+    "detail": "Post-employment non-compete void ab initio"
+  },
+  {
+    "head": "Contract_Breach",
+    "relation": "actual_loss_damages",
+    "tail": "Contract_Act_S73",
+    "detail": "Compensation for loss or damage caused by breach"
+  },
+  {
+    "head": "Penalty_Clause",
+    "relation": "liquidated_damages_cap",
+    "tail": "Contract_Act_S74",
+    "detail": "Reasonable compensation not exceeding penalty"
+  },
+  {
+    "head": "Arbitration_Interim_Relief",
+    "relation": "filed_before_court",
+    "tail": "Arbitration_Act_S9",
+    "detail": "Interim measures by court before or during arbitration"
+  },
+  {
+    "head": "Arbitrator_Appointment",
+    "relation": "high_court_petition",
+    "tail": "Arbitration_Act_S11",
+    "detail": "Appointment of arbitrators by Chief Justice / designate"
+  },
+  {
+    "head": "Unilateral_Arbitrator",
+    "relation": "void_ab_initio_TRF_Perkins",
+    "tail": "Arbitration_Act_S12_5",
+    "detail": "Ineligibility of unilateral party appointed arbitrator"
+  },
+  {
+    "head": "Arbitral_Award_Challenge",
+    "relation": "setting_aside_petition",
+    "tail": "Arbitration_Act_S34",
+    "detail": "Application for setting aside arbitral award"
+  },
+  {
+    "head": "Delayed_Flat_Possession",
+    "relation": "refund_with_interest",
+    "tail": "RERA_2016_S18",
+    "detail": "Return of amount and compensation under RERA"
+  },
+  {
+    "head": "Tenant_Eviction",
+    "relation": "15_day_notice_to_quit",
+    "tail": "TPA_1882_S106",
+    "detail": "Duration of leases and 15 days notice to terminate"
+  },
+  {
+    "head": "Unregistered_Lease_Over_11_Months",
+    "relation": "inadmissible_as_lease",
+    "tail": "Registration_Act_S17",
+    "detail": "Documents of which registration is compulsory"
+  },
+  {
+    "head": "Unpaid_Salary_Claim",
+    "relation": "claim_before_authority",
+    "tail": "Payment_of_Wages_Act_S15",
+    "detail": "Claims arising out of deductions from wages or delay"
+  },
+  {
+    "head": "Minimum_Wages_Violation",
+    "relation": "claim_before_Labour_Court",
+    "tail": "Minimum_Wages_Act_S22",
+    "detail": "Penalties and claims under Minimum Wages"
+  },
+  {
+    "head": "Gratuity_Eligibility",
+    "relation": "5_years_continuous_service",
+    "tail": "Payment_of_Gratuity_Act_S4",
+    "detail": "Mandatory payment of gratuity on 5 years service"
+  },
+  {
+    "head": "ITA_66A",
+    "relation": "struck_down_free_speech",
+    "tail": "Shreya_Singhal_2015",
+    "detail": "Unconstitutional under Article 19(1)(a)"
+  },
+  {
+    "head": "IPC_497",
+    "relation": "struck_down_gender_equality",
+    "tail": "Joseph_Shine_2018",
+    "detail": "Unconstitutional under Articles 14 and 21"
+  },
+  {
+    "head": "IPC_377",
+    "relation": "read_down_consensual_sex",
+    "tail": "Navtej_Johar_2018",
+    "detail": "Decriminalized adult consensual relations"
+  },
+  {
+    "head": "IPC_124A",
+    "relation": "stayed_and_omitted_in_BNS",
+    "tail": "Vombatkere_2022",
+    "detail": "SC ordered all sedition proceedings kept in abeyance"
+  },
+  {
+    "head": "IPC_303",
+    "relation": "struck_down_mandatory_death",
+    "tail": "Mithu_Punjab_1983",
+    "detail": "Mandatory death penalty unconstitutional"
+  },
+  {
+    "head": "Aadhaar_Act_S57",
+    "relation": "struck_down_private_mandate",
+    "tail": "Puttaswamy_2018",
+    "detail": "Private companies cannot demand Aadhaar verification"
+  },
+  {
+    "head": "Electoral_Bonds",
+    "relation": "struck_down_right_to_know",
+    "tail": "ADR_v_UOI_2024",
+    "detail": "Unconstitutional under Article 19(1)(a) right to information"
+  }
+]
