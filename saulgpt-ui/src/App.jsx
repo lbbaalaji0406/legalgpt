@@ -181,11 +181,18 @@ function Message({ msg, onTriageChoice }) {
   if (meta && typeof meta === "string") {
     try { meta = JSON.parse(meta); } catch { meta = null; }
   }
-  const triage = msg.triage || meta?.triage;
+  const effectiveMeta = meta?.meta || meta;
+  const triage = msg.triage || meta?.triage || effectiveMeta?.triage;
+  const scrutiny = meta?.scrutiny || effectiveMeta?.scrutiny;
+  const progressPct = msg.interviewProgress !== undefined ? msg.interviewProgress : (meta?.progress_pct !== undefined ? meta.progress_pct : effectiveMeta?.progress_pct);
+  const docReady = meta?.document_ready || effectiveMeta?.document_ready;
+  const docUrl = meta?.document_url || effectiveMeta?.document_url;
 
   const showPDF = showExport && !isError && !isClarify && (
     EXPORTABLE_MODES.includes(meta?.mode_used) ||
-    meta?.interview_complete                   ||
+    EXPORTABLE_MODES.includes(effectiveMeta?.mode_used) ||
+    meta?.interview_complete ||
+    effectiveMeta?.interview_complete ||
     isLong
   );
 
@@ -196,23 +203,23 @@ function Message({ msg, onTriageChoice }) {
   }
 
   function handlePDF() {
-    downloadAsPDF(content, meta || {});
+    downloadAsPDF(content, effectiveMeta || meta || {});
   }
 
   return (
     <div className={`message ${isUser ? "user-message" : "bot-message"}`}>
       {!isUser && <div className="bot-avatar"><span>⚖</span></div>}
       <div className="message-body">
-        {msg.interviewProgress !== undefined && (
-          <InterviewProgress pct={msg.interviewProgress} />
+        {progressPct !== undefined && (
+          <InterviewProgress pct={progressPct} />
         )}
 
-        {meta && (
+        {effectiveMeta && (
           <>
-            <VetoCard scrutiny={meta.scrutiny} />
-            <BNSCorrectionNotice meta={meta} />
-            <UrgencyBanner meta={meta} />
-            <JurisdictionBadge meta={meta} />
+            <VetoCard scrutiny={scrutiny} />
+            <BNSCorrectionNotice meta={effectiveMeta} />
+            <UrgencyBanner meta={effectiveMeta} />
+            <JurisdictionBadge meta={effectiveMeta} />
           </>
         )}
 
@@ -229,10 +236,11 @@ function Message({ msg, onTriageChoice }) {
               .replace(/## (.*?)(\n|$)/g,  "<h2>$1</h2>")
               .replace(/^- (.*)/gm, "<li>$1</li>")
               .replace(/(<li>.*<\/li>)/gs, "<ul>$1</ul>")
+              .replace(/\[(.*?)\]\((.*?)\)/g, '<a href="$2" target="_blank" rel="noopener noreferrer" style="color:var(--gold);text-decoration:underline;">$1</a>')
               .replace(/\n/g, "<br/>"),
           }}
         />
-        {meta && <PipelineMeta data={meta} />}
+        {effectiveMeta && <PipelineMeta data={effectiveMeta} />}
 
         {showExport && (
           <div className="export-bar">
@@ -253,9 +261,9 @@ function Message({ msg, onTriageChoice }) {
                 Download PDF
               </button>
             )}
-            {meta?.document_ready && meta?.document_url && (
+            {docReady && docUrl && (
               <a
-                href={meta.document_url}
+                href={docUrl}
                 className="export-btn docx-btn"
                 download
                 title="Download as .docx (editable)"
@@ -357,30 +365,7 @@ export default function App() {
     if (saved && savedToken) {
       const n = Number(saved);
       if (!isNaN(n) && n > 0) {
-        api().get(`/api/conversations/${n}`).then(({ data }) => {
-          if (!convRef.current || convRef.current !== n) return;
-          setConvId(n);
-          const sid = generateSessionId(n);
-          setSessionId(sid);
-          setMessages([]);
-          const msgs = (data.messages || []).map(m => {
-            let parsedMeta = undefined;
-            if (m.meta) {
-              try {
-                parsedMeta = typeof m.meta === "string" ? JSON.parse(m.meta) : m.meta;
-              } catch {
-                parsedMeta = undefined;
-              }
-            }
-            return {
-              role: m.role,
-              content: m.content || "",
-              meta: parsedMeta,
-              triage: parsedMeta?.triage,
-            };
-          });
-          setMessages(msgs);
-        }).catch(() => {});
+        loadConversation(n);
       }
     }
   }, []);
@@ -405,13 +390,13 @@ export default function App() {
 
   function api() {
     const headers = {};
-    const currentToken = localStorage.getItem("saulgpt_token");
+    const currentToken = token || localStorage.getItem("saulgpt_token");
     if (currentToken) headers.Authorization = `Bearer ${currentToken}`;
     const instance = axios.create({ headers });
     instance.interceptors.response.use(
       res => res,
       err => {
-        if (err.response?.status === 401 && localStorage.getItem("saulgpt_token")) {
+        if (err.response?.status === 401 && (token || localStorage.getItem("saulgpt_token"))) {
           logout();
         }
         return Promise.reject(err);
@@ -440,6 +425,7 @@ export default function App() {
   }
 
   async function loadConversation(id) {
+    if (!id) return;
     try {
       if (sessionId) {
         api().delete(`/api/draft/state/${sessionId}`).catch(() => {});
@@ -450,9 +436,11 @@ export default function App() {
       setForceMode(null);
       setLoading(true);
       setConvId(id);
+      convRef.current = id;
       const nextSid = generateSessionId(id);
       setSessionId(nextSid);
       localStorage.setItem("saulgpt_session_id", nextSid);
+      localStorage.setItem("saulgpt_conv_id", String(id));
 
       const { data } = await api().get(`/api/conversations/${id}`);
 
@@ -465,11 +453,13 @@ export default function App() {
             parsedMeta = undefined;
           }
         }
+        const pPct = parsedMeta?.progress_pct !== undefined ? parsedMeta.progress_pct : parsedMeta?.meta?.progress_pct;
         return {
           role: m.role,
           content: m.content || "",
           meta: parsedMeta,
-          triage: parsedMeta?.triage,
+          triage: parsedMeta?.triage || parsedMeta?.meta?.triage,
+          interviewProgress: pPct,
         };
       });
       setMessages(loadedMsgs);

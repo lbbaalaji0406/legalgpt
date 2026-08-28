@@ -18,6 +18,7 @@ This document provides a transparent, chronological record of every architectura
 10. **[ADR-010] Interview Drafter: Eliminating Numeric Field Interruption Loops**
 11. **[ADR-011] UI State Machine: Dynamic Session Scoping & Multi-Conversation Switching**
 12. **[ADR-012] Strategy Engine: Universal Path Choice Resolution & Seamless Triage Execution**
+13. **[ADR-013] Chat History: Conversation Restoral & Deep-Meta State Hydration**
 
 ---
 
@@ -190,3 +191,19 @@ This document provides a transparent, chronological record of every architectura
   3. Upgraded `_resolve_triage_choice` with regex pattern matching for `"Path A"`, `"Path B"`, `"Option 1"`, `"Option 2"`, numbers (`"1"`, `"2"`), and descriptive action titles.
 * **The Why**:
   Guarantees that clicking any strategic path card or typing a path choice instantly launches the corresponding action (document draft or statutory filing roadmap) across new, existing, or reloaded conversations.
+
+---
+
+### [ADR-013] Chat History: Conversation Restoral & Deep-Meta State Hydration
+* **Component**: `saulgpt-ui/src/App.jsx` (`loadConversation`, `Message`, mount `useEffect`)
+* **Date**: 2026-08-28
+* **Status**: ✅ Implemented & Verified
+* **The Problem**:
+  When switching conversations in the sidebar (e.g. clicking *"Draft a Sworn Affidavit for a lost 10th standard CBSE marksheet"*), historical turns failed to hydrate properly on mount due to a guard check (`!convRef.current`) evaluating to null. Additionally, nested metadata in historical messages (`meta.meta`, `progress_pct`, markdown download links) were not parsed, preventing document download links and progress trackers from rendering.
+* **The Decision & Change**:
+  1. Removed the blocking guard in mount recovery and routed directly through `loadConversation(n)`.
+  2. Deeply unwrapped and hydrated message metadata (`effectiveMeta = meta?.meta || meta`, `progressPct`, `scrutiny`, `docReady`, `docUrl`).
+  3. Added markdown hyperlink parser (`[text](url)` $ightarrow$ `<a href="url">text</a>`) in message body rendering.
+  4. Unified token retrieval in `api()` across React state and `localStorage`.
+* **The Why**:
+  Guarantees that clicking any past conversation (affidavit, demand letter, contract review, Q&A) instantly and faithfully restores all message bubbles, progress bars, legal scrutiny cards, and download buttons in the chat window.
