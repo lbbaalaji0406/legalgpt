@@ -35,74 +35,75 @@ DISCLAIMER_TEXT = (
     "specific situation."
 )
 
-# Repealed law detection patterns
-# Key: string to search in response
-# Value: warning message to append
+# Repealed law detection patterns: (regex_pattern, warning_message)
 REPEALED_ACT_PATTERNS = [
     (
-        "Indian Penal Code",
-        "⚠️  IMPORTANT: The Indian Penal Code has been replaced "
-        "by the Bharatiya Nyaya Sanhita (BNS) 2023, effective "
-        "July 1 2024. Please refer to current legislation."
+        r'\b(?:Indian\s+Penal\s+Code|IPC)\b',
+        "⚠️ IMPORTANT: The Indian Penal Code (IPC), 1860 has been replaced by the Bharatiya Nyaya Sanhita (BNS), 2023, effective July 1, 2024. Offences committed on or after July 1, 2024 are governed by BNS 2023."
     ),
     (
-        " IPC ",
-        "⚠️  IMPORTANT: IPC has been replaced by BNS 2023, "
-        "effective July 1 2024. Please refer to current legislation."
+        r'\b(?:Code\s+of\s+Criminal\s+Procedure|CrPC)\b',
+        "⚠️ IMPORTANT: The Code of Criminal Procedure (CrPC), 1973 has been replaced by the Bharatiya Nagarik Suraksha Sanhita (BNSS), 2023, effective July 1, 2024."
     ),
     (
-        "IPC Section",
-        "⚠️  IMPORTANT: IPC has been replaced by BNS 2023, "
-        "effective July 1 2024. Please refer to current legislation."
+        r'\b(?:Indian\s+Evidence\s+Act|IEA)\b',
+        "⚠️ IMPORTANT: The Indian Evidence Act, 1872 has been replaced by the Bharatiya Sakshya Adhiniyam (BSA), 2023, effective July 1, 2024."
     ),
     (
-        "Code of Criminal Procedure",
-        "⚠️  IMPORTANT: The Code of Criminal Procedure has been "
-        "replaced by the Bharatiya Nagarik Suraksha Sanhita "
-        "(BNSS) 2023, effective July 1 2024."
+        r'\b(?:TADA|Terrorist\s+and\s+Disruptive\s+Activities)\b',
+        "⚠️ IMPORTANT: The Terrorist and Disruptive Activities (Prevention) Act (TADA), 1987 lapsed in 1995. Current anti-terror legislation is governed by the Unlawful Activities (Prevention) Act (UAPA), 1967."
     ),
     (
-        "CrPC",
-        "⚠️  IMPORTANT: CrPC has been replaced by BNSS 2023, "
-        "effective July 1 2024. Please refer to current legislation."
+        r'\b(?:POTA|Prevention\s+of\s+Terrorism\s+Act)\b',
+        "⚠️ IMPORTANT: The Prevention of Terrorism Act (POTA), 2002 was repealed in 2004."
     ),
     (
-        "Indian Evidence Act",
-        "⚠️  IMPORTANT: The Indian Evidence Act has been replaced "
-        "by the Bharatiya Sakshya Adhiniyam (BSA) 2023, "
-        "effective July 1 2024."
+        r'\b(?:FERA|Foreign\s+Exchange\s+Regulation\s+Act)\b',
+        "⚠️ IMPORTANT: FERA, 1973 was repealed and replaced by the Foreign Exchange Management Act (FEMA), 1999 (civil penalty regime)."
+    ),
+    (
+        r'\bConsumer\s+Protection\s+Act,\s*1986\b',
+        "⚠️ IMPORTANT: The Consumer Protection Act, 1986 was repealed and replaced by the Consumer Protection Act, 2019 (introducing Central Consumer Protection Authority and e-commerce rules)."
+    ),
+    (
+        r'\bCompanies\s+Act,\s*1956\b',
+        "⚠️ IMPORTANT: The Companies Act, 1956 was repealed and replaced by the Companies Act, 2013."
+    ),
+    (
+        r'\bArbitration\s+Act,\s*1940\b',
+        "⚠️ IMPORTANT: The Arbitration Act, 1940 was repealed and replaced by the Arbitration and Conciliation Act, 1996."
+    ),
+    (
+        r'\b(?:MRTP|Monopolies\s+and\s+Restrictive\s+Trade\s+Practices)\b',
+        "⚠️ IMPORTANT: The MRTP Act, 1969 was repealed and replaced by the Competition Act, 2002."
     ),
 ]
 
-# Struck down / read down section patterns
-# These sections are invalid law — must warn user
+# Struck down / unconstitutional / read down section patterns: (regex_pattern, warning_message)
 STRUCK_DOWN_PATTERNS = [
     (
-        "66A",
-        "🚨 IMPORTANT: Section 66A of the IT Act was struck down "
-        "as unconstitutional by the Supreme Court in "
-        "Shreya Singhal v. Union of India (2015). "
-        "It is no longer valid law."
+        r'\b(?:Section\s+)?66A\b',
+        "🚨 STRUCK DOWN: Section 66A of the Information Technology Act was struck down as unconstitutional (violating Article 19(1)(a) Free Speech) by the Supreme Court in Shreya Singhal v. Union of India (2015). No FIR or arrest can be made under Section 66A."
     ),
     (
-        "Section 124A",
-        "🚨 IMPORTANT: Section 124A IPC (Sedition) is currently "
-        "under a Supreme Court stay in S.G. Vombatkere v. "
-        "Union of India (2022). It has also been omitted "
-        "from BNS 2023."
+        r'\b(?:Section\s+)?497\b',
+        "🚨 STRUCK DOWN: Section 497 IPC (Adultery as a crime) was unanimously struck down as unconstitutional (violating Articles 14 and 21) by the Supreme Court in Joseph Shine v. Union of India (2018). Adultery is NO LONGER a criminal offence; it remains only a civil ground for divorce."
     ),
     (
-        "Section 377",
-        "🚨 IMPORTANT: Section 377 IPC was read down by the "
-        "Supreme Court in Navtej Singh Johar v. Union of India "
-        "(2018). Consensual same-sex relations between adults "
-        "are decriminalized."
+        r'\b(?:Section\s+)?124A\b',
+        "🚨 IMPORTANT: Section 124A IPC (Sedition) was stayed by the Supreme Court in S.G. Vombatkere v. Union of India (2022). In BNS 2023, the colonial offence of sedition has been omitted (replaced by Section 152 BNS targeting acts endangering sovereignty)."
     ),
     (
-        "Section 303",
-        "🚨 IMPORTANT: Section 303 IPC was struck down by the "
-        "Supreme Court in Mithu v. State of Punjab (1983). "
-        "Mandatory death penalty for life convicts is invalid."
+        r'\b(?:Section\s+)?377\b',
+        "🚨 READ DOWN: Section 377 IPC was read down by the Constitution Bench of the Supreme Court in Navtej Singh Johar v. Union of India (2018). Consensual adult same-sex relationships are fully decriminalized."
+    ),
+    (
+        r'\b(?:Section\s+)?303\b',
+        "🚨 STRUCK DOWN: Section 303 IPC (Mandatory Death Penalty for Life Convicts) was struck down as unconstitutional (violating Articles 14 and 21) by the Supreme Court in Mithu v. State of Punjab (1983)."
+    ),
+    (
+        r'\bSection\s+57\s+of\s+(?:the\s+)?Aadhaar\b',
+        "🚨 STRUCK DOWN: Section 57 of the Aadhaar Act, 2016 (allowing private entities to mandate Aadhaar verification) was struck down by the Supreme Court in Justice K.S. Puttaswamy v. Union of India (2018)."
     ),
 ]
 
@@ -225,13 +226,17 @@ def _ground_citations_against_graph(
 
         extracted_citations = citation_pattern.finditer(generated_text)
 
-        # Hardcoded set of known repealed laws for quick checks
-        KNOWN_REPEALED = {"Indian Penal Code", "IPC",
-                          "Code of Criminal Procedure", "CrPC",
-                          "Indian Evidence Act", "IEA",
-                          "Bharatiya Nyaya Sanhita", "BNS",
-                          "Bharatiya Nagarik Suraksha Sanhita", "BNSS",
-                          "Bharatiya Sakshya Adhiniyam", "BSA"}
+        # Hardcoded set of known repealed laws for quick checks (BNS/BNSS/BSA are active new laws!)
+        KNOWN_REPEALED = {
+            "Indian Penal Code", "IPC",
+            "Code of Criminal Procedure", "CrPC",
+            "Indian Evidence Act", "IEA",
+            "TADA", "POTA", "FERA",
+            "Consumer Protection Act 1986",
+            "Companies Act 1956",
+            "Arbitration Act 1940",
+            "MRTP Act"
+        }
 
         for match in extracted_citations:
             section_num = match.group(1).strip()
@@ -406,20 +411,20 @@ def _collect_warnings(
     patterns: List[Tuple[str, str]]
 ) -> List[str]:
     """
-    Scans generated text for pattern matches.
+    Scans generated text for regex pattern matches.
     Returns list of warning strings for all matches found.
     Deduplicates warnings.
 
     Args:
         generated_text: Layer 3 response
-        patterns: list of (search_string, warning_message) tuples
+        patterns: list of (regex_pattern_or_string, warning_message) tuples
 
     Returns:
         list of unique warning strings
     """
     warnings = []
-    for needle, warning in patterns:
-        if needle in generated_text and warning not in warnings:
+    for pattern, warning in patterns:
+        if re.search(pattern, generated_text, re.IGNORECASE) and warning not in warnings:
             warnings.append(warning)
     return warnings
 

@@ -131,7 +131,7 @@ class ResearcherAgent:
 
         if validate_legal_response:
             validated = validate_legal_response(response, retrieved_docs)
-            response = validated.get("response", response)
+            response = validated.get("final_response") or validated.get("response") or response
         
         import re
         clean_resp = re.sub(r'^\s*\{[\s\S]*?context_sufficient[\s\S]*?\}\s*', '', response).strip()

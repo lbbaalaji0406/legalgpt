@@ -22,6 +22,7 @@ This document provides a transparent, chronological record of every architectura
 14. **[ADR-014] UI Layering: Backdrop Stacking Context & Click Event Propagation**
 15. **[ADR-015] Pleading Family: Order VII CPC Triad of Survival & Mid-Interview Interruption Handling**
 16. **[ADR-016] Bilingual Query Reformulation & Countryside Regional Legal Intelligence**
+17. **[ADR-017] Constitutional Struck-Down Guardrails & 2024 Statutory Transition Engine**
 
 ---
 
@@ -256,3 +257,18 @@ This document provides a transparent, chronological record of every architectura
   3. Enforced the **Language Matching Protocol** in Layer 3: when queries are received in Hindi/Hinglish, SaulGPT generates authoritative, empathetic, court-accurate responses in fluent Hindi (Devanagari).
 * **The Why**:
   Democratizes legal intelligence across India, enabling rural citizens and non-English speakers to receive senior-counsel-level guidance and statutory remedies in their native language.
+
+---
+
+### [ADR-017] Constitutional Struck-Down Guardrails & 2024 Statutory Transition Engine
+* **Component**: `backend/layer4_validation.py` (`STRUCK_DOWN_PATTERNS`, `REPEALED_ACT_PATTERNS`, `_collect_warnings`)
+* **Date**: 2026-08-28
+* **Status**: ✅ Implemented & Verified
+* **The Problem**:
+  When users or adversaries cite unconstitutional or repealed provisions (e.g., police threatening arrest under *Section 66A IT Act*, complaints under *Section 497 IPC*, *Section 377 IPC*, *TADA/POTA*, or *Consumer Protection Act 1986*), LLMs often explain the mechanics of the repealed law without forcefully warning that the provision has been struck down by the Supreme Court.
+* **The Decision & Change**:
+  1. Hardened Layer 4 validation with word-boundary regex patterns covering landmark Supreme Court strikes (*Shreya Singhal 2015* for Section 66A, *Joseph Shine 2018* for Section 497, *Navtej Johar 2018* for Section 377, *Puttaswamy 2018* for Section 57 Aadhaar, *S.G. Vombatkere 2022* for Section 124A, *Mithu 1983* for Section 303).
+  2. Added automated guardrail injection for lapsed/repealed statutes (TADA 1987, POTA 2002, FERA 1973, MRTP 1969, Companies Act 1956, CPA 1986).
+  3. Configured the **Statutory Transition Engine** to explain exact constitutional quashing remedies (Writ Petition / S.482 CrPC / S.528 BNSS) and map repealed provisions to current 2023/2024 codes.
+* **The Why**:
+  Protects citizens from illegal police harassment and ensures advocates cite active, constitutionally valid statutes before judicial forums.
