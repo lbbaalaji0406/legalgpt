@@ -26,6 +26,7 @@ This document provides a transparent, chronological record of every architectura
 18. **[ADR-018] Institutional Legal Knowledge Graph: Multi-Domain Topology Expansion**
 19. **[ADR-019] Relational GNN, GraphRAG & Bidirectional ChromaDB Synchronization**
 20. **[ADR-020] Continuous Self-Learning ChromaDB Engine & Concurrency-Hardened Scheduler**
+21. **[ADR-021] Universal Guest Persistence & Graceful Conversation State Recovery**
 
 ---
 
@@ -318,3 +319,18 @@ This document provides a transparent, chronological record of every architectura
   3. Removed mandatory external progress bar dependencies (`tqdm`) with resilient fallbacks.
 * **The Why**:
   Guarantees that ChromaDB never grows stale, learning dynamically from every user consultation while maintaining rock-solid 24/7 server stability under heavy load.
+
+---
+
+### [ADR-021] Universal Guest Persistence & Graceful Conversation State Recovery
+* **Component**: `backend/api_server.py` (`_get_user_id`), `backend/database.py` (`init_db`), `saulgpt-ui/src/App.jsx` (`loadConversation`)
+* **Date**: 2026-08-29
+* **Status**: ✅ Implemented & Verified
+* **The Problem**:
+  When users consulted SaulGPT in local or unauthenticated guest mode, calling `GET /api/conversations/{conv_id}` resulted in `401 Authentication Required` HTTP exceptions, causing the React chat window to display `"Failed to load conversation"` and blocking conversation history hydration.
+* **The Decision & Change**:
+  1. Updated `_get_user_id` to automatically fallback to `user_id = 1` (Default Guest User) whenever no bearer token is present.
+  2. Updated `init_db` in SQLite to ensure the default guest user record exists permanently.
+  3. Upgraded `loadConversation()` in `App.jsx` with graceful error recovery: if an orphaned conversation ID is encountered, the UI clears the stale state and cleanly initializes a fresh consultation without showing red error strings.
+* **The Why**:
+  Guarantees 100% seamless, uninterrupted conversation switching and SQLite history hydration across both authenticated and guest sessions.
