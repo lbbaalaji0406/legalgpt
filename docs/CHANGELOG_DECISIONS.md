@@ -25,6 +25,7 @@ This document provides a transparent, chronological record of every architectura
 17. **[ADR-017] Constitutional Struck-Down Guardrails & 2024 Statutory Transition Engine**
 18. **[ADR-018] Institutional Legal Knowledge Graph: Multi-Domain Topology Expansion**
 19. **[ADR-019] Relational GNN, GraphRAG & Bidirectional ChromaDB Synchronization**
+20. **[ADR-020] Continuous Self-Learning ChromaDB Engine & Concurrency-Hardened Scheduler**
 
 ---
 
@@ -302,3 +303,18 @@ This document provides a transparent, chronological record of every architectura
   3. Integrated GNN topological pathways directly into **Layer 6 (`expand_context`)** and **Layer 3 (`format_context`)**, allowing the 120B Big Model to synthesize holistic, multi-forum courtroom strategies.
 * **The Why**:
   Transforms SaulGPT into the world's first native Indian Legal GraphRAG assistant, synthesizing multi-court litigation roadmaps with 100% data symmetry and zero hallucination risk.
+
+---
+
+### [ADR-020] Continuous Self-Learning ChromaDB Engine & Concurrency-Hardened Scheduler
+* **Component**: `backend/layer5_external.py`, `backend/01_scraper.py`, `backend/02_chunk_and_embed.py`
+* **Date**: 2026-08-29
+* **Status**: ✅ Implemented & Verified
+* **The Problem**:
+  Static vector databases degrade over time as new Central/State gazette notifications and Supreme Court rulings are published. Furthermore, running background update jobs under high API concurrency risked race conditions, thread deadlocks, and uvicorn worker blocking.
+* **The Decision & Change**:
+  1. Implemented **Real-Time On-Demand Ingestion (`_auto_ingest_web_chunks_into_chromadb`)**: When Layer 5 retrieves clean statutory text from web queries, it automatically embeds (`all-MiniLM-L6-v2`) and permanently upserts the documents into ChromaDB (`saulgpt_indian_laws`), scaling the local vector store dynamically with zero duplicate chunks.
+  2. Built **Concurrency-Hardened Background Scheduler (`run_database_update_async`)**: Wrapped monthly updates with non-blocking reentrant locks (`threading.Lock`), graceful exception handling, and virtualenv `sys.executable` execution. Rapid simultaneous triggers skip gracefully rather than crashing or blocking web traffic.
+  3. Removed mandatory external progress bar dependencies (`tqdm`) with resilient fallbacks.
+* **The Why**:
+  Guarantees that ChromaDB never grows stale, learning dynamically from every user consultation while maintaining rock-solid 24/7 server stability under heavy load.

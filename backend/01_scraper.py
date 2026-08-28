@@ -2,7 +2,13 @@ import os
 import json
 import logging
 import time
-from tqdm import tqdm
+
+try:
+    from tqdm import tqdm
+except ImportError:
+    def tqdm(iterable, *args, **kwargs):
+        return iterable
+
 from scraper.engine import LegalScraperEngine
 
 # --- LOGGING SETUP ---

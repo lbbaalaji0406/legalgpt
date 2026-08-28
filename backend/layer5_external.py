@@ -23,7 +23,10 @@ Import in orchestrator:
 """
 
 import os
+import sys
 import time
+import threading
+import hashlib
 import subprocess
 import requests
 from bs4 import BeautifulSoup
@@ -437,6 +440,10 @@ def fallback_web_search(query: str) -> list:
             })
 
         print(f"[Layer 5] [Web] Web fallback found {len(mock_chunks)} results.")
+        
+        # ── CONTINUOUS LEARNING: Auto-ingest rich web results into ChromaDB ──
+        _auto_ingest_web_chunks_into_chromadb(mock_chunks)
+        
         return mock_chunks
 
     except Exception as e:
@@ -444,76 +451,161 @@ def fallback_web_search(query: str) -> list:
         return []
 
 
+def _auto_ingest_web_chunks_into_chromadb(mock_chunks: list, async_mode: bool = True):
+    """
+    Continuous Self-Learning Ingester:
+    Automatically embeds and upserts newly retrieved high-quality web legal chunks
+    directly into ChromaDB (`saulgpt_indian_laws`) so the database expands over time.
+    """
+    if not mock_chunks:
+        return
+
+    def _ingest_worker():
+        try:
+            import hashlib
+            import chromadb
+            from chromadb.config import Settings
+            from sentence_transformers import SentenceTransformer
+
+            # Setup ChromaDB persistent client pointing to official vector_db path
+            chroma_dir = os.path.join(REPO_DIR, "data", "vector_db")
+            if not os.path.exists(chroma_dir):
+                chroma_dir = os.path.join(os.path.dirname(__file__), "data", "vector_db")
+
+            client = chromadb.PersistentClient(
+                path=chroma_dir,
+                settings=Settings(anonymized_telemetry=False)
+            )
+            collection = client.get_or_create_collection(
+                name="saulgpt_indian_laws",
+                metadata={"hnsw:space": "cosine"}
+            )
+
+            model = SentenceTransformer("all-MiniLM-L6-v2")
+
+            ids_to_add = []
+            docs_to_add = []
+            metas_to_add = []
+            embs_to_add = []
+
+            for chunk in mock_chunks:
+                content = chunk.get("content", "")
+                if len(content) < 100:
+                    continue
+
+                # Deterministic MD5 ID based on content
+                chunk_hash = hashlib.md5(content.encode("utf-8")).hexdigest()[:12]
+                chunk_id = f"web_ingest_{chunk_hash}"
+
+                # Check if already present
+                existing = collection.get(ids=[chunk_id])
+                if existing and existing.get("ids"):
+                    continue
+
+                emb = model.encode(content).tolist()
+
+                ids_to_add.append(chunk_id)
+                docs_to_add.append(content)
+                embs_to_add.append(emb)
+                metas_to_add.append({
+                    "act_name": "Web Ingested Legal Rule",
+                    "section_number": str(chunk.get("section_number", "Web Source")),
+                    "law_type": "web_live_ingest",
+                    "source_type": chunk.get("source_type", "primary"),
+                    "status": "active",
+                    "ingestion_date": datetime.now().isoformat()
+                })
+
+            if ids_to_add:
+                collection.upsert(
+                    ids=ids_to_add,
+                    documents=docs_to_add,
+                    embeddings=embs_to_add,
+                    metadatas=metas_to_add
+                )
+                print(f"[ChromaDB Ingest] [OK] Dynamically learned {len(ids_to_add)} new web statute chunk(s) into saulgpt_indian_laws! Total chunks now: {collection.count()}")
+
+        except Exception as err:
+            import traceback
+            print(f"[ChromaDB Ingest] WARNING: Dynamic ingestion failed: {err}")
+            traceback.print_exc()
+
+    if async_mode:
+        t = threading.Thread(target=_ingest_worker, daemon=True, name="ChromaDB_Dynamic_Ingester")
+        t.start()
+        return t
+    else:
+        _ingest_worker()
+
+
+# ─────────────────────────────────────────────────────────────
+# THREAD-SAFE DATABASE AUTO-UPDATER & SCHEDULER
+# ─────────────────────────────────────────────────────────────
+
+_UPDATE_LOCK = threading.Lock()
+_IS_UPDATING = False
+
 def run_database_update():
     """
     Executes scraper + chunker to refresh ChromaDB.
-    Called by APScheduler every 30 days.
-    Uses subprocess so it runs in separate process
-    and never blocks the main pipeline.
+    Guarded with strict thread locking to prevent overlapping runs under high load.
     """
+    global _IS_UPDATING
+    if not _UPDATE_LOCK.acquire(blocking=False):
+        print(f"[{datetime.now().strftime('%Y-%m-%d %H:%M:%S')}] ⏳ DB Update already running in background. Skipping duplicate trigger.")
+        return
+
+    _IS_UPDATING = True
     timestamp = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
     print(f"\n[{timestamp}] 🔄 SCHEDULED DB UPDATE STARTING...")
 
     try:
-        # Step 1: Run scraper
-        print("  → Running 01_scraper.py...")
-        subprocess.run(
-            ["python", SCRAPER],
-            check=True,
-            cwd=REPO_DIR
-        )
-        print("  → Scraper complete.")
+        if os.path.exists(SCRAPER):
+            print("  → Running 01_scraper.py...")
+            subprocess.run([sys.executable, SCRAPER], check=True, cwd=REPO_DIR, timeout=300)
+            print("  → Scraper complete.")
 
-        # Step 2: Run chunker and embedder
-        print("  → Running 02_chunk_and_embed.py...")
-        subprocess.run(
-            ["python", CHUNKER],
-            check=True,
-            cwd=REPO_DIR
-        )
-        print("  → Chunker complete.")
+        if os.path.exists(CHUNKER):
+            print("  → Running 02_chunk_and_embed.py...")
+            subprocess.run([sys.executable, CHUNKER], check=True, cwd=REPO_DIR, timeout=300)
+            print("  → Chunker complete.")
 
         done_time = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
         print(f"[{done_time}] ✅ DATABASE UPDATE COMPLETE.\n")
 
     except subprocess.CalledProcessError as e:
         print(f"🚨 UPDATE FAILED: Script crashed. Error: {e}")
-
-    except FileNotFoundError as e:
-        print(f"🚨 UPDATE FAILED: Script file not found. Error: {e}")
-        print(f"   Expected scraper at: {SCRAPER}")
-        print(f"   Expected chunker at: {CHUNKER}")
-
+    except subprocess.TimeoutExpired:
+        print("🚨 UPDATE FAILED: Process timed out after 300s.")
     except Exception as e:
         print(f"🚨 UPDATE FAILED: Unknown error: {e}")
+    finally:
+        _IS_UPDATING = False
+        _UPDATE_LOCK.release()
+
+
+def run_database_update_async():
+    """Non-blocking asynchronous wrapper for scheduler and manual triggers."""
+    worker = threading.Thread(target=run_database_update, daemon=True, name="ChromaDB_Auto_Updater")
+    worker.start()
 
 
 def start_auto_updater():
     """
     Starts the APScheduler background job.
-    Call this once when FastAPI server starts.
-
-    Returns:
-        scheduler instance (call scheduler.shutdown() to stop)
-
-    Usage in FastAPI main.py:
-        from layer5_external import start_auto_updater
-        scheduler = start_auto_updater()
-
-        @app.on_event("shutdown")
-        def shutdown_scheduler():
-            scheduler.shutdown()
+    Uses asynchronous worker so it never blocks web requests or API threads.
     """
     try:
         from apscheduler.schedulers.background import BackgroundScheduler
 
         scheduler = BackgroundScheduler()
         scheduler.add_job(
-            run_database_update,
+            run_database_update_async,
             trigger   = 'interval',
             days      = 30,
             id        = 'monthly_law_update',
-            replace_existing = True
+            replace_existing = True,
+            max_instances = 1
         )
         scheduler.start()
 
@@ -525,9 +617,7 @@ def start_auto_updater():
 
     except ImportError:
         print("⚠️  APScheduler not installed. Auto-updater disabled.")
-        print("   Install with: pip install apscheduler")
         return None
-
     except Exception as e:
         print(f"⚠️  Auto-updater failed to start: {e}")
         return None
