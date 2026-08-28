@@ -1130,7 +1130,7 @@ async def chat_endpoint(
             if _is_confirmation(query):
                 return _save_and_return(_generate_document_docx(session_id, state), user_id, conv_id)
             else:
-                doc_name = state.display_name
+                doc_name = state.display_name or (state._doc_display_name() if hasattr(state, '_doc_display_name') else "document")
                 state.reset()
                 if TRIAGE_STATE_AVAILABLE:
                     reset_triage_state(session_id)

@@ -95,16 +95,17 @@ DOCUMENT_SCHEMAS = {
 }
 
 DOCUMENT_TRIGGERS = {
-    "eviction_notice":  ["eviction", "evict tenant", "eviction notice", "tenant not paying rent",
-                         "tenant has not paid", "lease agreement expired", "lease expired",
-                         "notice to tenant", "notice for eviction"],
-    "legal_notice":     ["legal notice", "notice to", "send a notice", "formal notice"],
+    "court_plaint":     ["court plaint", "plaint", "court petition", "file petition", "civil suit",
+                         "suit for eviction", "injunction petition", "plaint under cpc", "order 7 cpc", "plaint for eviction"],
+    "consumer_complaint": ["consumer complaint", "consumer forum", "consumer court", "consumer dispute", "ncdrc", "dcdrc", "scdrc"],
+    "fir_complaint":    ["fir", "police complaint", "file a complaint", "complaint to police", "fir draft", "section 154", "section 173 bnss"],
+    "eviction_notice":  ["eviction notice", "evict tenant", "notice to tenant", "notice for eviction", "eviction demand"],
+    "legal_notice":     ["legal notice", "notice to", "send a notice", "formal notice", "demand notice", "advocate notice"],
     "cheque_bounce":    ["cheque bounce", "bounced cheque", "section 138", "dishonoured cheque",
-                         "cheque returned", "insufficient funds notice"],
+                         "cheque returned", "insufficient funds notice", "138 notice"],
     "employment_notice":["salary notice", "employment notice", "hr notice", "unpaid salary notice",
-                         "grievance notice"],
-    "fir_complaint":    ["fir", "police complaint", "file a complaint", "complaint to police"],
-    "rental_agreement": ["rental agreement", "lease agreement", "rent agreement", "tenancy agreement"],
+                         "grievance notice", "wage notice"],
+    "rental_agreement": ["rental agreement", "lease agreement", "rent agreement", "tenancy agreement", "commercial lease"],
 }
 
 # ─────────────────────────────────────────────────────────────
@@ -442,12 +443,17 @@ def detect_document_type(query: str) -> Optional[str]:
 
 
 FAMILY_MAP = {
-    "eviction_notice":   "letter",
-    "legal_notice":      "letter",
-    "cheque_bounce":     "letter",
-    "employment_notice": "letter",
-    "fir_complaint":     "pleading",
-    "rental_agreement":  "agreement",
+    "court_plaint":       "pleading",
+    "fir_complaint":      "pleading",
+    "consumer_complaint": "pleading",
+    "court_petition":     "pleading",
+    "eviction_notice":    "letter",
+    "legal_notice":       "letter",
+    "cheque_bounce":      "letter",
+    "employment_notice":  "letter",
+    "rental_agreement":   "agreement",
+    "partnership_deed":   "agreement",
+    "affidavit_general":  "affidavit",
 }
 
 def map_doc_type_to_family(doc_type: str) -> str:

@@ -20,6 +20,7 @@ This document provides a transparent, chronological record of every architectura
 12. **[ADR-012] Strategy Engine: Universal Path Choice Resolution & Seamless Triage Execution**
 13. **[ADR-013] Chat History: Conversation Restoral & Deep-Meta State Hydration**
 14. **[ADR-014] UI Layering: Backdrop Stacking Context & Click Event Propagation**
+15. **[ADR-015] Pleading Family: Order VII CPC Triad of Survival & Mid-Interview Interruption Handling**
 
 ---
 
@@ -223,3 +224,19 @@ This document provides a transparent, chronological record of every architectura
   3. Added `e.stopPropagation()` and `e.preventDefault()` to `.sidebar` and `.sidebar-item` click events to prevent backdrop event bubbling.
 * **The Why**:
   Guarantees 100% click fidelity on sidebar items, allowing users to switch effortlessly between FIR petitions, employee wage disputes, sworn affidavits, and new consultations.
+
+---
+
+### [ADR-015] Pleading Family: Order VII CPC Triad of Survival & Mid-Interview Interruption Handling
+* **Component**: `backend/interview_state.py` (`MASTER_SCHEMAS["pleading"]`, `FAMILY_MAP`, `FAMILY_SPEC_PROMPTS["pleading"]`)
+* **Date**: 2026-08-28
+* **Status**: ✅ Implemented & Verified
+* **The Problem**:
+  Court Pleadings (Plaints and Petitions under the Code of Civil Procedure, 1908) require strict adherence to Order VII Rule 11 CPC. Failure to plead (a) Cause of Action Date & Limitation, (b) Territorial & Pecuniary Jurisdiction, and (c) Specific Valuation & Prayer leads to mandatory rejection of the plaint. Additionally, mid-interview user clarification requests (*"Why do you need the exact cause of action date?"*) must be answered with legal backing without resetting the interview state stack.
+* **The Decision & Change**:
+  1. Established the 7-step Pleading Schema: Plaintiff Name, Plaintiff Address, Defendant Name, Defendant Address, Cause of Action Date, Court Location, and Brief Facts.
+  2. Integrated the **Order VII Rule 11 CPC "Triad of Survival"** (Limitation under Limitation Act 1963, Jurisdiction, Valuation for Court Fees Act 1870, and quantifiable prayers with interest and mesne profits).
+  3. Formatted Order VI Rule 15 CPC Verification clauses splitting personal knowledge from legal advice.
+  4. Verified stateful mid-interview interruption handling: user questions are answered contextually before seamlessly resuming the exact pending step.
+* **The Why**:
+  Produces court-grade civil plaints and petitions ready for immediate filing in Indian District Courts, High Courts, and Tribunals that survive Order 7 Rule 11 rejection scrutiny.
