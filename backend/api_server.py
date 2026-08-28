@@ -933,21 +933,43 @@ def _resume_after_interruption(state) -> str:
     return state._ask_next() if state._field_index < len(state._pending_fields) else state._summarize()
 
 
+def _is_broad_strategy_interruption(query: str) -> bool:
+    q = query.lower()
+    patterns = [
+        r"\b(?:strategy|remedies|remedy|options|legal\s+position|explain\s+(?:the\s+)?law|can\s+we\s+stop|can\s+i\s+stop|criminal\s+and\s+civil)\b",
+        r"\b(?:before\s+drafting|tell\s+me\s+the\s+law|what\s+are\s+(?:our|my)\s+rights|what\s+can\s+we\s+do)\b"
+    ]
+    return any(re.search(p, q) for p in patterns)
+
+
 def _handle_clarification(state, query: str) -> dict:
-    """Explain why the current field matters, then re-ask."""
+    """Explain why the current field matters, or provide full legal strategy if a broad question was asked, then re-ask."""
     from interview_state import _ensure_field_llm
     llm = _ensure_field_llm()
     field_key = state.current_field
     idx = state._field_index
     field_label = state._pending_fields[idx].get("label", field_key) if idx < len(state._pending_fields) else field_key
 
-    prompt = (
-        f"The user is drafting a legal document ({state.display_name}). "
-        f"They were asked: '{field_label}'. Their response: '{query}'.\n\n"
-        f"Explain in 2-3 clear sentences why this information is legally necessary. "
-        f"Be specific (limitation period, court rules, evidence requirements, etc.). "
-        f"Be practical and reassuring. If they don't know the exact answer, suggest a reasonable approximation."
-    )
+    if _is_broad_strategy_interruption(query):
+        prompt = (
+            f"The user is dealing with the following Indian legal situation:\n"
+            f"'{state.problem_description}'\n\n"
+            f"During the document preparation ({state.display_name}), they asked this substantive legal question:\n"
+            f"'{query}'\n\n"
+            f"Provide a clear, authoritative, senior-counsel legal analysis covering:\n"
+            f"1. Complete Civil & Criminal Remedies under Indian law (cite active BNS/BNSS 2023, NI Act, CPC, Contract Act).\n"
+            f"2. Mandatory statutory notice requirements and limitation periods.\n"
+            f"3. Practical strategic guidance directly answering their query.\n"
+            f"Format with clean markdown bullet points, professional tone, and concise legal clarity."
+        )
+    else:
+        prompt = (
+            f"The user is drafting a legal document ({state.display_name}). "
+            f"They were asked: '{field_label}'. Their response: '{query}'.\n\n"
+            f"Explain in 2-3 clear sentences why this information is legally necessary. "
+            f"Be specific (limitation period, court rules, evidence requirements, etc.). "
+            f"Be practical and reassuring. If they don't know the exact answer, suggest a reasonable approximation."
+        )
     try:
         resp = llm.invoke(prompt)
         explanation = resp.content.strip()
@@ -956,6 +978,14 @@ def _handle_clarification(state, query: str) -> dict:
 
     state.pop_state()
     next_q = _resume_after_interruption(state)
+    
+    if _is_broad_strategy_interruption(query):
+        return {
+            "response": f"{explanation}\n\n---\n**When you are ready to proceed with drafting your {state.display_name}, please provide:**\n\n{next_q}",
+            "interview_active": True,
+            "state_stack_resumed": True,
+        }
+
     return {
         "response": f"{explanation}\n\n{next_q}",
         "interview_active": True,
