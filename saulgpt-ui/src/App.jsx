@@ -465,8 +465,11 @@ export default function App() {
       setMessages(loadedMsgs);
       setRefreshTrigger(prev => prev + 1);
     } catch (e) {
-      console.error("Failed to load conversation:", e);
-      setMessages([{ role: "assistant", content: "Failed to load conversation." }]);
+      console.warn("Could not load conversation (may be fresh or reset):", e);
+      localStorage.removeItem("saulgpt_conv_id");
+      setConvId(null);
+      setMessages([]);
+      setShowSuggestions(true);
     } finally {
       setLoading(false);
     }

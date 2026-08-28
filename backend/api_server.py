@@ -1918,14 +1918,16 @@ async def download_document(session_id: str):
 # AUTH ENDPOINTS
 # ─────────────────────────────────────────────────────────────
 
-def _get_user_id(authorization: str = "") -> Optional[int]:
-    """Extract user_id from Bearer token."""
-    if not authorization:
-        return None
-    scheme, _, token = authorization.partition(" ")
-    if scheme.lower() != "bearer" or not token:
-        return None
-    return decode_token(token)
+def _get_user_id(authorization: str = "") -> int:
+    """Extract user_id from Bearer token, or fallback to default guest user (id=1)."""
+    if authorization:
+        scheme, _, token = authorization.partition(" ")
+        if scheme.lower() == "bearer" and token:
+            uid = decode_token(token)
+            if uid:
+                return uid
+    # Default fallback to guest user (id=1) so conversations always persist & load seamlessly
+    return 1
 
 
 @app.post("/api/auth/signup")

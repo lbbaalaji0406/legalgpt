@@ -57,6 +57,10 @@ def init_db():
         CREATE INDEX IF NOT EXISTS idx_messages_conv
             ON messages(conversation_id, turn);
     """)
+    conn.execute("""
+        INSERT OR IGNORE INTO users (id, email, username, password)
+        VALUES (1, 'guest@saulgpt.local', 'Guest User', 'guest_mode_unrestricted')
+    """)
     conn.commit()
     conn.close()
 
