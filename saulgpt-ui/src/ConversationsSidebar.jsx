@@ -54,12 +54,12 @@ export default function ConversationsSidebar({ token, activeConvId, refreshTrigg
   }
 
   return (
-    <div className="sidebar">
+    <div className="sidebar" onClick={e => e.stopPropagation()}>
       <div className="sidebar-header">
         <span className="sidebar-title">Chats <small style={{color:"var(--ink-faint)",fontSize:11}}>({total})</small></span>
         <div className="sidebar-header-actions">
-          <button className="sidebar-new-btn" onClick={onNew} title="New Chat">+</button>
-          <button className="sidebar-close-btn" onClick={onClose} title="Close Sidebar">✕</button>
+          <button className="sidebar-new-btn" onClick={e => { e.stopPropagation(); onNew(); }} title="New Chat">+</button>
+          <button className="sidebar-close-btn" onClick={e => { e.stopPropagation(); onClose(); }} title="Close Sidebar">✕</button>
         </div>
       </div>
       <div className="sidebar-list">
@@ -69,15 +69,29 @@ export default function ConversationsSidebar({ token, activeConvId, refreshTrigg
           <div
             key={c.id}
             className={`sidebar-item ${c.id === activeConvId ? "active" : ""}`}
-            onClick={() => onSelect(c.id)}
+            onClick={(e) => {
+              e.preventDefault();
+              e.stopPropagation();
+              onSelect(c.id);
+            }}
           >
             <span className="sidebar-item-title">{displayTitle(c)}</span>
             <span className="sidebar-item-time">{relativeTime(c.updated_at)}</span>
-            <button className="sidebar-item-del" onClick={e => { e.stopPropagation(); onDelete(c.id); }} title="Delete">x</button>
+            <button
+              className="sidebar-item-del"
+              onClick={e => {
+                e.preventDefault();
+                e.stopPropagation();
+                onDelete(c.id);
+              }}
+              title="Delete"
+            >
+              x
+            </button>
           </div>
         ))}
         {convs.length < total && (
-          <button className="sidebar-load-more" onClick={loadMore}>
+          <button className="sidebar-load-more" onClick={e => { e.stopPropagation(); loadMore(); }}>
             Load more ({total - convs.length} remaining)
           </button>
         )}
