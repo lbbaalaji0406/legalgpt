@@ -19,6 +19,7 @@ This document provides a transparent, chronological record of every architectura
 11. **[ADR-011] UI State Machine: Dynamic Session Scoping & Multi-Conversation Switching**
 12. **[ADR-012] Strategy Engine: Universal Path Choice Resolution & Seamless Triage Execution**
 13. **[ADR-013] Chat History: Conversation Restoral & Deep-Meta State Hydration**
+14. **[ADR-014] UI Layering: Backdrop Stacking Context & Click Event Propagation**
 
 ---
 
@@ -207,3 +208,18 @@ This document provides a transparent, chronological record of every architectura
   4. Unified token retrieval in `api()` across React state and `localStorage`.
 * **The Why**:
   Guarantees that clicking any past conversation (affidavit, demand letter, contract review, Q&A) instantly and faithfully restores all message bubbles, progress bars, legal scrutiny cards, and download buttons in the chat window.
+
+---
+
+### [ADR-014] UI Layering: Backdrop Stacking Context & Click Event Propagation
+* **Component**: `saulgpt-ui/src/App.css` & `saulgpt-ui/src/ConversationsSidebar.jsx`
+* **Date**: 2026-08-28
+* **Status**: ✅ Implemented & Verified
+* **The Problem**:
+  When opening the sidebar, clicking on a different chat item (e.g., *"My employer hasn't paid salary..."*) failed to trigger the selection handler. Instead, the click was intercepted by the full-screen fixed overlay `.sidebar-backdrop` (`z-index: 90`), which simply executed `setShowSidebar(false)` and closed the sidebar, leaving the user on the current conversation page without switching.
+* **The Decision & Change**:
+  1. Elevated `.sidebar` stacking context with `position: relative; z-index: 100; box-shadow: 4px 0 24px rgba(0, 0, 0, 0.4);`.
+  2. Set `.sidebar-backdrop` to `z-index: 90` to guarantee that the sidebar list always sits strictly on top of the backdrop.
+  3. Added `e.stopPropagation()` and `e.preventDefault()` to `.sidebar` and `.sidebar-item` click events to prevent backdrop event bubbling.
+* **The Why**:
+  Guarantees 100% click fidelity on sidebar items, allowing users to switch effortlessly between FIR petitions, employee wage disputes, sworn affidavits, and new consultations.
