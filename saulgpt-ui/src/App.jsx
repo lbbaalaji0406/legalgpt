@@ -169,27 +169,34 @@ function Message({ msg, onTriageChoice }) {
   const isUser  = msg.role === "user";
   const [copied, setCopied] = useState(false);
 
-  const showExport = !isUser && msg.content && msg.content.length > 100;
+  const content = typeof msg.content === "string" ? msg.content : (msg.content != null ? String(msg.content) : "");
+  const showExport = !isUser && content && content.length > 100;
 
   const EXPORTABLE_MODES = ["document", "evaluate", "pathfinder", "analysis", "knowledge"];
-  const isError    = msg.content.startsWith("🚨");
-  const isClarify  = msg.content.includes("Could you please clarify");
-  const isLong     = msg.content.length > 300;
+  const isError    = content.startsWith("🚨");
+  const isClarify  = content.includes("Could you please clarify");
+  const isLong     = content.length > 300;
+
+  let meta = msg.meta;
+  if (meta && typeof meta === "string") {
+    try { meta = JSON.parse(meta); } catch { meta = null; }
+  }
+  const triage = msg.triage || meta?.triage;
 
   const showPDF = showExport && !isError && !isClarify && (
-    EXPORTABLE_MODES.includes(msg.meta?.mode_used) ||
-    msg.meta?.interview_complete                   ||
+    EXPORTABLE_MODES.includes(meta?.mode_used) ||
+    meta?.interview_complete                   ||
     isLong
   );
 
   async function handleCopy() {
-    await copyToClipboard(msg.content);
+    await copyToClipboard(content);
     setCopied(true);
     setTimeout(() => setCopied(false), 2000);
   }
 
   function handlePDF() {
-    downloadAsPDF(msg.content, msg.meta || {});
+    downloadAsPDF(content, meta || {});
   }
 
   return (
@@ -200,23 +207,23 @@ function Message({ msg, onTriageChoice }) {
           <InterviewProgress pct={msg.interviewProgress} />
         )}
 
-        {msg.meta && (
+        {meta && (
           <>
-            <VetoCard scrutiny={msg.meta.scrutiny} />
-            <BNSCorrectionNotice meta={msg.meta} />
-            <UrgencyBanner meta={msg.meta} />
-            <JurisdictionBadge meta={msg.meta} />
+            <VetoCard scrutiny={meta.scrutiny} />
+            <BNSCorrectionNotice meta={meta} />
+            <UrgencyBanner meta={meta} />
+            <JurisdictionBadge meta={meta} />
           </>
         )}
 
-        {msg.triage && (
-          <TriageCards triage={msg.triage} onChoose={onTriageChoice} />
+        {triage && (
+          <TriageCards triage={triage} onChoose={onTriageChoice} />
         )}
 
         <div
           className="message-text"
           dangerouslySetInnerHTML={{
-            __html: msg.content
+            __html: content
               .replace(/\*\*(.*?)\*\*/g, "<strong>$1</strong>")
               .replace(/### (.*?)(\n|$)/g, "<h3>$1</h3>")
               .replace(/## (.*?)(\n|$)/g,  "<h2>$1</h2>")
@@ -225,7 +232,7 @@ function Message({ msg, onTriageChoice }) {
               .replace(/\n/g, "<br/>"),
           }}
         />
-        {msg.meta && <PipelineMeta data={msg.meta} />}
+        {meta && <PipelineMeta data={meta} />}
 
         {showExport && (
           <div className="export-bar">
@@ -246,9 +253,9 @@ function Message({ msg, onTriageChoice }) {
                 Download PDF
               </button>
             )}
-            {msg.meta?.document_ready && msg.meta?.document_url && (
+            {meta?.document_ready && meta?.document_url && (
               <a
-                href={msg.meta.document_url}
+                href={meta.document_url}
                 className="export-btn docx-btn"
                 download
                 title="Download as .docx (editable)"
@@ -356,11 +363,22 @@ export default function App() {
           const sid = generateSessionId(n);
           setSessionId(sid);
           setMessages([]);
-          const msgs = (data.messages || []).map(m => ({
-            role: m.role,
-            content: m.content,
-            meta: m.meta ? (typeof m.meta === "string" ? JSON.parse(m.meta) : m.meta) : undefined,
-          }));
+          const msgs = (data.messages || []).map(m => {
+            let parsedMeta = undefined;
+            if (m.meta) {
+              try {
+                parsedMeta = typeof m.meta === "string" ? JSON.parse(m.meta) : m.meta;
+              } catch {
+                parsedMeta = undefined;
+              }
+            }
+            return {
+              role: m.role,
+              content: m.content || "",
+              meta: parsedMeta,
+              triage: parsedMeta?.triage,
+            };
+          });
           setMessages(msgs);
         }).catch(() => {});
       }
@@ -438,11 +456,23 @@ export default function App() {
 
       const { data } = await api().get(`/api/conversations/${id}`);
 
-      setMessages((data.messages || []).map(m => ({
-        role: m.role,
-        content: m.content,
-        meta: m.meta ? (typeof m.meta === "string" ? JSON.parse(m.meta) : m.meta) : undefined,
-      })));
+      const loadedMsgs = (data.messages || []).map(m => {
+        let parsedMeta = undefined;
+        if (m.meta) {
+          try {
+            parsedMeta = typeof m.meta === "string" ? JSON.parse(m.meta) : m.meta;
+          } catch {
+            parsedMeta = undefined;
+          }
+        }
+        return {
+          role: m.role,
+          content: m.content || "",
+          meta: parsedMeta,
+          triage: parsedMeta?.triage,
+        };
+      });
+      setMessages(loadedMsgs);
       setRefreshTrigger(prev => prev + 1);
     } catch (e) {
       console.error("Failed to load conversation:", e);
