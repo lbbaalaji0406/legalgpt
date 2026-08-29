@@ -212,6 +212,19 @@ def fetch_case_law(
                     f"  Link: {link}"
                 )
 
+                # ── SELF-HEALING PRECEDENT INGESTION: Auto-ingest into Precedents DB ──
+                try:
+                    from precedent_engine import PrecedentIntelligenceEngine
+                    PrecedentIntelligenceEngine.auto_ingest_case_precedent({
+                        "case_name": title,
+                        "citation": "IndiaKanoon / Web Precedent",
+                        "court": "Supreme Court / High Court",
+                        "statute": f"{search_act} {section_num}".strip(),
+                        "summary": snippet
+                    })
+                except Exception as e:
+                    pass
+
             except Exception:
                 # Skip malformed result — don't crash
                 continue

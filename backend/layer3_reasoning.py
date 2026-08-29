@@ -448,6 +448,17 @@ def format_context(
             )
             print("[Layer 3] 🕸️  Knowledge Graph context injected.")
 
+        precedents_context = layer1_payload.get("precedents_context", "").strip()
+        if precedents_context:
+            formatted += (
+                "\n\n--- BINDING JUDICIAL PRECEDENTS (SUPREME COURT & HIGH COURT) ---\n"
+                "The following are authoritative, binding landmark judgments interpreting these statutes.\n"
+                "You MUST highlight these case precedents and their executed relief in your response under a dedicated '### ⚖️ Controlling Judicial Precedents & Real-World Execution' section:\n"
+                + precedents_context
+                + "\n--- END BINDING JUDICIAL PRECEDENTS ---"
+            )
+            print("[Layer 3] 🏛️  Judicial Precedents context injected.")
+
     return formatted
 
 

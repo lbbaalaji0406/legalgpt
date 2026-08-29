@@ -1,0 +1,1339 @@
+[
+  {
+    "id": "PREC_CRIM_01",
+    "domain": "Criminal & Police Escalation",
+    "case_name": "Lalita Kumari v. Govt. of U.P.",
+    "citation": "(2014) 2 SCC 1",
+    "court": "Supreme Court of India (5-Judge Constitution Bench)",
+    "year": 2014,
+    "governing_statutes": [
+      "Section 154 CrPC",
+      "Section 173 BNSS",
+      "Article 21 Constitution"
+    ],
+    "key_issue": "Mandatory registration of FIR upon receipt of cognizable offence information.",
+    "ratio_decidendi": "Registration of FIR is mandatory under Section 154 of the CrPC / Section 173 BNSS if the information discloses the commission of a cognizable offence. Police officers have no discretion to hold a preliminary inquiry before registration.",
+    "factual_scenario": "Father reported his minor daughter was kidnapped; police station in-charge refused to register an FIR and demanded bribes.",
+    "executed_relief": "Supreme Court issued strict pan-India directions holding that non-registration of FIR makes the police officer liable for contempt and departmental prosecution.",
+    "practical_takeaway": "If a police station refuses to file an FIR for theft, assault, or land grab, cite Lalita Kumari in your written escalation to the SP under BNSS 173(4) / 175(3)."
+  },
+  {
+    "id": "PREC_CRIM_02",
+    "domain": "Criminal & Police Escalation",
+    "case_name": "D.K. Basu v. State of West Bengal",
+    "citation": "(1997) 1 SCC 416",
+    "court": "Supreme Court of India",
+    "year": 1997,
+    "governing_statutes": [
+      "Article 21 & 22 Constitution",
+      "Section 41B CrPC",
+      "Section 36 BNSS"
+    ],
+    "key_issue": "Arrest guidelines and safeguards against custodial torture and arbitrary detention.",
+    "ratio_decidendi": "Every person arrested has the fundamental right to know the grounds of arrest, have a relative/friend informed within 8-12 hours, receive a signed Arrest Memo, undergo medical examination every 48 hours, and consult an advocate.",
+    "factual_scenario": "Widespread instances of custodial deaths and torture in police stations without documentation of arrest.",
+    "executed_relief": "Framed 11 mandatory arrest guidelines which were subsequently codified into the Code of Criminal Procedure.",
+    "practical_takeaway": "If a relative is picked up by police without an arrest memo or grounds, cite D.K. Basu to immediately demand arrest memo and medical examination."
+  },
+  {
+    "id": "PREC_CRIM_03",
+    "domain": "Criminal & Police Escalation",
+    "case_name": "Arnesh Kumar v. State of Bihar",
+    "citation": "(2014) 8 SCC 273",
+    "court": "Supreme Court of India",
+    "year": 2014,
+    "governing_statutes": [
+      "Section 41 & 41A CrPC",
+      "Section 35 BNSS",
+      "Section 498A IPC",
+      "Section 85 BNS"
+    ],
+    "key_issue": "Restraint on mechanical arrests in matrimonial disputes and offences punishable under 7 years.",
+    "ratio_decidendi": "Police shall not automatically arrest accused persons in offences punishable with imprisonment up to 7 years. Police must first issue a Section 41A CrPC / Section 35(3) BNSS Notice of Appearance; arrest is only permissible if statutory checklist criteria are satisfied.",
+    "factual_scenario": "Husband and aged in-laws faced imminent arrest in a false Section 498A dowry harassment complaint without investigation.",
+    "executed_relief": "Supreme Court restrained arrest and mandated Magistrate review of the police checklist before granting remand.",
+    "practical_takeaway": "If threatened with arrest for offences with sentence under 7 years, demand a Notice of Appearance under Section 35(3) BNSS citing Arnesh Kumar."
+  },
+  {
+    "id": "PREC_CRIM_04",
+    "domain": "Criminal & Police Escalation",
+    "case_name": "Satender Kumar Antil v. CBI",
+    "citation": "(2022) 10 SCC 51",
+    "court": "Supreme Court of India",
+    "year": 2022,
+    "governing_statutes": [
+      "Section 437 & 439 CrPC",
+      "Section 480 & 483 BNSS",
+      "Article 21 Constitution"
+    ],
+    "key_issue": "Category-wise bail guidelines and eliminating unnecessary pre-trial incarceration.",
+    "ratio_decidendi": "Bail applications for offences punishable with imprisonment up to 7 years (Category A) should be decided without taking the accused into physical custody if they complied with investigation notices.",
+    "factual_scenario": "Undertrial prisoners languishing in jail despite non-arrest during investigation upon filing of chargesheet.",
+    "executed_relief": "Framed nationwide guidelines making bail the rule and jail the exception across all trial and magistrate courts.",
+    "practical_takeaway": "When appearing on summons after a chargesheet is filed without prior arrest, cite Satender Antil for immediate bail on personal bond."
+  },
+  {
+    "id": "PREC_CRIM_05",
+    "domain": "Criminal & Police Escalation",
+    "case_name": "State of Haryana v. Bhajan Lal",
+    "citation": "1992 Supp (1) SCC 335",
+    "court": "Supreme Court of India",
+    "year": 1992,
+    "governing_statutes": [
+      "Section 482 CrPC",
+      "Section 528 BNSS",
+      "Article 226 Constitution"
+    ],
+    "key_issue": "High Court powers to quash frivolous, motivated, or baseless FIRs and criminal complaints.",
+    "ratio_decidendi": "The High Court under Section 482 CrPC / Section 528 BNSS can quash an FIR where the allegations do not prima facie constitute any offence, where the proceeding is manifestly attended with mala fides, or where a civil dispute is fraudulently given a criminal color.",
+    "factual_scenario": "Political rivalry led to a fabricated FIR alleging disproportionate assets with zero documentary basis.",
+    "executed_relief": "Supreme Court laid down the 7 cardinal golden principles for quashing malicious criminal proceedings.",
+    "practical_takeaway": "If a business partner or relative files a false FIR over a pure civil contract/money dispute, file a Quashing Petition under Section 528 BNSS citing Bhajan Lal."
+  },
+  {
+    "id": "PREC_CRIM_06",
+    "domain": "Criminal & Police Escalation",
+    "case_name": "Gian Singh v. State of Punjab",
+    "citation": "(2012) 10 SCC 303",
+    "court": "Supreme Court of India (3-Judge Bench)",
+    "year": 2012,
+    "governing_statutes": [
+      "Section 482 CrPC",
+      "Section 528 BNSS"
+    ],
+    "key_issue": "Quashing of non-heinous criminal proceedings upon mutual settlement/compromise between parties.",
+    "ratio_decidendi": "High Court possesses inherent power to quash criminal proceedings arising out of commercial, family, matrimonial, or property disputes if the parties have genuinely settled the matter amicably, even if the offence is non-compoundable.",
+    "factual_scenario": "Parties settled a property quarrel and agreed to withdraw cross-complaints, but police chargesheeted under non-compoundable sections.",
+    "executed_relief": "High Court quashed the criminal case based on the joint compromise affidavit of the parties.",
+    "practical_takeaway": "If you settle a dispute with an opposing party outside court, file a joint quashing petition citing Gian Singh to close the FIR permanently."
+  },
+  {
+    "id": "PREC_CRIM_07",
+    "domain": "Criminal & Police Escalation",
+    "case_name": "P. Chidambaram v. Directorate of Enforcement",
+    "citation": "(2019) 9 SCC 24",
+    "court": "Supreme Court of India",
+    "year": 2019,
+    "governing_statutes": [
+      "Section 439 CrPC",
+      "Section 483 BNSS",
+      "Article 21 Constitution"
+    ],
+    "key_issue": "The 'Triple Test' criteria for the grant of regular bail.",
+    "ratio_decidendi": "Bail cannot be withheld as a punitive measure. The court must assess: (1) whether the accused is a flight risk, (2) whether there is a risk of tampering with evidence, and (3) whether there is likelihood of influencing witnesses.",
+    "factual_scenario": "Accused remained incarcerated for months during ongoing investigation without evidence of witness tampering.",
+    "executed_relief": "Supreme Court granted regular bail emphasizing that gravity of offence alone cannot justify pre-trial detention.",
+    "practical_takeaway": "In any regular bail petition, demonstrate compliance with the Triple Test under P. Chidambaram to establish entitlement to bail."
+  },
+  {
+    "id": "PREC_CRIM_08",
+    "domain": "Criminal & Police Escalation",
+    "case_name": "Sharad Birdhichand Sarda v. State of Maharashtra",
+    "citation": "(1984) 4 SCC 116",
+    "court": "Supreme Court of India",
+    "year": 1984,
+    "governing_statutes": [
+      "Indian Evidence Act",
+      "Section 3 BSA 2023"
+    ],
+    "key_issue": "The 5 Golden Principles (Panchsheel) of circumstantial evidence in criminal trials.",
+    "ratio_decidendi": "In cases based on circumstantial evidence, the circumstances must be fully established, forming a complete chain pointing exclusively to the guilt of the accused, consistent only with innocence of any alternative hypothesis.",
+    "factual_scenario": "Husband convicted of murder purely based on suspicion without direct witness testimony.",
+    "executed_relief": "Supreme Court acquitted the accused because the chain of circumstantial evidence had fatal missing links.",
+    "practical_takeaway": "If accused without direct eyewitnesses, rely on Sharad Birdhichand Sarda to prove that reasonable doubt in circumstantial chain requires acquittal."
+  },
+  {
+    "id": "PREC_CRIM_09",
+    "domain": "Criminal & Police Escalation",
+    "case_name": "Tofan Singh v. State of Tamil Nadu",
+    "citation": "(2021) 4 SCC 1",
+    "court": "Supreme Court of India (3-Judge Bench)",
+    "year": 2021,
+    "governing_statutes": [
+      "Section 67 NDPS Act",
+      "Section 25 Evidence Act",
+      "Section 23 BSA 2023"
+    ],
+    "key_issue": "Inadmissibility of confessional statements recorded by investigating officers.",
+    "ratio_decidendi": "Officers invested with powers of police under special acts (NDPS, Customs, DRI) are 'police officers', and any confessional statement made to them is inadmissible as substantive evidence in trial.",
+    "factual_scenario": "Conviction recorded solely on the basis of a self-incriminatory statement written during custodial interrogation.",
+    "executed_relief": "Supreme Court set aside the conviction, affirming the right against self-incrimination under Article 20(3).",
+    "practical_takeaway": "Any forced signature or confession extracted by officers during detention is legally void under Tofan Singh."
+  },
+  {
+    "id": "PREC_CRIM_10",
+    "domain": "Criminal & Police Escalation",
+    "case_name": "Sasi Thomas v. State",
+    "citation": "(2006) 12 SCC 421",
+    "court": "Supreme Court of India",
+    "year": 2006,
+    "governing_statutes": [
+      "Article 21 & 39A Constitution",
+      "Section 304 CrPC",
+      "Section 341 BNSS"
+    ],
+    "key_issue": "Constitutional right to free legal aid and speedy trial for indigent accused.",
+    "ratio_decidendi": "Right to legal defense is a fundamental right. Trial conducted without providing competent legal representation to an indigent accused is void and violates Article 21.",
+    "factual_scenario": "Poor undertrial was tried without legal counsel or notice of free legal aid services.",
+    "executed_relief": "Quashed trial proceedings and ordered appointment of Legal Services Authority counsel.",
+    "practical_takeaway": "If unable to afford a lawyer, cite Sasi Thomas and Section 341 BNSS to demand state-sponsored Legal Aid at court expense."
+  },
+  {
+    "id": "PREC_COMM_01",
+    "domain": "Cheque Bounce & Commercial Debt",
+    "case_name": "Bir Singh v. Mukesh Kumar",
+    "citation": "(2019) 4 SCC 197",
+    "court": "Supreme Court of India",
+    "year": 2019,
+    "governing_statutes": [
+      "Section 138 & 139 Negotiable Instruments Act"
+    ],
+    "key_issue": "Mandatory presumption of legally enforceable debt upon admission of signature on cheque.",
+    "ratio_decidendi": "Even if a cheque is issued as a blank signed cheque and filled up by another person, once the signature is admitted, the statutory presumption under Section 139 NI Act that the cheque was issued for discharge of debt is mandatory.",
+    "factual_scenario": "Drawer claimed he gave a blank cheque as security and the payee filled in ₹15 Lakhs without consent.",
+    "executed_relief": "Supreme Court upheld conviction and ordered payment of cheque amount with interest.",
+    "practical_takeaway": "In a cheque bounce complaint, once you prove the other party signed the cheque, the court must presume debt liability under Bir Singh."
+  },
+  {
+    "id": "PREC_COMM_02",
+    "domain": "Cheque Bounce & Commercial Debt",
+    "case_name": "Dashrath Rupsingh Rathod v. State of Maharashtra",
+    "citation": "(2014) 9 SCC 129",
+    "court": "Supreme Court of India (3-Judge Bench)",
+    "year": 2014,
+    "governing_statutes": [
+      "Section 138 & 142(2) Negotiable Instruments Act"
+    ],
+    "key_issue": "Territorial jurisdiction for filing Section 138 NI Act cheque bounce complaints.",
+    "ratio_decidendi": "Under the amended Section 142(2) NI Act, jurisdiction lies exclusively where the payee/holder maintains the bank account where the cheque was presented for clearing.",
+    "factual_scenario": "Dispute over whether complaint should be filed in drawer's city or payee's bank location.",
+    "executed_relief": "Reaffirmed statutory amendment allowing payees to file complaints in their local home branch court.",
+    "practical_takeaway": "You can file your cheque bounce case in your own local district court where your bank branch is located."
+  },
+  {
+    "id": "PREC_COMM_03",
+    "domain": "Cheque Bounce & Commercial Debt",
+    "case_name": "C.C. Alavi Haji v. Palapetty Muhammed",
+    "citation": "(2007) 6 SCC 555",
+    "court": "Supreme Court of India (3-Judge Bench)",
+    "year": 2007,
+    "governing_statutes": [
+      "Section 138(b) NI Act",
+      "Section 27 General Clauses Act 1897"
+    ],
+    "key_issue": "Deemed service of 15-day statutory demand notice when drawer refuses or ignores registered post.",
+    "ratio_decidendi": "When a statutory notice is sent by Registered Post / Speed Post to the correct address of the drawer, it is deemed to be served under Section 27 General Clauses Act. The drawer cannot escape by claiming non-receipt if summons is accompanied by notice copy.",
+    "factual_scenario": "Drawer argued he never received the postal envelope and claimed Section 138 notice requirement was unfulfilled.",
+    "executed_relief": "Supreme Court held service valid and rejected drawer's technical defense.",
+    "practical_takeaway": "Send your 15-day notice via Registered Post AD / Speed Post and keep the postal tracking receipt as conclusive proof."
+  },
+  {
+    "id": "PREC_COMM_04",
+    "domain": "Cheque Bounce & Commercial Debt",
+    "case_name": "IDBI Trusteeship Services Ltd v. Hubtown Ltd",
+    "citation": "(2017) 1 SCC 568",
+    "court": "Supreme Court of India",
+    "year": 2017,
+    "governing_statutes": [
+      "Order XXXVII CPC (Summary Suits)"
+    ],
+    "key_issue": "4-Tier Principles for granting Leave to Defend in Order 37 CPC Summary Recovery Suits.",
+    "ratio_decidendi": "If the defendant has no substantial defense and raises a sham or moonshine defense, leave to defend must be refused and plaintiff is entitled to immediate recovery judgment.",
+    "factual_scenario": "Borrower failed to repay corporate debentures and raised frivolous verbal claims to delay summary decree.",
+    "executed_relief": "Supreme Court directed defendant to deposit substantial cash security as pre-condition for defense.",
+    "practical_takeaway": "In unpaid invoice or loan suits, file under Order 37 CPC citing IDBI Hubtown to demand full recovery or mandatory cash deposit."
+  },
+  {
+    "id": "PREC_COMM_05",
+    "domain": "Cheque Bounce & Commercial Debt",
+    "case_name": "Sunil Todi v. State of Gujarat",
+    "citation": "2021 SCC OnLine SC 1174",
+    "court": "Supreme Court of India",
+    "year": 2021,
+    "governing_statutes": [
+      "Section 138 NI Act"
+    ],
+    "key_issue": "Cheques issued as 'Security' for commercial contracts attracting Section 138 upon default.",
+    "ratio_decidendi": "A cheque issued as security for payment does not lose its character under Section 138 NI Act if an outstanding debt or liability has crystallized at the time of presentation.",
+    "factual_scenario": "Company defaulted on power purchase agreement and claimed dishonored cheques were 'security cheques' immune from Section 138.",
+    "executed_relief": "Supreme Court dismissed quashing petition and held security cheques fully actionable.",
+    "practical_takeaway": "If a debtor claims 'it was only a security cheque', Sunil Todi confirms Section 138 applies once payment is due."
+  },
+  {
+    "id": "PREC_COMM_06",
+    "domain": "Cheque Bounce & Commercial Debt",
+    "case_name": "K. Bhaskaran v. Sankaran Vaidhyan Balan",
+    "citation": "(1999) 7 SCC 510",
+    "court": "Supreme Court of India",
+    "year": 1999,
+    "governing_statutes": [
+      "Section 138 & 142 NI Act"
+    ],
+    "key_issue": "The 5 components of cause of action and limitation under Section 138 NI Act.",
+    "ratio_decidendi": "Cause of action arises strictly on the 16th day after the 15-day notice period expires. Complaint must be filed within 1 month (30 days) thereafter before the Judicial Magistrate.",
+    "factual_scenario": "Dispute over the exact day limitation begins to run for filing criminal cheque bounce complaint.",
+    "executed_relief": "Supreme Court established the precise timeline calculation rule.",
+    "practical_takeaway": "Count exactly 15 days from notice delivery + 30 days to file before the Magistrate under Section 142 NI Act."
+  },
+  {
+    "id": "PREC_COMM_07",
+    "domain": "Cheque Bounce & Commercial Debt",
+    "case_name": "P. Mohanraj v. Shah Brothers ISPAT Pvt Ltd",
+    "citation": "(2021) 6 SCC 258",
+    "court": "Supreme Court of India (3-Judge Bench)",
+    "year": 2021,
+    "governing_statutes": [
+      "Section 14 IBC 2016",
+      "Section 138 & 141 NI Act"
+    ],
+    "key_issue": "Effect of Corporate Insolvency (IBC) Moratorium on Section 138 cheque bounce proceedings.",
+    "ratio_decidendi": "While Section 14 IBC moratorium stays Section 138 proceedings against the corporate company debtor, the natural person Directors/Signatories remain personally criminally liable and prosecution continues against them.",
+    "factual_scenario": "Directors of an insolvent company sought to evade personal cheque bounce liability citing company bankruptcy.",
+    "executed_relief": "Supreme Court permitted ongoing criminal trial against the individual directors.",
+    "practical_takeaway": "Even if a company enters IBC insolvency, you can personally prosecute the signing directors under Section 141 NI Act."
+  },
+  {
+    "id": "PREC_COMM_08",
+    "domain": "Cheque Bounce & Commercial Debt",
+    "case_name": "Kishan Rao v. Shankargouda",
+    "citation": "(2018) 8 SCC 165",
+    "court": "Supreme Court of India",
+    "year": 2018,
+    "governing_statutes": [
+      "Section 139 NI Act"
+    ],
+    "key_issue": "Standard of proof to rebut the Section 139 presumption.",
+    "ratio_decidendi": "Mere denial or oral testimony of the accused is insufficient to rebut the statutory presumption under Section 139; the accused must produce cogent documentary evidence or establish a probable defense.",
+    "factual_scenario": "High Court acquitted accused based on oral denial of taking a hand loan.",
+    "executed_relief": "Supreme Court reversed High Court and restored trial court conviction.",
+    "practical_takeaway": "Payee wins unless the debtor produces solid documentary proof of loan repayment."
+  },
+  {
+    "id": "PREC_COMM_09",
+    "domain": "Cheque Bounce & Commercial Debt",
+    "case_name": "M/s Gimpex Private Ltd v. Manoj Goel",
+    "citation": "2021 SCC OnLine SC 925",
+    "court": "Supreme Court of India (3-Judge Bench)",
+    "year": 2021,
+    "governing_statutes": [
+      "Section 138 NI Act",
+      "Section 62 Contract Act"
+    ],
+    "key_issue": "Enforceability of Settlement Agreements executed during Section 138 compounding.",
+    "ratio_decidendi": "When parties enter a settlement agreement novating the original liability, default on the settlement agreement gives rise to fresh cause of action and legal notice remedies.",
+    "factual_scenario": "Debtor signed a settlement deed to pay in installments but defaulted on the second installment.",
+    "executed_relief": "Supreme Court upheld enforcement of the novated settlement terms.",
+    "practical_takeaway": "If a debtor signs a settlement agreement during mediation, any breach allows immediate summary recovery."
+  },
+  {
+    "id": "PREC_COMM_10",
+    "domain": "Cheque Bounce & Commercial Debt",
+    "case_name": "APS Forex Services Pvt Ltd v. Shakti International",
+    "citation": "(2020) 12 SCC 724",
+    "court": "Supreme Court of India",
+    "year": 2020,
+    "governing_statutes": [
+      "Section 138 & 139 NI Act"
+    ],
+    "key_issue": "Presumption extends to the existence of a legally enforceable debt.",
+    "ratio_decidendi": "Whenever an accused admits issuance of cheque, the court must presume the existence of a legally recoverable debt unless proved otherwise.",
+    "factual_scenario": "Accused claimed forex company could not prove source of funds for the underlying invoice.",
+    "executed_relief": "Supreme Court held initial burden is fully on the accused, not the complainant.",
+    "practical_takeaway": "You do not need to prove detailed source of funds in your initial complaint once the cheque is dishonored."
+  },
+  {
+    "id": "PREC_PROP_01",
+    "domain": "Property & Tenancy",
+    "case_name": "Maria Margarida Sequeria Fernandes v. Erasmo Jack de Sequeria",
+    "citation": "(2012) 5 SCC 370",
+    "court": "Supreme Court of India",
+    "year": 2012,
+    "governing_statutes": [
+      "Section 6 Specific Relief Act 1963",
+      "Section 9 CPC"
+    ],
+    "key_issue": "Protection of peaceful possession and prohibition of forcible dispossession.",
+    "ratio_decidendi": "No person in peaceful possession of property can be dispossessed by force, even by the true owner. Dispossession can only occur through due process of law by obtaining a court decree.",
+    "factual_scenario": "Owner used musclemen to throw out a long-term occupant without a court eviction order.",
+    "executed_relief": "Supreme Court mandated police-assisted restoration of possession and established guidelines for title pleadings.",
+    "practical_takeaway": "If a landlord or neighbor tries to throw your belongings or change locks by force, file an immediate Section 6 SRA suit for mandatory restoration."
+  },
+  {
+    "id": "PREC_PROP_02",
+    "domain": "Property & Tenancy",
+    "case_name": "Midnapur Zamindary Co. Ltd. v. Naresh Narayan Roy",
+    "citation": "AIR 1924 PC 144",
+    "court": "Privy Council (Affirmed by Supreme Court of India)",
+    "year": 1924,
+    "governing_statutes": [
+      "Section 6 Specific Relief Act",
+      "Transfer of Property Act"
+    ],
+    "key_issue": "Landlord's absolute obligation to seek judicial eviction.",
+    "ratio_decidendi": "In India, persons are not permitted to take forcible possession. Even against a tenant holding over without a lease, the landlord must obtain a decree of a competent court.",
+    "factual_scenario": "Landlord attempted extra-judicial self-help eviction after lease expiry.",
+    "executed_relief": "Injunction granted protecting tenant until lawful eviction decree.",
+    "practical_takeaway": "Even after lease expiry, your landlord cannot cut electricity, water, or lock the premises without a court eviction order."
+  },
+  {
+    "id": "PREC_PROP_03",
+    "domain": "Property & Tenancy",
+    "case_name": "Suraj Lamp & Industries Pvt Ltd v. State of Haryana",
+    "citation": "(2012) 1 SCC 656",
+    "court": "Supreme Court of India (3-Judge Bench)",
+    "year": 2012,
+    "governing_statutes": [
+      "Section 17 & 49 Registration Act",
+      "Section 54 Transfer of Property Act"
+    ],
+    "key_issue": "Invalidity of property transfers via Power of Attorney (GPA / SA / Will).",
+    "ratio_decidendi": "Transactions in the nature of General Power of Attorney (GPA), Agreement to Sell, or Will do not convey title or ownership. Immovable property can only be lawfully transferred by a registered deed of conveyance.",
+    "factual_scenario": "Purchaser bought prime land on GPA notarized stamp paper and claimed clear ownership title.",
+    "executed_relief": "Supreme Court held GPA sales cannot create ownership title or mutation rights.",
+    "practical_takeaway": "Never buy real estate on GPA/Notary agreement alone; demand a registered Sale Deed under Section 54 TPA."
+  },
+  {
+    "id": "PREC_PROP_04",
+    "domain": "Property & Tenancy",
+    "case_name": "R.V. Bhupal Prasad v. State of A.P.",
+    "citation": "(1995) 5 SCC 698",
+    "court": "Supreme Court of India",
+    "year": 1995,
+    "governing_statutes": [
+      "Section 106 & 111 Transfer of Property Act"
+    ],
+    "key_issue": "Tenant at Sufferance vs Tenant Holding Over.",
+    "ratio_decidendi": "A tenant whose lease has expired is a 'tenant at sufferance' but still enjoys judicial protection against illegal force. Landlord cannot commit criminal trespass to evict.",
+    "factual_scenario": "Commercial tenant's 5-year lease lapsed and landlord seized machinery by force.",
+    "executed_relief": "Supreme Court held eviction unlawful and ordered civil trial for recovery of possession.",
+    "practical_takeaway": "Tenant cannot be evicted by hired goons; landlord must serve 15-day notice under Section 106 TPA and file a civil suit."
+  },
+  {
+    "id": "PREC_PROP_05",
+    "domain": "Property & Tenancy",
+    "case_name": "Vidya Devi v. State of Himachal Pradesh",
+    "citation": "(2020) 2 SCC 569",
+    "court": "Supreme Court of India",
+    "year": 2020,
+    "governing_statutes": [
+      "Article 300A Constitution",
+      "Right to Fair Compensation in Land Acquisition Act"
+    ],
+    "key_issue": "Right to Property as a Human Right against state land grabbing.",
+    "ratio_decidendi": "The state cannot dispossess a citizen of their private land under the guise of public work without acquiring it under due statutory process and paying just compensation. Delay of 50 years cannot extinguish the citizen's title.",
+    "factual_scenario": "State took an illiterate widow's agricultural land for a public highway in 1967 without acquisition or paying compensation.",
+    "executed_relief": "Supreme Court ordered the State Government to pay ₹1 Crore compensation with interest and ₹10 Lakh litigation costs.",
+    "practical_takeaway": "If a government authority or municipal body encroaches on your private land without acquisition notice, file a Writ Petition under Article 226 citing Vidya Devi."
+  },
+  {
+    "id": "PREC_PROP_06",
+    "domain": "Property & Tenancy",
+    "case_name": "P.T. Munichikkanna Reddy v. Revamma",
+    "citation": "(2007) 6 SCC 59",
+    "court": "Supreme Court of India",
+    "year": 2007,
+    "governing_statutes": [
+      "Articles 64 & 65 Limitation Act 1963"
+    ],
+    "key_issue": "Strict requirements of Animus Possidendi for claiming title by Adverse Possession.",
+    "ratio_decidendi": "To claim title by adverse possession (12-year rule), the claimant must prove continuous, hostile possession with explicit animus possidendi (intent to dispossess the real owner to their knowledge). Mere long permissive possession does not ripen into ownership.",
+    "factual_scenario": "Relative lived in property as a permissive licensee for 15 years and claimed ownership by adverse possession.",
+    "executed_relief": "Supreme Court rejected adverse possession claim and restored property to true owner.",
+    "practical_takeaway": "A caretaker or relative living in your property cannot claim adverse possession without proof of hostile open defiance."
+  },
+  {
+    "id": "PREC_PROP_07",
+    "domain": "Property & Tenancy",
+    "case_name": "K.B. Saha and Sons Pvt Ltd v. Development Consultant Ltd",
+    "citation": "(2008) 8 SCC 564",
+    "court": "Supreme Court of India",
+    "year": 2008,
+    "governing_statutes": [
+      "Section 17 & 49 Registration Act 1908",
+      "Section 107 TPA"
+    ],
+    "key_issue": "Inadmissibility of unregistered lease agreement exceeding 11 months.",
+    "ratio_decidendi": "A lease of immovable property for exceeding 1 year or reserving yearly rent requires mandatory registration. An unregistered lease deed cannot be admitted into evidence to prove lease terms except for collateral purpose.",
+    "factual_scenario": "Landlord sued for breach of specific covenant in an unregistered 3-year commercial lease.",
+    "executed_relief": "Supreme Court held unregistered lease cannot be enforced for substantive covenants.",
+    "practical_takeaway": "Ensure all tenancy agreements over 11 months are registered; otherwise, it is treated as a month-to-month tenancy."
+  },
+  {
+    "id": "PREC_PROP_08",
+    "domain": "Property & Tenancy",
+    "case_name": "Anthony v. K.C. Ittoop and Sons",
+    "citation": "(2000) 6 SCC 394",
+    "court": "Supreme Court of India",
+    "year": 2000,
+    "governing_statutes": [
+      "Section 106 & 107 Transfer of Property Act"
+    ],
+    "key_issue": "Month-to-month tenancy creation when lease is unregistered.",
+    "ratio_decidendi": "When a tenant is in possession paying rent under an unregistered deed, law presumes a month-to-month tenancy terminable by 15 days' notice under Section 106 TPA.",
+    "factual_scenario": "Tenant claimed lease was void so landlord could not evict or recover rent.",
+    "executed_relief": "Supreme Court upheld landlord's 15-day termination notice under Section 106 TPA.",
+    "practical_takeaway": "Landlord can terminate an unregistered tenancy by issuing a 15-day legal notice to quit under Section 106 TPA."
+  },
+  {
+    "id": "PREC_PROP_09",
+    "domain": "Property & Tenancy",
+    "case_name": "S.P. Chengalvaraya Naidu v. Jagannath",
+    "citation": "(1994) 1 SCC 1",
+    "court": "Supreme Court of India",
+    "year": 1994,
+    "governing_statutes": [
+      "Section 44 Indian Evidence Act",
+      "Section 9 CPC"
+    ],
+    "key_issue": "Fraud vitiates all court decrees and property judgments.",
+    "ratio_decidendi": "A litigant who approaches the court with unclean hands or suppresses material title deeds obtains a decree by fraud, which is null and void ab initio and can be challenged at any stage in any court.",
+    "factual_scenario": "Party obtained a partition preliminary decree by concealing a registered release deed.",
+    "executed_relief": "Supreme Court threw out the fraudulent decree with costs.",
+    "practical_takeaway": "If an adversary obtained an ex-parte or fraudulent property order by hiding deeds, file an application to declare it void under Chengalvaraya Naidu."
+  },
+  {
+    "id": "PREC_PROP_10",
+    "domain": "Property & Tenancy",
+    "case_name": "Babu Lal v. Hazari Lal Kishori Lal",
+    "citation": "(1982) 1 SCC 525",
+    "court": "Supreme Court of India",
+    "year": 1982,
+    "governing_statutes": [
+      "Section 22 & 28 Specific Relief Act 1963"
+    ],
+    "key_issue": "Specific performance decree execution including possession and mesne profits.",
+    "ratio_decidendi": "In a suit for specific performance of sale agreement, the court is empowered to grant possession, partition, and refund of earnest money even at the stage of execution.",
+    "factual_scenario": "Seller refused to execute sale deed and argued court could not order physical delivery of possession.",
+    "executed_relief": "Supreme Court directed execution of sale deed and physical delivery of possession through court bailiff.",
+    "practical_takeaway": "When seller backs out of an Agreement to Sell, file a suit for Specific Performance claiming sale deed + physical possession under SRA."
+  },
+  {
+    "id": "PREC_FAM_01",
+    "domain": "Family, Matrimonial & Domestic Violence",
+    "case_name": "Vineeta Sharma v. Rakesh Sharma",
+    "citation": "(2020) 9 SCC 1",
+    "court": "Supreme Court of India (3-Judge Bench)",
+    "year": 2020,
+    "governing_statutes": [
+      "Section 6 Hindu Succession Act 1956"
+    ],
+    "key_issue": "Equal coparcenary rights of daughters in ancestral property by birth.",
+    "ratio_decidendi": "Daughters have equal coparcenary birthrights in ancestral Hindu Undivided Family (HUF) property under Section 6 HSA from birth. It is not necessary that the father was alive on the date of the 2005 amendment (9 September 2005).",
+    "factual_scenario": "Brothers claimed sister was not entitled to ancestral property partition because father passed away prior to 2005.",
+    "executed_relief": "Supreme Court ruled daughter is an equal coparcener entitled to identical share as sons.",
+    "practical_takeaway": "A daughter can claim an equal partition share in ancestral land/property regardless of when her father died."
+  },
+  {
+    "id": "PREC_FAM_02",
+    "domain": "Family, Matrimonial & Domestic Violence",
+    "case_name": "Satish Chander Ahuja v. Sneha Ahuja",
+    "citation": "(2020) 10 SCC 788",
+    "court": "Supreme Court of India (3-Judge Bench)",
+    "year": 2020,
+    "governing_statutes": [
+      "Section 2(s), 17 & 19 Protection of Women from Domestic Violence Act 2005"
+    ],
+    "key_issue": "Woman's right of residence in a shared household owned exclusively by in-laws.",
+    "ratio_decidendi": "A shared household under Section 2(s) PWDVA does not require the husband to have ownership title. Even if the house belongs exclusively to the father-in-law or mother-in-law, if the woman lived there in a domestic relationship, she cannot be evicted without due process of law.",
+    "factual_scenario": "Father-in-law filed a civil suit to evict daughter-in-law from his self-acquired house during matrimonial discord.",
+    "executed_relief": "Supreme Court protected daughter-in-law's right to reside in the matrimonial home.",
+    "practical_takeaway": "In-laws cannot evict a married woman from the shared home without providing equal alternate accommodation under Section 19 PWDVA."
+  },
+  {
+    "id": "PREC_FAM_03",
+    "domain": "Family, Matrimonial & Domestic Violence",
+    "case_name": "Amardeep Singh v. Harveen Kaur",
+    "citation": "(2017) 8 SCC 746",
+    "court": "Supreme Court of India",
+    "year": 2017,
+    "governing_statutes": [
+      "Section 13B(2) Hindu Marriage Act 1955"
+    ],
+    "key_issue": "Waiver of the 6-month statutory cooling-off period in mutual consent divorce.",
+    "ratio_decidendi": "The 6-month waiting period under Section 13B(2) is directory, not mandatory. If the parties have been separated for over 18 months and all mediation/settlement terms are resolved, the court can waive the cooling-off period.",
+    "factual_scenario": "Husband and wife settled all child custody and alimony terms after 8 years of separation and sought immediate divorce.",
+    "executed_relief": "Supreme Court waived the 6-month period and granted mutual consent divorce within 1 week.",
+    "practical_takeaway": "If you have agreed on mutual divorce terms and lived separately for over 18 months, apply for 6-month cooling-off waiver citing Amardeep Singh."
+  },
+  {
+    "id": "PREC_FAM_04",
+    "domain": "Family, Matrimonial & Domestic Violence",
+    "case_name": "Rajnesh v. Neha",
+    "citation": "(2021) 2 SCC 324",
+    "court": "Supreme Court of India",
+    "year": 2020,
+    "governing_statutes": [
+      "Section 125 CrPC",
+      "Section 24 HMA",
+      "Section 20 PWDVA"
+    ],
+    "key_issue": "Pan-India uniform guidelines on interim maintenance and mandatory Asset Disclosure Affidavits.",
+    "ratio_decidendi": "Both parties must mandatorily file detailed Affidavits of Assets and Liabilities. Maintenance is payable from the date of filing the application, and overlapping maintenance orders across different courts must be adjusted.",
+    "factual_scenario": "Husband hid his real income to evade paying child and spousal maintenance.",
+    "executed_relief": "Framed comprehensive nationwide templates for mandatory income disclosure under oath.",
+    "practical_takeaway": "Demand immediate interim maintenance from the date of application with mandatory asset disclosure citing Rajnesh v. Neha."
+  },
+  {
+    "id": "PREC_FAM_05",
+    "domain": "Family, Matrimonial & Domestic Violence",
+    "case_name": "Shilpa Sailesh v. Varun Sreenivasan",
+    "citation": "2023 SCC OnLine SC 544",
+    "court": "Supreme Court of India (5-Judge Constitution Bench)",
+    "year": 2023,
+    "governing_statutes": [
+      "Article 142 Constitution of India",
+      "Section 13 HMA"
+    ],
+    "key_issue": "Direct dissolution of marriage by Supreme Court on ground of Irretrievable Breakdown of Marriage.",
+    "ratio_decidendi": "Supreme Court has the power under Article 142 to grant divorce on the ground of 'Irretrievable Breakdown of Marriage' to do complete justice without forcing parties to wait for years in family court trials.",
+    "factual_scenario": "Couple lived separately for over 10 years with bitter litigation and zero possibility of reconciliation.",
+    "executed_relief": "Supreme Court dissolved the dead marriage directly under Article 142.",
+    "practical_takeaway": "When marriage is completely dead beyond repair for years, petition the Supreme Court under Article 142 for immediate dissolution."
+  },
+  {
+    "id": "PREC_FAM_06",
+    "domain": "Family, Matrimonial & Domestic Violence",
+    "case_name": "Dr. Swapan Kumar Banerjee v. State of West Bengal",
+    "citation": "(2020) 19 SCC 342",
+    "court": "Supreme Court of India",
+    "year": 2019,
+    "governing_statutes": [
+      "Section 125 CrPC",
+      "Section 144 BNSS"
+    ],
+    "key_issue": "Divorced wife's right to maintenance even if divorce granted on ground of desertion.",
+    "ratio_decidendi": "A divorced wife who has not remarried is entitled to maintenance under Section 125 CrPC / Section 144 BNSS even if the divorce decree was granted in favor of the husband on the ground of desertion.",
+    "factual_scenario": "Husband stopped paying maintenance arguing wife deserted him and he obtained ex-parte divorce.",
+    "executed_relief": "Supreme Court held maintenance obligation continues as long as she is unable to maintain herself.",
+    "practical_takeaway": "Divorced wives remain entitled to monthly maintenance until remarriage regardless of divorce grounds."
+  },
+  {
+    "id": "PREC_FAM_07",
+    "domain": "Family, Matrimonial & Domestic Violence",
+    "case_name": "K. Srinivas Rao v. D.A. Deepa",
+    "citation": "(2013) 5 SCC 226",
+    "court": "Supreme Court of India",
+    "year": 2013,
+    "governing_statutes": [
+      "Section 13(1)(ia) Hindu Marriage Act 1955"
+    ],
+    "key_issue": "False, scandalous criminal complaints constituting mental cruelty for divorce.",
+    "ratio_decidendi": "Filing unfounded, defamatory criminal complaints and causing arrest of spouse and in-laws amounts to mental cruelty of such magnitude as to warrant dissolution of marriage under Section 13(1)(ia) HMA.",
+    "factual_scenario": "Wife filed false complaints alleging incestuous conduct and dowry harassment resulting in husband's arrest.",
+    "executed_relief": "Supreme Court granted divorce decree on ground of cruelty.",
+    "practical_takeaway": "Acquittal in false Section 498A charges serves as ground to obtain divorce on cruelty under Section 13(1)(ia) HMA."
+  },
+  {
+    "id": "PREC_FAM_08",
+    "domain": "Family, Matrimonial & Domestic Violence",
+    "case_name": "Roxann Sharma v. Arun Sharma",
+    "citation": "(2015) 8 SCC 318",
+    "court": "Supreme Court of India",
+    "year": 2015,
+    "governing_statutes": [
+      "Section 6(a) Hindu Minority and Guardianship Act 1956",
+      "Guardians and Wards Act"
+    ],
+    "key_issue": "Custody of minor children under 5 years of age.",
+    "ratio_decidendi": "In child custody disputes, child's welfare is paramount. Under Section 6(a) HMGA, the custody of a child under 5 years should ordinarily be with the mother unless her conduct makes her unsuitable.",
+    "factual_scenario": "Father forcibly took 2-year-old child and claimed better financial resources for custody.",
+    "executed_relief": "Supreme Court returned physical custody to the mother.",
+    "practical_takeaway": "For infants and toddlers under 5, maternal custody is strongly presumed and protected under Section 6(a) HMGA."
+  },
+  {
+    "id": "PREC_FAM_09",
+    "domain": "Family, Matrimonial & Domestic Violence",
+    "case_name": "Prabha Tyagi v. Kamlesh Devi",
+    "citation": "(2022) 8 SCC 90",
+    "court": "Supreme Court of India",
+    "year": 2022,
+    "governing_statutes": [
+      "Section 12, 18 & 19 PWDVA 2005"
+    ],
+    "key_issue": "Victim's right to file Domestic Violence complaint even when not living in the house at the time of filing.",
+    "ratio_decidendi": "It is not mandatory for an aggrieved woman to be physically residing in the shared household at the time of filing the PWDVA application; past domestic relationship suffices.",
+    "factual_scenario": "Widow thrown out after husband's death filed PWDVA suit from her parents' home; in-laws claimed suit unmaintainable.",
+    "executed_relief": "Supreme Court ruled application fully maintainable and granted residence and monetary relief.",
+    "practical_takeaway": "You can file a domestic violence petition from your parents' home even if you were evicted months ago."
+  },
+  {
+    "id": "PREC_FAM_10",
+    "domain": "Family, Matrimonial & Domestic Violence",
+    "case_name": "Badshah v. Urmila Badshah Godse",
+    "citation": "(2014) 1 SCC 188",
+    "court": "Supreme Court of India",
+    "year": 2014,
+    "governing_statutes": [
+      "Section 125 CrPC",
+      "Section 144 BNSS"
+    ],
+    "key_issue": "Maintenance rights of second wife when husband fraudulently concealed first marriage.",
+    "ratio_decidendi": "A man who dupes a woman by concealing his existing marriage cannot take advantage of his own wrong to deny maintenance under Section 125 CrPC.",
+    "factual_scenario": "Husband married second wife claiming he was single and later refused maintenance claiming marriage was void.",
+    "executed_relief": "Supreme Court ordered husband to pay regular monthly maintenance.",
+    "practical_takeaway": "If deceived into a second marriage, you can claim full maintenance under Section 144 BNSS / Section 125 CrPC."
+  },
+  {
+    "id": "PREC_LAB_01",
+    "domain": "Employment, Wages & Labour",
+    "case_name": "State of Punjab v. Jagjit Singh",
+    "citation": "(2017) 1 SCC 148",
+    "court": "Supreme Court of India",
+    "year": 2016,
+    "governing_statutes": [
+      "Articles 14 & 39(d) Constitution of India"
+    ],
+    "key_issue": "Equal Pay for Equal Work for temporary, contractual, and ad-hoc employees.",
+    "ratio_decidendi": "An employee engaged for the same work cannot be paid less than a regular employee doing identical duties. Denying equal pay violates human dignity and Article 14.",
+    "factual_scenario": "Daily wage and contractual workers performed identical 8-hour duties as regular staff for 1/3rd the salary.",
+    "executed_relief": "Supreme Court ordered parity of minimum pay scale for all temporary staff.",
+    "practical_takeaway": "If contractual workers perform identical duties to permanent employees, demand minimum pay parity citing Jagjit Singh."
+  },
+  {
+    "id": "PREC_LAB_02",
+    "domain": "Employment, Wages & Labour",
+    "case_name": "Central Inland Water Transport Corp v. Brojo Nath Ganguly",
+    "citation": "(1986) 3 SCC 156",
+    "court": "Supreme Court of India",
+    "year": 1986,
+    "governing_statutes": [
+      "Section 23 Indian Contract Act",
+      "Article 14 Constitution"
+    ],
+    "key_issue": "Unconscionable 'hire-and-fire' clauses in employment contracts.",
+    "ratio_decidendi": "An employment clause giving the employer absolute arbitrary power to terminate a permanent employee with 3 months' notice without inquiry is void against public policy under Section 23 Contract Act.",
+    "factual_scenario": "Public corporation terminated manager with 3 months' pay under Rule 9(i) without charges or hearing.",
+    "executed_relief": "Supreme Court struck down the termination clause and ordered reinstatement with full back wages.",
+    "practical_takeaway": "Arbitrary termination clauses without reason or enquiry are legally void under Section 23 Contract Act."
+  },
+  {
+    "id": "PREC_LAB_03",
+    "domain": "Employment, Wages & Labour",
+    "case_name": "Bangalore Water Supply and Sewerage Board v. A. Rajappa",
+    "citation": "(1978) 2 SCC 213",
+    "court": "Supreme Court of India (7-Judge Constitution Bench)",
+    "year": 1978,
+    "governing_statutes": [
+      "Section 2(j) Industrial Disputes Act 1947"
+    ],
+    "key_issue": "The 'Triple Test' defining 'Industry' under Labour Law.",
+    "ratio_decidendi": "Any systematic activity organized by cooperation between employer and employee for the production and distribution of goods and services is an 'Industry', covering hospitals, universities, clubs, and research boards.",
+    "factual_scenario": "Employees of board sought dispute resolution under Industrial Disputes Act; employer claimed it was sovereign statutory body.",
+    "executed_relief": "Supreme Court held board is an industry and workers have full labour court rights.",
+    "practical_takeaway": "You can approach the Labour Commissioner / Labour Court against educational institutions, hospitals, and boards."
+  },
+  {
+    "id": "PREC_LAB_04",
+    "domain": "Employment, Wages & Labour",
+    "case_name": "Bakshish Singh v. Darshan Engineering Works",
+    "citation": "(1994) 1 SCC 9",
+    "court": "Supreme Court of India",
+    "year": 1994,
+    "governing_statutes": [
+      "Section 4 Payment of Gratuity Act 1972"
+    ],
+    "key_issue": "Statutory right to Gratuity after 5 years of continuous service.",
+    "ratio_decidendi": "Payment of Gratuity is a statutory entitlement upon completing 5 years of continuous service, payable even upon voluntary resignation. Employer cannot withhold gratuity without criminal conviction causing financial loss.",
+    "factual_scenario": "Employer withheld gratuity of employee who resigned after 7 years of service.",
+    "executed_relief": "Supreme Court ordered immediate disbursement of gratuity with 10% compound interest.",
+    "practical_takeaway": "If an employer refuses gratuity after 5 years of service, file a Form N claim before the Controlling Authority under the Gratuity Act."
+  },
+  {
+    "id": "PREC_LAB_05",
+    "domain": "Employment, Wages & Labour",
+    "case_name": "Deepali Gundu Surwase v. Kranti Junior Adhyapak Mahavidyalaya",
+    "citation": "(2013) 10 SCC 324",
+    "court": "Supreme Court of India",
+    "year": 2013,
+    "governing_statutes": [
+      "Section 11A Industrial Disputes Act 1947"
+    ],
+    "key_issue": "Reinstatement with 100% Back Wages as normal rule in illegal terminations.",
+    "ratio_decidendi": "In cases of wrongful termination, the normal rule is full back-wages with reinstatement. The burden is on the employer to prove the employee was gainfully employed elsewhere during the interim period.",
+    "factual_scenario": "Teacher unlawfully dismissed without enquiry was reinstated but denied back wages.",
+    "executed_relief": "Supreme Court awarded 100% back wages and continuity of service.",
+    "practical_takeaway": "Upon proving illegal termination before the Labour Court, you are entitled to full retroactive back-wages."
+  },
+  {
+    "id": "PREC_LAB_06",
+    "domain": "Employment, Wages & Labour",
+    "case_name": "Aurelius Consultants v. POSH Internal Committee",
+    "citation": "2021 SCC OnLine Del 3521",
+    "court": "Delhi High Court / Supreme Court Guidelines",
+    "year": 2021,
+    "governing_statutes": [
+      "POSH Act 2013 (Prevention of Sexual Harassment at Workplace)"
+    ],
+    "key_issue": "Natural Justice and strict 90-day inquiry timelines under POSH Act.",
+    "ratio_decidendi": "The Internal Complaints Committee (ICC) must provide the complaint copy to the respondent within 7 days, complete the inquiry within 90 days, and ensure both parties receive the inquiry report.",
+    "factual_scenario": "Company terminated senior executive without sharing ICC report or witness statements.",
+    "executed_relief": "Court set aside the termination order for violation of natural justice.",
+    "practical_takeaway": "POSH inquiries must strictly conclude within 90 days with full disclosure of witness testimonies."
+  },
+  {
+    "id": "PREC_LAB_07",
+    "domain": "Employment, Wages & Labour",
+    "case_name": "D.K. Yadav v. J.M.A. Industries Ltd",
+    "citation": "(1993) 3 SCC 259",
+    "court": "Supreme Court of India",
+    "year": 1993,
+    "governing_statutes": [
+      "Article 21 Constitution",
+      "Industrial Disputes Act"
+    ],
+    "key_issue": "Automatic termination for 'Abandonment of Service' without domestic enquiry.",
+    "ratio_decidendi": "Even if standing orders provide for automatic termination after 8 days of unauthorized absence, the employer must conduct a basic domestic inquiry and give an opportunity to explain before striking the name off rolls.",
+    "factual_scenario": "Employee on medical leave had his service struck off rolls under deemed abandonment clause.",
+    "executed_relief": "Supreme Court struck down the termination and awarded reinstatement with 50% back wages.",
+    "practical_takeaway": "An employer cannot fire you for absence without issuing a show-cause notice and holding an inquiry."
+  },
+  {
+    "id": "PREC_LAB_08",
+    "domain": "Employment, Wages & Labour",
+    "case_name": "All India Reserve Bank Employees Association v. RBI",
+    "citation": "AIR 1966 SC 305",
+    "court": "Supreme Court of India",
+    "year": 1966,
+    "governing_statutes": [
+      "Minimum Wages Act 1948",
+      "Article 23 Constitution"
+    ],
+    "key_issue": "Payment below statutory Minimum Wage amounting to forced labour.",
+    "ratio_decidendi": "An employer who pays less than the statutory minimum wage violates Article 23 (prohibition of forced labour); financial hardship of the employer is no excuse.",
+    "factual_scenario": "Contractor claimed financial loss prevented paying statutory minimum wages to cleaning staff.",
+    "executed_relief": "Supreme Court mandated strict payment of minimum wages with penal damages.",
+    "practical_takeaway": "Paying below minimum wage is a criminal offence; file a complaint before the Labour Enforcement Officer."
+  },
+  {
+    "id": "PREC_LAB_09",
+    "domain": "Employment, Wages & Labour",
+    "case_name": "Workmen of American Express v. Management of American Express",
+    "citation": "(1985) 4 SCC 71",
+    "court": "Supreme Court of India",
+    "year": 1985,
+    "governing_statutes": [
+      "Section 25B & 25F Industrial Disputes Act 1947"
+    ],
+    "key_issue": "Calculation of 240 days continuous service including Sundays and paid holidays.",
+    "ratio_decidendi": "For determining 240 days of continuous service under Section 25B IDA for retrenchment protection, Sundays, paid holidays, and authorized leave must be counted.",
+    "factual_scenario": "Bank terminated workman claiming he worked only 230 actual working days excluding Sundays.",
+    "executed_relief": "Supreme Court held workman completed 240 days and ordered reinstatement under Section 25F.",
+    "practical_takeaway": "If you completed 240 days including weekends in 12 months, you cannot be retrenched without 1 month notice and severance compensation."
+  },
+  {
+    "id": "PREC_LAB_10",
+    "domain": "Employment, Wages & Labour",
+    "case_name": "State of U.P. v. Arvind Kumar Srivastava",
+    "citation": "(2015) 1 SCC 347",
+    "court": "Supreme Court of India",
+    "year": 2015,
+    "governing_statutes": [
+      "Article 14 & 16 Constitution of India"
+    ],
+    "key_issue": "Normal rule of parity for similarly situated employees in service benefits.",
+    "ratio_decidendi": "When a set of employees is granted relief by the court, all similarly situated employees must be extended the same benefit by the state without forcing everyone to individually litigate.",
+    "factual_scenario": "Government gave revised pay scale only to employees who filed court petitions, denying others.",
+    "executed_relief": "Supreme Court ordered extension of benefits to all eligible employees.",
+    "practical_takeaway": "If coworkers won a pay or regularization judgment, cite Arvind Kumar Srivastava to demand the same benefit."
+  },
+  {
+    "id": "PREC_CONS_01",
+    "domain": "Consumer Protection & RERA",
+    "case_name": "Imperia Structures Ltd v. Anil Patni",
+    "citation": "(2020) 10 SCC 783",
+    "court": "Supreme Court of India",
+    "year": 2020,
+    "governing_statutes": [
+      "Consumer Protection Act 2019",
+      "RERA 2016 Section 18 & 79"
+    ],
+    "key_issue": "Concurrent remedies under Consumer Forums and Real Estate (RERA) Authority.",
+    "ratio_decidendi": "Remedies under the Consumer Protection Act and RERA are concurrent. A homebuyer is entitled to initiate proceedings before the Consumer Commission (NCDRC/SCDRC) even if RERA exists, and RERA does not bar consumer complaints.",
+    "factual_scenario": "Builder argued NCDRC consumer complaint was barred because project was registered under RERA.",
+    "executed_relief": "Supreme Court dismissed builder's appeal and upheld consumer refund order with 9% interest.",
+    "practical_takeaway": "Homebuyers can choose between RERA and Consumer Forum (NCDRC) or pursue concurrent remedies against defaulting builders."
+  },
+  {
+    "id": "PREC_CONS_02",
+    "domain": "Consumer Protection & RERA",
+    "case_name": "Pioneer Urban Land & Infrastructure Ltd v. Govindan Raghavan",
+    "citation": "(2019) 5 SCC 725",
+    "court": "Supreme Court of India",
+    "year": 2019,
+    "governing_statutes": [
+      "Section 2(46) Consumer Protection Act 2019",
+      "Section 18 RERA 2016"
+    ],
+    "key_issue": "One-sided, unfair terms in Builder-Buyer agreements.",
+    "ratio_decidendi": "A term in a standard builder contract that imposes 18% interest on buyer delays but only ₹5/sq.ft on builder delays is an 'Unfair Contract' and unenforceable. Homebuyer cannot be compelled to take delayed possession and is entitled to full refund with interest.",
+    "factual_scenario": "Builder delayed handover by 3 years and insisted buyer take possession under one-sided clauses.",
+    "executed_relief": "Supreme Court ordered full refund of ₹4.83 Crores with 10.7% interest.",
+    "practical_takeaway": "One-sided builder contracts with unequal delay penalties are void unfair contracts under Pioneer Urban."
+  },
+  {
+    "id": "PREC_CONS_03",
+    "domain": "Consumer Protection & RERA",
+    "case_name": "Wg Cdr Arifur Rahman Khan v. DLF Southern Homes Pvt Ltd",
+    "citation": "(2020) 16 SCC 512",
+    "court": "Supreme Court of India",
+    "year": 2020,
+    "governing_statutes": [
+      "Consumer Protection Act",
+      "Section 18 RERA"
+    ],
+    "key_issue": "Compensation for delayed possession in addition to taking handover.",
+    "ratio_decidendi": "Even if a homebuyer chooses to take possession of the flat rather than refund, the buyer is legally entitled to compensation for delay at 6% p.a. from the promised possession date until actual delivery.",
+    "factual_scenario": "Homebuyers accepted delayed flat keys but builder refused to pay delay compensation.",
+    "executed_relief": "Supreme Court awarded 6% p.a. interest compensation plus ₹50,000 litigation costs to each buyer.",
+    "practical_takeaway": "You can accept flat handover and STILL demand 6% p.a. delay compensation from the builder."
+  },
+  {
+    "id": "PREC_CONS_04",
+    "domain": "Consumer Protection & RERA",
+    "case_name": "Fortune Infrastructure v. Trevor D'Lima",
+    "citation": "(2018) 5 SCC 442",
+    "court": "Supreme Court of India",
+    "year": 2018,
+    "governing_statutes": [
+      "Section 2(1)(g) Consumer Protection Act",
+      "Section 18 RERA"
+    ],
+    "key_issue": "Homebuyer cannot be made to wait indefinitely for flat possession.",
+    "ratio_decidendi": "A homebuyer cannot be asked to wait indefinitely for possession. When a builder fails to deliver within a reasonable period (3 years), the buyer is entitled to full refund with interest and market value escalation.",
+    "factual_scenario": "Developer failed to start construction for 4 years citing local municipal approval delays.",
+    "executed_relief": "Supreme Court ordered refund of entire principal amount with market value compensation.",
+    "practical_takeaway": "If construction is stalled for over 3 years, you have an absolute right to demand full money back with interest."
+  },
+  {
+    "id": "PREC_CONS_05",
+    "domain": "Consumer Protection & RERA",
+    "case_name": "New India Assurance Co. Ltd. v. Hilli Multipurpose Cold Storage",
+    "citation": "(2020) 5 SCC 757",
+    "court": "Supreme Court of India (5-Judge Constitution Bench)",
+    "year": 2020,
+    "governing_statutes": [
+      "Section 38(2)(a) Consumer Protection Act 2019"
+    ],
+    "key_issue": "Strict 30+15=45 days limitation period for opposite party to file Written Version in Consumer Courts.",
+    "ratio_decidendi": "The statutory limitation of 30 days (extendable by 15 days) for the opposite party to file a written reply before the Consumer Forum is mandatory and cannot be extended under any circumstances.",
+    "factual_scenario": "Insurance company delayed filing reply by 60 days and sought condonation of delay.",
+    "executed_relief": "Supreme Court struck off the insurance company's defense for missing the 45-day deadline.",
+    "practical_takeaway": "If a company fails to file its reply within 45 days of notice in Consumer Court, their defense is automatically forfeited."
+  },
+  {
+    "id": "PREC_CONS_06",
+    "domain": "Consumer Protection & RERA",
+    "case_name": "National Insurance Co. Ltd. v. Nitin Khandelwal",
+    "citation": "(2008) 11 SCC 259",
+    "court": "Supreme Court of India",
+    "year": 2008,
+    "governing_statutes": [
+      "Consumer Protection Act",
+      "Motor Vehicles Act 1988"
+    ],
+    "key_issue": "Rejection of vehicle theft insurance claims on technical condition breaches.",
+    "ratio_decidendi": "In vehicle theft claims, insurance company cannot reject the claim in toto on the ground of breach of policy conditions (e.g. using private vehicle for commercial carrying); claim must be settled on non-standard basis (75%).",
+    "factual_scenario": "Vehicle stolen by passengers; insurance company repudiated claim stating vehicle was carrying paid passengers.",
+    "executed_relief": "Supreme Court ordered insurer to pay 75% of insured declared value with interest.",
+    "practical_takeaway": "Insurance companies cannot totally reject genuine theft claims on minor policy condition technicalities."
+  },
+  {
+    "id": "PREC_CONS_07",
+    "domain": "Consumer Protection & RERA",
+    "case_name": "IREO Grace Realtech Pvt Ltd v. Abhishek Khanna",
+    "citation": "(2021) 3 SCC 241",
+    "court": "Supreme Court of India",
+    "year": 2021,
+    "governing_statutes": [
+      "Consumer Protection Act 2019",
+      "Section 18 RERA"
+    ],
+    "key_issue": "Right of refund for apartment buyers who have not received possession within timeline.",
+    "ratio_decidendi": "Allottees who have not been offered possession within the contractual timeline are entitled to complete refund of amounts deposited along with 9% interest from the date of each deposit.",
+    "factual_scenario": "Developer received Occupancy Certificate after 5 years of delay and attempted to force refund claimants to accept flat.",
+    "executed_relief": "Supreme Court upheld full cash refund with 9% interest for all non-possession buyers.",
+    "practical_takeaway": "If you sought refund before the developer obtained OC, you are entitled to full refund with 9% interest."
+  },
+  {
+    "id": "PREC_CONS_08",
+    "domain": "Consumer Protection & RERA",
+    "case_name": "Emaar MGF Land Ltd. v. Aftab Singh",
+    "citation": "(2019) 12 SCC 751",
+    "court": "Supreme Court of India",
+    "year": 2019,
+    "governing_statutes": [
+      "Section 8 Arbitration & Conciliation Act 1996",
+      "Consumer Protection Act"
+    ],
+    "key_issue": "Arbitration clauses cannot oust Consumer Forum jurisdiction.",
+    "ratio_decidendi": "An arbitration clause in a commercial or consumer agreement cannot bar a consumer from approaching Consumer Forums, as consumer remedies are special statutory protections.",
+    "factual_scenario": "Builder filed Section 8 Arbitration application seeking dismissal of consumer complaint.",
+    "executed_relief": "Supreme Court dismissed builder's plea and affirmed consumer court jurisdiction.",
+    "practical_takeaway": "An arbitration clause in your buyer/service contract cannot stop you from filing a consumer court case."
+  },
+  {
+    "id": "PREC_CONS_09",
+    "domain": "Consumer Protection & RERA",
+    "case_name": "Bikram Chatterji v. Union of India (Amrapali)",
+    "citation": "(2019) 19 SCC 161",
+    "court": "Supreme Court of India",
+    "year": 2019,
+    "governing_statutes": [
+      "RERA 2016",
+      "Prevention of Money Laundering Act"
+    ],
+    "key_issue": "Piercing the corporate veil in real estate builder fraud and forensic audit.",
+    "ratio_decidendi": "Diversion of homebuyers' funds by builder directors constitutes fraud. Court can cancel RERA registration, attach personal properties of directors, and appoint NBCC to complete stalled housing projects.",
+    "factual_scenario": "Amrapali Group siphoned ₹3,000 Crores of homebuyer money leaving 42,000 flats incomplete.",
+    "executed_relief": "Supreme Court cancelled builder lease, seized directors' personal bank accounts, and handed construction to government NBCC.",
+    "practical_takeaway": "RERA and High Courts have the power to attach personal assets of builder directors for fund diversion."
+  },
+  {
+    "id": "PREC_CONS_10",
+    "domain": "Consumer Protection & RERA",
+    "case_name": "Gurgaon Real Estate Regulatory Authority v. Sanjeevani",
+    "citation": "2021 SCC OnLine SC 892",
+    "court": "Supreme Court of India",
+    "year": 2021,
+    "governing_statutes": [
+      "Section 40 RERA 2016"
+    ],
+    "key_issue": "Execution of RERA Recovery Certificates through District Collector Revenue Recovery.",
+    "ratio_decidendi": "Orders of refund and interest passed by RERA are enforceable as arrears of land revenue through the District Collector under Section 40 RERA.",
+    "factual_scenario": "Builder refused to pay RERA refund order claiming civil court execution was required.",
+    "executed_relief": "Supreme Court affirmed direct revenue attachment by District Collector.",
+    "practical_takeaway": "If a builder ignores a RERA refund order, apply to the District Collector to attach builder bank accounts as land revenue arrears."
+  },
+  {
+    "id": "PREC_CONT_01",
+    "domain": "Contract & Arbitration",
+    "case_name": "Percept D'Mark (India) Pvt Ltd v. Zaheer Khan",
+    "citation": "(2006) 4 SCC 227",
+    "court": "Supreme Court of India",
+    "year": 2006,
+    "governing_statutes": [
+      "Section 27 Indian Contract Act 1872"
+    ],
+    "key_issue": "Absolute voidance of post-employment and post-contractual Non-Compete clauses.",
+    "ratio_decidendi": "Under Section 27 of the Indian Contract Act, any agreement in restraint of trade or profession is void ab initio. Post-contractual non-compete restrictions cannot be enforced in India, regardless of reasonableness.",
+    "factual_scenario": "Management agency sought injunction against cricketer Zaheer Khan from signing with another agency after contract expiry.",
+    "executed_relief": "Supreme Court dismissed injunction and declared post-term non-compete void.",
+    "practical_takeaway": "A post-employment non-compete clause in your employment contract is 100% void and legally unenforceable in India."
+  },
+  {
+    "id": "PREC_CONT_02",
+    "domain": "Contract & Arbitration",
+    "case_name": "Kailash Nath Associates v. Delhi Development Authority (DDA)",
+    "citation": "(2015) 4 SCC 136",
+    "court": "Supreme Court of India",
+    "year": 2015,
+    "governing_statutes": [
+      "Section 74 Indian Contract Act 1872"
+    ],
+    "key_issue": "Forfeiture of Earnest Money and Security Deposits requiring proof of actual loss.",
+    "ratio_decidendi": "Section 74 Contract Act emphasizes that liquidated damages or earnest money forfeiture is permissible only if actual loss has been suffered by the non-defaulting party. Forfeiture of deposit without proving loss is illegal penalty.",
+    "factual_scenario": "DDA forfeited ₹1.25 Crores earnest money deposit of auction winner despite subsequently re-auctioning the plot at a higher profit.",
+    "executed_relief": "Supreme Court ordered DDA to refund entire deposit with 9% interest.",
+    "practical_takeaway": "A seller or client cannot forfeit your earnest money deposit unless they prove they suffered actual financial loss."
+  },
+  {
+    "id": "PREC_CONT_03",
+    "domain": "Contract & Arbitration",
+    "case_name": "Perkins Eastman Architects DPC v. HSCC (India) Ltd",
+    "citation": "(2020) 20 SCC 760",
+    "court": "Supreme Court of India",
+    "year": 2019,
+    "governing_statutes": [
+      "Section 12(5) Arbitration and Conciliation Act 1996"
+    ],
+    "key_issue": "Voidance of Unilateral Sole Arbitrator Appointments by interested party.",
+    "ratio_decidendi": "A person who has an interest in the outcome of the dispute (such as a Director or Managing Director of one party) is ineligible to act as arbitrator and is equally disqualified from unilaterally appointing a sole arbitrator.",
+    "factual_scenario": "Government company unilaterally appointed its own arbitrator under standard contract clause.",
+    "executed_relief": "Supreme Court annulled the unilateral appointment and appointed an independent former judge as sole arbitrator.",
+    "practical_takeaway": "If a bank, vendor, or client unilaterally appoints their own arbitrator, it is void ab initio under Perkins Eastman."
+  },
+  {
+    "id": "PREC_CONT_04",
+    "domain": "Contract & Arbitration",
+    "case_name": "TRF Ltd v. Energo Engineering Projects Ltd",
+    "citation": "(2017) 8 SCC 377",
+    "court": "Supreme Court of India (3-Judge Bench)",
+    "year": 2017,
+    "governing_statutes": [
+      "Section 12(5) & Seventh Schedule Arbitration Act 1996"
+    ],
+    "key_issue": "Ineligible Managing Director cannot nominate substitute arbitrator.",
+    "ratio_decidendi": "Once an authority becomes ineligible by operation of law under Section 12(5) to act as an arbitrator, they cannot nominate another person to act as an arbitrator on their behalf (Qui facit per alium facit per se).",
+    "factual_scenario": "Managing Director disqualified by 2015 amendment nominated an advocate as sole arbitrator.",
+    "executed_relief": "Supreme Court declared the nomination void and set aside the reference.",
+    "practical_takeaway": "Clause allowing MD to appoint arbitrator is invalid; apply to High Court under Section 11 for neutral court appointment."
+  },
+  {
+    "id": "PREC_CONT_05",
+    "domain": "Contract & Arbitration",
+    "case_name": "Energy Watchdog v. CERC",
+    "citation": "(2017) 14 SCC 80",
+    "court": "Supreme Court of India",
+    "year": 2017,
+    "governing_statutes": [
+      "Section 32 & 56 Indian Contract Act 1872"
+    ],
+    "key_issue": "Strict boundaries of Force Majeure and Frustration of Contracts.",
+    "ratio_decidendi": "Commercial unviability, rise in fuel prices, or loss of profit does not amount to frustration under Section 56 Contract Act. Force Majeure clauses must be strictly construed according to their express language.",
+    "factual_scenario": "Power producer sought tariff escalation claiming Indonesian coal price hike made contract impossible to perform.",
+    "executed_relief": "Supreme Court held contract was not frustrated and enforced original tariff obligation.",
+    "practical_takeaway": "You cannot breach a contract under 'Force Majeure' merely because prices increased or it became unprofitable."
+  },
+  {
+    "id": "PREC_CONT_06",
+    "domain": "Contract & Arbitration",
+    "case_name": "Satyabrata Ghose v. Mugneeram Bangur & Co.",
+    "citation": "1954 SCR 310",
+    "court": "Supreme Court of India",
+    "year": 1954,
+    "governing_statutes": [
+      "Section 56 Indian Contract Act 1872"
+    ],
+    "key_issue": "Doctrine of Frustration of Contract in Indian Jurisprudence.",
+    "ratio_decidendi": "Section 56 of the Contract Act is an exhaustive code on the doctrine of frustration. Impossibility is not restricted to physical impossibility, but includes supervening events that fundamentally destroy the basis of the contract.",
+    "factual_scenario": "Plot sale contract delayed because land was temporarily requisitioned for military purposes during World War II.",
+    "executed_relief": "Supreme Court held temporary war requisition did not permanently frustrate the sale contract.",
+    "practical_takeaway": "Contract frustration requires proof that the foundational purpose was completely and permanently destroyed."
+  },
+  {
+    "id": "PREC_CONT_07",
+    "domain": "Contract & Arbitration",
+    "case_name": "Bharat Aluminium Co. (BALCO) v. Kaiser Aluminium",
+    "citation": "(2012) 9 SCC 552",
+    "court": "Supreme Court of India (5-Judge Constitution Bench)",
+    "year": 2012,
+    "governing_statutes": [
+      "Section 2(1)(e) & 20 Arbitration and Conciliation Act 1996"
+    ],
+    "key_issue": "Seat vs Venue in Arbitration and territorial court jurisdiction.",
+    "ratio_decidendi": "The 'Seat' of arbitration determines the exclusive supervisory jurisdiction of courts. Once a seat is designated, only the courts at the seat have jurisdiction to entertain Section 9 interim relief and Section 34 challenge petitions.",
+    "factual_scenario": "Dispute over whether Indian courts had jurisdiction when arbitration was seated abroad in London.",
+    "executed_relief": "Supreme Court held Indian courts have no jurisdiction over foreign-seated arbitrations.",
+    "practical_takeaway": "Check the 'Seat' clause in your contract; only the court at the designated seat has jurisdiction over the dispute."
+  },
+  {
+    "id": "PREC_CONT_08",
+    "domain": "Contract & Arbitration",
+    "case_name": "Vidya Drolia v. Durga Trading Corp",
+    "citation": "(2021) 2 SCC 1",
+    "court": "Supreme Court of India (3-Judge Bench)",
+    "year": 2020,
+    "governing_statutes": [
+      "Section 8 & 11 Arbitration Act 1996",
+      "Transfer of Property Act"
+    ],
+    "key_issue": "4-Fold Test of Arbitrability and Tenancy Disputes.",
+    "ratio_decidendi": "Tenancy and landlord-tenant disputes governed by the Transfer of Property Act are arbitrable. Actions in personam are arbitrable; actions in rem, insolvency, and criminal matters are non-arbitrable.",
+    "factual_scenario": "Landlord invoked arbitration clause in commercial lease; tenant claimed tenancy disputes can only be tried by civil courts.",
+    "executed_relief": "Supreme Court held tenancy disputes under TPA are fully arbitrable.",
+    "practical_takeaway": "If your commercial lease contains an arbitration clause, disputes must be resolved through arbitration."
+  },
+  {
+    "id": "PREC_CONT_09",
+    "domain": "Contract & Arbitration",
+    "case_name": "Ssangyong Engineering & Construction v. NHAI",
+    "citation": "(2019) 15 SCC 131",
+    "court": "Supreme Court of India",
+    "year": 2019,
+    "governing_statutes": [
+      "Section 34 Arbitration & Conciliation Act 1996"
+    ],
+    "key_issue": "Grounds for Setting Aside Arbitral Awards under 'Patent Illegality'.",
+    "ratio_decidendi": "An arbitral award can be set aside under Section 34 if it suffers from 'Patent Illegality' appearing on the face of the award, or if the arbitrator rewrote the terms of the contract contrary to express covenants.",
+    "factual_scenario": "Arbitral tribunal awarded highway price escalation based on a revised government formula not in the contract.",
+    "executed_relief": "Supreme Court set aside the majority award as patently illegal.",
+    "practical_takeaway": "If an arbitrator ignores express contract clauses or acts arbitrarily, file a Section 34 petition to set aside the award."
+  },
+  {
+    "id": "PREC_CONT_10",
+    "domain": "Contract & Arbitration",
+    "case_name": "Unitech Ltd v. Telangana State Industrial Infrastructure Corp",
+    "citation": "2021 SCC OnLine SC 99",
+    "court": "Supreme Court of India",
+    "year": 2021,
+    "governing_statutes": [
+      "Article 226 Constitution",
+      "Section 65 Contract Act"
+    ],
+    "key_issue": "Writ jurisdiction under Article 226 for contractual restitution against State entities.",
+    "ratio_decidendi": "High Court under Article 226 can order refund and restitution of money against a state instrumentality when the state acts arbitrarily in breach of contract and retains public money without authority.",
+    "factual_scenario": "State corporation failed to hand over unencumbered land and refused to refund ₹165 Crores deposited by developer.",
+    "executed_relief": "Supreme Court ordered State Corporation to refund entire amount with 12% interest under Article 226.",
+    "practical_takeaway": "If a government department arbitrarily withholds your contractual deposit, file a Writ Petition under Article 226 for refund."
+  },
+  {
+    "id": "PREC_CONST_01",
+    "domain": "Constitutional Rights & Cyber",
+    "case_name": "K.S. Puttaswamy (Privacy) v. Union of India",
+    "citation": "(2017) 10 SCC 1",
+    "court": "Supreme Court of India (9-Judge Constitution Bench)",
+    "year": 2017,
+    "governing_statutes": [
+      "Article 21 Constitution of India"
+    ],
+    "key_issue": "Fundamental Right to Privacy as an intrinsic part of Article 21.",
+    "ratio_decidendi": "Right to Privacy is a fundamental right protected under Article 21 and Part III of the Constitution. Any state encroachment on privacy must satisfy the 3-fold test: (1) Legality (statutory law), (2) Legitimate state aim (Need), and (3) Proportionality.",
+    "factual_scenario": "Challenge to biometric data collection for citizen welfare schemes without statutory data protection.",
+    "executed_relief": "Supreme Court unanimously declared privacy a fundamental right over-ruling MP Sharma and Kharak Singh.",
+    "practical_takeaway": "Any unauthorized state or corporate surveillance, wiretapping, or biometric harvesting violates Article 21 under Puttaswamy."
+  },
+  {
+    "id": "PREC_CONST_02",
+    "domain": "Constitutional Rights & Cyber",
+    "case_name": "K.S. Puttaswamy (Aadhaar) v. Union of India",
+    "citation": "(2019) 1 SCC 1",
+    "court": "Supreme Court of India (5-Judge Constitution Bench)",
+    "year": 2018,
+    "governing_statutes": [
+      "Section 57 Aadhaar Act 2016",
+      "Article 14 & 21 Constitution"
+    ],
+    "key_issue": "Unconstitutionality of Section 57 Aadhaar Act allowing private corporate access.",
+    "ratio_decidendi": "Section 57 of the Aadhaar Act, which allowed private corporations (telecoms, banks, payment apps) to mandate Aadhaar verification, was struck down as unconstitutional. No private entity can deny services for lack of Aadhaar.",
+    "factual_scenario": "Banks and telecom companies refused to open accounts or issue SIM cards without biometric Aadhaar linking.",
+    "executed_relief": "Supreme Court struck down Section 57 and prohibited private companies from demanding Aadhaar.",
+    "practical_takeaway": "Private entities (hotels, SIM retailers, apps) cannot legally force you to provide Aadhaar; passport/Voter ID is sufficient."
+  },
+  {
+    "id": "PREC_CONST_03",
+    "domain": "Constitutional Rights & Cyber",
+    "case_name": "Shreya Singhal v. Union of India",
+    "citation": "(2015) 5 SCC 1",
+    "court": "Supreme Court of India",
+    "year": 2015,
+    "governing_statutes": [
+      "Section 66A Information Technology Act 2000",
+      "Article 19(1)(a) Constitution"
+    ],
+    "key_issue": "Unconstitutionality of Section 66A IT Act penalizing online speech.",
+    "ratio_decidendi": "Section 66A of the IT Act was struck down in its entirety as unconstitutional and violative of Article 19(1)(a). The terms 'offensive' and 'menacing' were unconstitutionally vague and created a chilling effect on free speech.",
+    "factual_scenario": "Two young women arrested for posting a comment on Facebook questioning a city shutdown.",
+    "executed_relief": "Supreme Court struck down Section 66A and directed immediate quashing of all pending FIRs nationwide.",
+    "practical_takeaway": "Police cannot register an FIR under Section 66A IT Act for social media posts; any such FIR is void under Shreya Singhal."
+  },
+  {
+    "id": "PREC_CONST_04",
+    "domain": "Constitutional Rights & Cyber",
+    "case_name": "Joseph Shine v. Union of India",
+    "citation": "(2019) 3 SCC 39",
+    "court": "Supreme Court of India (5-Judge Constitution Bench)",
+    "year": 2018,
+    "governing_statutes": [
+      "Section 497 IPC",
+      "Section 198(2) CrPC",
+      "Articles 14, 15 & 21 Constitution"
+    ],
+    "key_issue": "Unconstitutionality of criminal adultery under Section 497 IPC.",
+    "ratio_decidendi": "Section 497 IPC was struck down as unconstitutional. Treating a woman as chattel and criminalizing consensual marital infidelity violates gender equality under Article 14 and autonomy under Article 21. Adultery remains only a civil ground for divorce.",
+    "factual_scenario": "Constitutional challenge to a 160-year-old penal law punishing men for adultery while treating women as husband's property.",
+    "executed_relief": "Supreme Court decriminalized adultery across India.",
+    "practical_takeaway": "Adultery is not a crime in India; police cannot register an FIR for adultery, though it is a ground for civil divorce under HMA."
+  },
+  {
+    "id": "PREC_CONST_05",
+    "domain": "Constitutional Rights & Cyber",
+    "case_name": "Navtej Singh Johar v. Union of India",
+    "citation": "(2018) 10 SCC 1",
+    "court": "Supreme Court of India (5-Judge Constitution Bench)",
+    "year": 2018,
+    "governing_statutes": [
+      "Section 377 IPC",
+      "Articles 14, 15, 19 & 21 Constitution"
+    ],
+    "key_issue": "Decriminalization of consensual same-sex relations under Section 377 IPC.",
+    "ratio_decidendi": "Section 377 IPC was read down insofar as it criminalized consensual sexual acts between consenting adults in private. Consensual same-sex relationships are protected under privacy, equality, and dignity under Article 21.",
+    "factual_scenario": "LGBTQ+ citizens challenged colonial-era law criminalizing private consensual adult relations.",
+    "executed_relief": "Supreme Court declared Section 377 unconstitutional regarding consenting adults.",
+    "practical_takeaway": "Consensual adult relationships in private cannot be criminalized by police under Section 377 or BNS."
+  },
+  {
+    "id": "PREC_CONST_06",
+    "domain": "Constitutional Rights & Cyber",
+    "case_name": "Association for Democratic Reforms (ADR) v. Union of India",
+    "citation": "2024 SCC OnLine SC 150",
+    "court": "Supreme Court of India (5-Judge Constitution Bench)",
+    "year": 2024,
+    "governing_statutes": [
+      "Electoral Bonds Scheme 2018",
+      "Section 182 Companies Act",
+      "Article 19(1)(a) Constitution"
+    ],
+    "key_issue": "Unconstitutionality of Anonymous Electoral Bonds Scheme.",
+    "ratio_decidendi": "The Electoral Bonds Scheme and amendments to Companies Act allowing unlimited anonymous corporate political funding violate the voters' fundamental Right to Information under Article 19(1)(a).",
+    "factual_scenario": "Anonymous bond scheme allowed corporations to donate unlimited secret funds to political parties.",
+    "executed_relief": "Supreme Court struck down the scheme and ordered SBI to publish complete donor and recipient bond data.",
+    "practical_takeaway": "Citizens have a constitutional Right to Know under Article 19(1)(a) regarding public corporate and electoral transactions."
+  },
+  {
+    "id": "PREC_CONST_07",
+    "domain": "Constitutional Rights & Cyber",
+    "case_name": "Anuradha Bhasin v. Union of India",
+    "citation": "(2020) 3 SCC 637",
+    "court": "Supreme Court of India (3-Judge Bench)",
+    "year": 2020,
+    "governing_statutes": [
+      "Article 19(1)(a) & 19(1)(g) Constitution",
+      "Section 144 CrPC"
+    ],
+    "key_issue": "Fundamental right to freedom of speech and profession over the Internet.",
+    "ratio_decidendi": "Freedom of speech and expression and freedom to practice any trade/profession through the medium of the internet is constitutionally protected under Article 19(1)(a) and 19(1)(g). Indefinite internet suspension is illegal.",
+    "factual_scenario": "Journalist challenged prolonged statewide internet shutdown in Jammu & Kashmir impacting press and businesses.",
+    "executed_relief": "Supreme Court mandated periodic review of all internet shutdown orders and publication of suspension orders.",
+    "practical_takeaway": "Indefinite internet shutdowns violate fundamental rights and are subject to judicial review under Article 226."
+  },
+  {
+    "id": "PREC_CONST_08",
+    "domain": "Constitutional Rights & Cyber",
+    "case_name": "Maneka Gandhi v. Union of India",
+    "citation": "(1978) 1 SCC 248",
+    "court": "Supreme Court of India (7-Judge Constitution Bench)",
+    "year": 1978,
+    "governing_statutes": [
+      "Article 21, 14 & 19 Constitution of India",
+      "Passports Act 1967"
+    ],
+    "key_issue": "Substantive Due Process and Natural Justice in Article 21.",
+    "ratio_decidendi": "Procedure established by law under Article 21 must be 'just, fair and reasonable', not arbitrary, fanciful, or oppressive. Principles of natural justice (Audi Alteram Partem) are an integral part of constitutional law.",
+    "factual_scenario": "Government impounded citizen's passport without stating reasons or granting a hearing.",
+    "executed_relief": "Supreme Court held passport impoundment invalid for lack of post-decisional hearing.",
+    "practical_takeaway": "Any government order impounding licenses, properties, or passports without hearing is unconstitutional under Maneka Gandhi."
+  },
+  {
+    "id": "PREC_CONST_09",
+    "domain": "Constitutional Rights & Cyber",
+    "case_name": "Mithu v. State of Punjab",
+    "citation": "(1983) 2 SCC 277",
+    "court": "Supreme Court of India (5-Judge Constitution Bench)",
+    "year": 1983,
+    "governing_statutes": [
+      "Section 303 IPC",
+      "Articles 14 & 21 Constitution"
+    ],
+    "key_issue": "Unconstitutionality of Mandatory Death Penalty under Section 303 IPC.",
+    "ratio_decidendi": "Section 303 IPC, which prescribed mandatory death penalty for a person committing murder while under life sentence, was struck down as unconstitutional and violative of Articles 14 and 21.",
+    "factual_scenario": "Prisoner serving life sentence faced automatic mandatory death without judicial discretion.",
+    "executed_relief": "Supreme Court struck down Section 303; all such offences are punishable under Section 302 IPC / Section 103 BNS.",
+    "practical_takeaway": "Mandatory death sentences without judicial hearing on mitigating circumstances are unconstitutional in India."
+  },
+  {
+    "id": "PREC_CONST_10",
+    "domain": "Constitutional Rights & Cyber",
+    "case_name": "Common Cause v. Union of India (Living Will)",
+    "citation": "(2018) 5 SCC 1",
+    "court": "Supreme Court of India (5-Judge Constitution Bench)",
+    "year": 2018,
+    "governing_statutes": [
+      "Article 21 Constitution of India"
+    ],
+    "key_issue": "Right to Die with Dignity and Legal Validity of Advance Medical Directives (Living Will).",
+    "ratio_decidendi": "Right to life with dignity under Article 21 includes the right to die with dignity. An adult of sound mind has the legal right to execute an Advance Medical Directive (Living Will) refusing artificial life support during terminal illness.",
+    "factual_scenario": "Terminally ill patients kept on vegetative life support against expressed wishes.",
+    "executed_relief": "Supreme Court recognized passive euthanasia and framed streamlined execution guidelines.",
+    "practical_takeaway": "Citizens can execute an Advance Medical Directive (Living Will) witnessed before a Notary/Gazetted officer."
+  }
+]

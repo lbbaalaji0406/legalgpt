@@ -1039,5 +1039,565 @@
     "tail": "250_Crores_INR",
     "desc": "The maximum financial penalty that can be imposed under this section for specified violations is 250 Crores Rupees.",
     "weight": 0.88
+  },
+  {
+    "head": "Lalita_Kumari_v__Govt__of_U_P",
+    "relation": "supreme_court_benchmark",
+    "tail": "Section_154_CrPC",
+    "desc": "Lalita Kumari v. Govt. of U.P. establishes landmark Supreme Court ratio on Section_154_CrPC",
+    "weight": 0.98
+  },
+  {
+    "head": "D_K__Basu_v__State_of_West_Bengal",
+    "relation": "supreme_court_benchmark",
+    "tail": "Article_21___22_Constitution",
+    "desc": "D.K. Basu v. State of West Bengal establishes landmark Supreme Court ratio on Article_21___22_Constitution",
+    "weight": 0.98
+  },
+  {
+    "head": "Arnesh_Kumar_v__State_of_Bihar",
+    "relation": "supreme_court_benchmark",
+    "tail": "Section_41___41A_CrPC",
+    "desc": "Arnesh Kumar v. State of Bihar establishes landmark Supreme Court ratio on Section_41___41A_CrPC",
+    "weight": 0.98
+  },
+  {
+    "head": "Satender_Kumar_Antil_v__CBI",
+    "relation": "supreme_court_benchmark",
+    "tail": "Section_437___439_CrPC",
+    "desc": "Satender Kumar Antil v. CBI establishes landmark Supreme Court ratio on Section_437___439_CrPC",
+    "weight": 0.98
+  },
+  {
+    "head": "State_of_Haryana_v__Bhajan_Lal",
+    "relation": "supreme_court_benchmark",
+    "tail": "Section_482_CrPC",
+    "desc": "State of Haryana v. Bhajan Lal establishes landmark Supreme Court ratio on Section_482_CrPC",
+    "weight": 0.98
+  },
+  {
+    "head": "Gian_Singh_v__State_of_Punjab",
+    "relation": "supreme_court_benchmark",
+    "tail": "Section_482_CrPC",
+    "desc": "Gian Singh v. State of Punjab establishes landmark Supreme Court ratio on Section_482_CrPC",
+    "weight": 0.98
+  },
+  {
+    "head": "P__Chidambaram_v__Directorate_of_En",
+    "relation": "supreme_court_benchmark",
+    "tail": "Section_439_CrPC",
+    "desc": "P. Chidambaram v. Directorate of Enforcement establishes landmark Supreme Court ratio on Section_439_CrPC",
+    "weight": 0.98
+  },
+  {
+    "head": "Sharad_Birdhichand_Sarda_v__State_o",
+    "relation": "supreme_court_benchmark",
+    "tail": "Indian_Evidence_Act",
+    "desc": "Sharad Birdhichand Sarda v. State of Maharashtra establishes landmark Supreme Court ratio on Indian_Evidence_Act",
+    "weight": 0.98
+  },
+  {
+    "head": "Tofan_Singh_v__State_of_Tamil_Nadu",
+    "relation": "supreme_court_benchmark",
+    "tail": "Section_67_NDPS_Act",
+    "desc": "Tofan Singh v. State of Tamil Nadu establishes landmark Supreme Court ratio on Section_67_NDPS_Act",
+    "weight": 0.98
+  },
+  {
+    "head": "Sasi_Thomas_v__State",
+    "relation": "supreme_court_benchmark",
+    "tail": "Article_21___39A_Constitution",
+    "desc": "Sasi Thomas v. State establishes landmark Supreme Court ratio on Article_21___39A_Constitution",
+    "weight": 0.98
+  },
+  {
+    "head": "Bir_Singh_v__Mukesh_Kumar",
+    "relation": "supreme_court_benchmark",
+    "tail": "Section_138___139_Negotiable_Instru",
+    "desc": "Bir Singh v. Mukesh Kumar establishes landmark Supreme Court ratio on Section_138___139_Negotiable_Instru",
+    "weight": 0.98
+  },
+  {
+    "head": "Dashrath_Rupsingh_Rathod_v__State_o",
+    "relation": "supreme_court_benchmark",
+    "tail": "Section_138___142_2__Negotiable_Ins",
+    "desc": "Dashrath Rupsingh Rathod v. State of Maharashtra establishes landmark Supreme Court ratio on Section_138___142_2__Negotiable_Ins",
+    "weight": 0.98
+  },
+  {
+    "head": "C_C__Alavi_Haji_v__Palapetty_Muhamm",
+    "relation": "supreme_court_benchmark",
+    "tail": "Section_138_b__NI_Act",
+    "desc": "C.C. Alavi Haji v. Palapetty Muhammed establishes landmark Supreme Court ratio on Section_138_b__NI_Act",
+    "weight": 0.98
+  },
+  {
+    "head": "IDBI_Trusteeship_Services_Ltd_v__Hu",
+    "relation": "supreme_court_benchmark",
+    "tail": "Order_XXXVII_CPC__Summary_Suits",
+    "desc": "IDBI Trusteeship Services Ltd v. Hubtown Ltd establishes landmark Supreme Court ratio on Order_XXXVII_CPC__Summary_Suits",
+    "weight": 0.98
+  },
+  {
+    "head": "Sunil_Todi_v__State_of_Gujarat",
+    "relation": "supreme_court_benchmark",
+    "tail": "Section_138_NI_Act",
+    "desc": "Sunil Todi v. State of Gujarat establishes landmark Supreme Court ratio on Section_138_NI_Act",
+    "weight": 0.98
+  },
+  {
+    "head": "K__Bhaskaran_v__Sankaran_Vaidhyan_B",
+    "relation": "supreme_court_benchmark",
+    "tail": "Section_138___142_NI_Act",
+    "desc": "K. Bhaskaran v. Sankaran Vaidhyan Balan establishes landmark Supreme Court ratio on Section_138___142_NI_Act",
+    "weight": 0.98
+  },
+  {
+    "head": "P__Mohanraj_v__Shah_Brothers_ISPAT_",
+    "relation": "supreme_court_benchmark",
+    "tail": "Section_14_IBC_2016",
+    "desc": "P. Mohanraj v. Shah Brothers ISPAT Pvt Ltd establishes landmark Supreme Court ratio on Section_14_IBC_2016",
+    "weight": 0.98
+  },
+  {
+    "head": "Kishan_Rao_v__Shankargouda",
+    "relation": "supreme_court_benchmark",
+    "tail": "Section_139_NI_Act",
+    "desc": "Kishan Rao v. Shankargouda establishes landmark Supreme Court ratio on Section_139_NI_Act",
+    "weight": 0.98
+  },
+  {
+    "head": "M_s_Gimpex_Private_Ltd_v__Manoj_Goe",
+    "relation": "supreme_court_benchmark",
+    "tail": "Section_138_NI_Act",
+    "desc": "M/s Gimpex Private Ltd v. Manoj Goel establishes landmark Supreme Court ratio on Section_138_NI_Act",
+    "weight": 0.98
+  },
+  {
+    "head": "APS_Forex_Services_Pvt_Ltd_v__Shakt",
+    "relation": "supreme_court_benchmark",
+    "tail": "Section_138___139_NI_Act",
+    "desc": "APS Forex Services Pvt Ltd v. Shakti International establishes landmark Supreme Court ratio on Section_138___139_NI_Act",
+    "weight": 0.98
+  },
+  {
+    "head": "Maria_Margarida_Sequeria_Fernandes_",
+    "relation": "supreme_court_benchmark",
+    "tail": "Section_6_Specific_Relief_Act_1963",
+    "desc": "Maria Margarida Sequeria Fernandes v. Erasmo Jack de Sequeria establishes landmark Supreme Court ratio on Section_6_Specific_Relief_Act_1963",
+    "weight": 0.98
+  },
+  {
+    "head": "Midnapur_Zamindary_Co__Ltd__v__Nare",
+    "relation": "supreme_court_benchmark",
+    "tail": "Section_6_Specific_Relief_Act",
+    "desc": "Midnapur Zamindary Co. Ltd. v. Naresh Narayan Roy establishes landmark Supreme Court ratio on Section_6_Specific_Relief_Act",
+    "weight": 0.98
+  },
+  {
+    "head": "Suraj_Lamp___Industries_Pvt_Ltd_v__",
+    "relation": "supreme_court_benchmark",
+    "tail": "Section_17___49_Registration_Act",
+    "desc": "Suraj Lamp & Industries Pvt Ltd v. State of Haryana establishes landmark Supreme Court ratio on Section_17___49_Registration_Act",
+    "weight": 0.98
+  },
+  {
+    "head": "R_V__Bhupal_Prasad_v__State_of_A_P",
+    "relation": "supreme_court_benchmark",
+    "tail": "Section_106___111_Transfer_of_Prope",
+    "desc": "R.V. Bhupal Prasad v. State of A.P. establishes landmark Supreme Court ratio on Section_106___111_Transfer_of_Prope",
+    "weight": 0.98
+  },
+  {
+    "head": "Vidya_Devi_v__State_of_Himachal_Pra",
+    "relation": "supreme_court_benchmark",
+    "tail": "Article_300A_Constitution",
+    "desc": "Vidya Devi v. State of Himachal Pradesh establishes landmark Supreme Court ratio on Article_300A_Constitution",
+    "weight": 0.98
+  },
+  {
+    "head": "P_T__Munichikkanna_Reddy_v__Revamma",
+    "relation": "supreme_court_benchmark",
+    "tail": "Articles_64___65_Limitation_Act_196",
+    "desc": "P.T. Munichikkanna Reddy v. Revamma establishes landmark Supreme Court ratio on Articles_64___65_Limitation_Act_196",
+    "weight": 0.98
+  },
+  {
+    "head": "K_B__Saha_and_Sons_Pvt_Ltd_v__Devel",
+    "relation": "supreme_court_benchmark",
+    "tail": "Section_17___49_Registration_Act_19",
+    "desc": "K.B. Saha and Sons Pvt Ltd v. Development Consultant Ltd establishes landmark Supreme Court ratio on Section_17___49_Registration_Act_19",
+    "weight": 0.98
+  },
+  {
+    "head": "Anthony_v__K_C__Ittoop_and_Sons",
+    "relation": "supreme_court_benchmark",
+    "tail": "Section_106___107_Transfer_of_Prope",
+    "desc": "Anthony v. K.C. Ittoop and Sons establishes landmark Supreme Court ratio on Section_106___107_Transfer_of_Prope",
+    "weight": 0.98
+  },
+  {
+    "head": "S_P__Chengalvaraya_Naidu_v__Jaganna",
+    "relation": "supreme_court_benchmark",
+    "tail": "Section_44_Indian_Evidence_Act",
+    "desc": "S.P. Chengalvaraya Naidu v. Jagannath establishes landmark Supreme Court ratio on Section_44_Indian_Evidence_Act",
+    "weight": 0.98
+  },
+  {
+    "head": "Babu_Lal_v__Hazari_Lal_Kishori_Lal",
+    "relation": "supreme_court_benchmark",
+    "tail": "Section_22___28_Specific_Relief_Act",
+    "desc": "Babu Lal v. Hazari Lal Kishori Lal establishes landmark Supreme Court ratio on Section_22___28_Specific_Relief_Act",
+    "weight": 0.98
+  },
+  {
+    "head": "Vineeta_Sharma_v__Rakesh_Sharma",
+    "relation": "supreme_court_benchmark",
+    "tail": "Section_6_Hindu_Succession_Act_1956",
+    "desc": "Vineeta Sharma v. Rakesh Sharma establishes landmark Supreme Court ratio on Section_6_Hindu_Succession_Act_1956",
+    "weight": 0.98
+  },
+  {
+    "head": "Satish_Chander_Ahuja_v__Sneha_Ahuja",
+    "relation": "supreme_court_benchmark",
+    "tail": "Section_2_s___17___19_Protection_of",
+    "desc": "Satish Chander Ahuja v. Sneha Ahuja establishes landmark Supreme Court ratio on Section_2_s___17___19_Protection_of",
+    "weight": 0.98
+  },
+  {
+    "head": "Amardeep_Singh_v__Harveen_Kaur",
+    "relation": "supreme_court_benchmark",
+    "tail": "Section_13B_2__Hindu_Marriage_Act_1",
+    "desc": "Amardeep Singh v. Harveen Kaur establishes landmark Supreme Court ratio on Section_13B_2__Hindu_Marriage_Act_1",
+    "weight": 0.98
+  },
+  {
+    "head": "Rajnesh_v__Neha",
+    "relation": "supreme_court_benchmark",
+    "tail": "Section_125_CrPC",
+    "desc": "Rajnesh v. Neha establishes landmark Supreme Court ratio on Section_125_CrPC",
+    "weight": 0.98
+  },
+  {
+    "head": "Shilpa_Sailesh_v__Varun_Sreenivasan",
+    "relation": "supreme_court_benchmark",
+    "tail": "Article_142_Constitution_of_India",
+    "desc": "Shilpa Sailesh v. Varun Sreenivasan establishes landmark Supreme Court ratio on Article_142_Constitution_of_India",
+    "weight": 0.98
+  },
+  {
+    "head": "Dr__Swapan_Kumar_Banerjee_v__State_",
+    "relation": "supreme_court_benchmark",
+    "tail": "Section_125_CrPC",
+    "desc": "Dr. Swapan Kumar Banerjee v. State of West Bengal establishes landmark Supreme Court ratio on Section_125_CrPC",
+    "weight": 0.98
+  },
+  {
+    "head": "K__Srinivas_Rao_v__D_A__Deepa",
+    "relation": "supreme_court_benchmark",
+    "tail": "Section_13_1__ia__Hindu_Marriage_Ac",
+    "desc": "K. Srinivas Rao v. D.A. Deepa establishes landmark Supreme Court ratio on Section_13_1__ia__Hindu_Marriage_Ac",
+    "weight": 0.98
+  },
+  {
+    "head": "Roxann_Sharma_v__Arun_Sharma",
+    "relation": "supreme_court_benchmark",
+    "tail": "Section_6_a__Hindu_Minority_and_Gua",
+    "desc": "Roxann Sharma v. Arun Sharma establishes landmark Supreme Court ratio on Section_6_a__Hindu_Minority_and_Gua",
+    "weight": 0.98
+  },
+  {
+    "head": "Prabha_Tyagi_v__Kamlesh_Devi",
+    "relation": "supreme_court_benchmark",
+    "tail": "Section_12__18___19_PWDVA_2005",
+    "desc": "Prabha Tyagi v. Kamlesh Devi establishes landmark Supreme Court ratio on Section_12__18___19_PWDVA_2005",
+    "weight": 0.98
+  },
+  {
+    "head": "Badshah_v__Urmila_Badshah_Godse",
+    "relation": "supreme_court_benchmark",
+    "tail": "Section_125_CrPC",
+    "desc": "Badshah v. Urmila Badshah Godse establishes landmark Supreme Court ratio on Section_125_CrPC",
+    "weight": 0.98
+  },
+  {
+    "head": "State_of_Punjab_v__Jagjit_Singh",
+    "relation": "supreme_court_benchmark",
+    "tail": "Articles_14___39_d__Constitution_of",
+    "desc": "State of Punjab v. Jagjit Singh establishes landmark Supreme Court ratio on Articles_14___39_d__Constitution_of",
+    "weight": 0.98
+  },
+  {
+    "head": "Central_Inland_Water_Transport_Corp",
+    "relation": "supreme_court_benchmark",
+    "tail": "Section_23_Indian_Contract_Act",
+    "desc": "Central Inland Water Transport Corp v. Brojo Nath Ganguly establishes landmark Supreme Court ratio on Section_23_Indian_Contract_Act",
+    "weight": 0.98
+  },
+  {
+    "head": "Bangalore_Water_Supply_and_Sewerage",
+    "relation": "supreme_court_benchmark",
+    "tail": "Section_2_j__Industrial_Disputes_Ac",
+    "desc": "Bangalore Water Supply and Sewerage Board v. A. Rajappa establishes landmark Supreme Court ratio on Section_2_j__Industrial_Disputes_Ac",
+    "weight": 0.98
+  },
+  {
+    "head": "Bakshish_Singh_v__Darshan_Engineeri",
+    "relation": "supreme_court_benchmark",
+    "tail": "Section_4_Payment_of_Gratuity_Act_1",
+    "desc": "Bakshish Singh v. Darshan Engineering Works establishes landmark Supreme Court ratio on Section_4_Payment_of_Gratuity_Act_1",
+    "weight": 0.98
+  },
+  {
+    "head": "Deepali_Gundu_Surwase_v__Kranti_Jun",
+    "relation": "supreme_court_benchmark",
+    "tail": "Section_11A_Industrial_Disputes_Act",
+    "desc": "Deepali Gundu Surwase v. Kranti Junior Adhyapak Mahavidyalaya establishes landmark Supreme Court ratio on Section_11A_Industrial_Disputes_Act",
+    "weight": 0.98
+  },
+  {
+    "head": "Aurelius_Consultants_v__POSH_Intern",
+    "relation": "supreme_court_benchmark",
+    "tail": "POSH_Act_2013__Prevention_of_Sexual",
+    "desc": "Aurelius Consultants v. POSH Internal Committee establishes landmark Supreme Court ratio on POSH_Act_2013__Prevention_of_Sexual",
+    "weight": 0.98
+  },
+  {
+    "head": "D_K__Yadav_v__J_M_A__Industries_Ltd",
+    "relation": "supreme_court_benchmark",
+    "tail": "Article_21_Constitution",
+    "desc": "D.K. Yadav v. J.M.A. Industries Ltd establishes landmark Supreme Court ratio on Article_21_Constitution",
+    "weight": 0.98
+  },
+  {
+    "head": "All_India_Reserve_Bank_Employees_As",
+    "relation": "supreme_court_benchmark",
+    "tail": "Minimum_Wages_Act_1948",
+    "desc": "All India Reserve Bank Employees Association v. RBI establishes landmark Supreme Court ratio on Minimum_Wages_Act_1948",
+    "weight": 0.98
+  },
+  {
+    "head": "Workmen_of_American_Express_v__Mana",
+    "relation": "supreme_court_benchmark",
+    "tail": "Section_25B___25F_Industrial_Disput",
+    "desc": "Workmen of American Express v. Management of American Express establishes landmark Supreme Court ratio on Section_25B___25F_Industrial_Disput",
+    "weight": 0.98
+  },
+  {
+    "head": "State_of_U_P__v__Arvind_Kumar_Sriva",
+    "relation": "supreme_court_benchmark",
+    "tail": "Article_14___16_Constitution_of_Ind",
+    "desc": "State of U.P. v. Arvind Kumar Srivastava establishes landmark Supreme Court ratio on Article_14___16_Constitution_of_Ind",
+    "weight": 0.98
+  },
+  {
+    "head": "Imperia_Structures_Ltd_v__Anil_Patn",
+    "relation": "supreme_court_benchmark",
+    "tail": "Consumer_Protection_Act_2019",
+    "desc": "Imperia Structures Ltd v. Anil Patni establishes landmark Supreme Court ratio on Consumer_Protection_Act_2019",
+    "weight": 0.98
+  },
+  {
+    "head": "Pioneer_Urban_Land___Infrastructure",
+    "relation": "supreme_court_benchmark",
+    "tail": "Section_2_46__Consumer_Protection_A",
+    "desc": "Pioneer Urban Land & Infrastructure Ltd v. Govindan Raghavan establishes landmark Supreme Court ratio on Section_2_46__Consumer_Protection_A",
+    "weight": 0.98
+  },
+  {
+    "head": "Wg_Cdr_Arifur_Rahman_Khan_v__DLF_So",
+    "relation": "supreme_court_benchmark",
+    "tail": "Consumer_Protection_Act",
+    "desc": "Wg Cdr Arifur Rahman Khan v. DLF Southern Homes Pvt Ltd establishes landmark Supreme Court ratio on Consumer_Protection_Act",
+    "weight": 0.98
+  },
+  {
+    "head": "Fortune_Infrastructure_v__Trevor_D_",
+    "relation": "supreme_court_benchmark",
+    "tail": "Section_2_1__g__Consumer_Protection",
+    "desc": "Fortune Infrastructure v. Trevor D'Lima establishes landmark Supreme Court ratio on Section_2_1__g__Consumer_Protection",
+    "weight": 0.98
+  },
+  {
+    "head": "New_India_Assurance_Co__Ltd__v__Hil",
+    "relation": "supreme_court_benchmark",
+    "tail": "Section_38_2__a__Consumer_Protectio",
+    "desc": "New India Assurance Co. Ltd. v. Hilli Multipurpose Cold Storage establishes landmark Supreme Court ratio on Section_38_2__a__Consumer_Protectio",
+    "weight": 0.98
+  },
+  {
+    "head": "National_Insurance_Co__Ltd__v__Niti",
+    "relation": "supreme_court_benchmark",
+    "tail": "Consumer_Protection_Act",
+    "desc": "National Insurance Co. Ltd. v. Nitin Khandelwal establishes landmark Supreme Court ratio on Consumer_Protection_Act",
+    "weight": 0.98
+  },
+  {
+    "head": "IREO_Grace_Realtech_Pvt_Ltd_v__Abhi",
+    "relation": "supreme_court_benchmark",
+    "tail": "Consumer_Protection_Act_2019",
+    "desc": "IREO Grace Realtech Pvt Ltd v. Abhishek Khanna establishes landmark Supreme Court ratio on Consumer_Protection_Act_2019",
+    "weight": 0.98
+  },
+  {
+    "head": "Emaar_MGF_Land_Ltd__v__Aftab_Singh",
+    "relation": "supreme_court_benchmark",
+    "tail": "Section_8_Arbitration___Conciliatio",
+    "desc": "Emaar MGF Land Ltd. v. Aftab Singh establishes landmark Supreme Court ratio on Section_8_Arbitration___Conciliatio",
+    "weight": 0.98
+  },
+  {
+    "head": "Bikram_Chatterji_v__Union_of_India_",
+    "relation": "supreme_court_benchmark",
+    "tail": "RERA_2016",
+    "desc": "Bikram Chatterji v. Union of India (Amrapali) establishes landmark Supreme Court ratio on RERA_2016",
+    "weight": 0.98
+  },
+  {
+    "head": "Gurgaon_Real_Estate_Regulatory_Auth",
+    "relation": "supreme_court_benchmark",
+    "tail": "Section_40_RERA_2016",
+    "desc": "Gurgaon Real Estate Regulatory Authority v. Sanjeevani establishes landmark Supreme Court ratio on Section_40_RERA_2016",
+    "weight": 0.98
+  },
+  {
+    "head": "Percept_D_Mark__India__Pvt_Ltd_v__Z",
+    "relation": "supreme_court_benchmark",
+    "tail": "Section_27_Indian_Contract_Act_1872",
+    "desc": "Percept D'Mark (India) Pvt Ltd v. Zaheer Khan establishes landmark Supreme Court ratio on Section_27_Indian_Contract_Act_1872",
+    "weight": 0.98
+  },
+  {
+    "head": "Kailash_Nath_Associates_v__Delhi_De",
+    "relation": "supreme_court_benchmark",
+    "tail": "Section_74_Indian_Contract_Act_1872",
+    "desc": "Kailash Nath Associates v. Delhi Development Authority (DDA) establishes landmark Supreme Court ratio on Section_74_Indian_Contract_Act_1872",
+    "weight": 0.98
+  },
+  {
+    "head": "Perkins_Eastman_Architects_DPC_v__H",
+    "relation": "supreme_court_benchmark",
+    "tail": "Section_12_5__Arbitration_and_Conci",
+    "desc": "Perkins Eastman Architects DPC v. HSCC (India) Ltd establishes landmark Supreme Court ratio on Section_12_5__Arbitration_and_Conci",
+    "weight": 0.98
+  },
+  {
+    "head": "TRF_Ltd_v__Energo_Engineering_Proje",
+    "relation": "supreme_court_benchmark",
+    "tail": "Section_12_5____Seventh_Schedule_Ar",
+    "desc": "TRF Ltd v. Energo Engineering Projects Ltd establishes landmark Supreme Court ratio on Section_12_5____Seventh_Schedule_Ar",
+    "weight": 0.98
+  },
+  {
+    "head": "Energy_Watchdog_v__CERC",
+    "relation": "supreme_court_benchmark",
+    "tail": "Section_32___56_Indian_Contract_Act",
+    "desc": "Energy Watchdog v. CERC establishes landmark Supreme Court ratio on Section_32___56_Indian_Contract_Act",
+    "weight": 0.98
+  },
+  {
+    "head": "Satyabrata_Ghose_v__Mugneeram_Bangu",
+    "relation": "supreme_court_benchmark",
+    "tail": "Section_56_Indian_Contract_Act_1872",
+    "desc": "Satyabrata Ghose v. Mugneeram Bangur & Co. establishes landmark Supreme Court ratio on Section_56_Indian_Contract_Act_1872",
+    "weight": 0.98
+  },
+  {
+    "head": "Bharat_Aluminium_Co___BALCO__v__Kai",
+    "relation": "supreme_court_benchmark",
+    "tail": "Section_2_1__e____20_Arbitration_an",
+    "desc": "Bharat Aluminium Co. (BALCO) v. Kaiser Aluminium establishes landmark Supreme Court ratio on Section_2_1__e____20_Arbitration_an",
+    "weight": 0.98
+  },
+  {
+    "head": "Vidya_Drolia_v__Durga_Trading_Corp",
+    "relation": "supreme_court_benchmark",
+    "tail": "Section_8___11_Arbitration_Act_1996",
+    "desc": "Vidya Drolia v. Durga Trading Corp establishes landmark Supreme Court ratio on Section_8___11_Arbitration_Act_1996",
+    "weight": 0.98
+  },
+  {
+    "head": "Ssangyong_Engineering___Constructio",
+    "relation": "supreme_court_benchmark",
+    "tail": "Section_34_Arbitration___Conciliati",
+    "desc": "Ssangyong Engineering & Construction v. NHAI establishes landmark Supreme Court ratio on Section_34_Arbitration___Conciliati",
+    "weight": 0.98
+  },
+  {
+    "head": "Unitech_Ltd_v__Telangana_State_Indu",
+    "relation": "supreme_court_benchmark",
+    "tail": "Article_226_Constitution",
+    "desc": "Unitech Ltd v. Telangana State Industrial Infrastructure Corp establishes landmark Supreme Court ratio on Article_226_Constitution",
+    "weight": 0.98
+  },
+  {
+    "head": "K_S__Puttaswamy__Privacy__v__Union_",
+    "relation": "supreme_court_benchmark",
+    "tail": "Article_21_Constitution_of_India",
+    "desc": "K.S. Puttaswamy (Privacy) v. Union of India establishes landmark Supreme Court ratio on Article_21_Constitution_of_India",
+    "weight": 0.98
+  },
+  {
+    "head": "K_S__Puttaswamy__Aadhaar__v__Union_",
+    "relation": "supreme_court_benchmark",
+    "tail": "Section_57_Aadhaar_Act_2016",
+    "desc": "K.S. Puttaswamy (Aadhaar) v. Union of India establishes landmark Supreme Court ratio on Section_57_Aadhaar_Act_2016",
+    "weight": 0.98
+  },
+  {
+    "head": "Shreya_Singhal_v__Union_of_India",
+    "relation": "supreme_court_benchmark",
+    "tail": "Section_66A_Information_Technology_",
+    "desc": "Shreya Singhal v. Union of India establishes landmark Supreme Court ratio on Section_66A_Information_Technology_",
+    "weight": 0.98
+  },
+  {
+    "head": "Joseph_Shine_v__Union_of_India",
+    "relation": "supreme_court_benchmark",
+    "tail": "Section_497_IPC",
+    "desc": "Joseph Shine v. Union of India establishes landmark Supreme Court ratio on Section_497_IPC",
+    "weight": 0.98
+  },
+  {
+    "head": "Navtej_Singh_Johar_v__Union_of_Indi",
+    "relation": "supreme_court_benchmark",
+    "tail": "Section_377_IPC",
+    "desc": "Navtej Singh Johar v. Union of India establishes landmark Supreme Court ratio on Section_377_IPC",
+    "weight": 0.98
+  },
+  {
+    "head": "Association_for_Democratic_Reforms_",
+    "relation": "supreme_court_benchmark",
+    "tail": "Electoral_Bonds_Scheme_2018",
+    "desc": "Association for Democratic Reforms (ADR) v. Union of India establishes landmark Supreme Court ratio on Electoral_Bonds_Scheme_2018",
+    "weight": 0.98
+  },
+  {
+    "head": "Anuradha_Bhasin_v__Union_of_India",
+    "relation": "supreme_court_benchmark",
+    "tail": "Article_19_1__a____19_1__g__Constit",
+    "desc": "Anuradha Bhasin v. Union of India establishes landmark Supreme Court ratio on Article_19_1__a____19_1__g__Constit",
+    "weight": 0.98
+  },
+  {
+    "head": "Maneka_Gandhi_v__Union_of_India",
+    "relation": "supreme_court_benchmark",
+    "tail": "Article_21__14___19_Constitution_of",
+    "desc": "Maneka Gandhi v. Union of India establishes landmark Supreme Court ratio on Article_21__14___19_Constitution_of",
+    "weight": 0.98
+  },
+  {
+    "head": "Mithu_v__State_of_Punjab",
+    "relation": "supreme_court_benchmark",
+    "tail": "Section_303_IPC",
+    "desc": "Mithu v. State of Punjab establishes landmark Supreme Court ratio on Section_303_IPC",
+    "weight": 0.98
+  },
+  {
+    "head": "Common_Cause_v__Union_of_India__Liv",
+    "relation": "supreme_court_benchmark",
+    "tail": "Article_21_Constitution_of_India",
+    "desc": "Common Cause v. Union of India (Living Will) establishes landmark Supreme Court ratio on Article_21_Constitution_of_India",
+    "weight": 0.98
   }
 ]

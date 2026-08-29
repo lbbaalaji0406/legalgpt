@@ -470,6 +470,18 @@ def run_saulgpt_pipeline(
             else:
                 print("      No additional relationships found")
 
+        # ─── STEP 2c: PRECEDENT INTELLIGENCE RETRIEVAL ───
+        try:
+            from precedent_engine import retrieve_precedents, format_precedents
+            matched_precedents = retrieve_precedents(user_query, top_k=2)
+            if matched_precedents:
+                print(f"\n[Precedents] 🏛️  Found {len(matched_precedents)} controlling landmark precedent(s):")
+                for mp in matched_precedents:
+                    print(f"      • {mp['case_name']} [{mp['citation']}] (Score: {mp['relevance_score']})")
+                layer1_payload["precedents_context"] = format_precedents(matched_precedents)
+        except Exception as err:
+            print(f"[Precedents] Retrieval skipped: {err}")
+
         # ─── AUTO MODE DETECTION ───
         selected_mode = mode if mode else detect_mode(layer1_payload, session_id)
         print(f"      Mode auto-detected: {selected_mode}")
