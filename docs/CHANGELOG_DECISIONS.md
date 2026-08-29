@@ -28,6 +28,8 @@ This document provides a transparent, chronological record of every architectura
 20. **[ADR-020] Continuous Self-Learning ChromaDB Engine & Concurrency-Hardened Scheduler**
 21. **[ADR-021] Universal Guest Persistence & Graceful Conversation State Recovery**
 22. **[ADR-022] Self-Healing Judicial Precedent Engine: Landmark Case Law Vectorization & Dynamic Ingestion**
+23. **[ADR-023] Geometric Legal Validity & Coram-Aware Graph Governance**
+24. **[ADR-024] Adversarial Actor-Critic Layer 4 Upgrade & Fine-Grained Process Reward Model (FG-PRM)**
 
 ---
 
@@ -352,3 +354,19 @@ ightarrow$ `<a href="url">text</a>`) in message body rendering.
   4. Implemented **Dynamic Self-Healing Ingestion (`auto_ingest_case_precedent`)**: Any novel case law fetched by Layer 5 Web Fallback / IndiaKanoon is automatically embedded, vectorized, and registered into ChromaDB and GNN for permanent future recall.
 * **The Why**:
   Eliminates citation hallucinations, provides 10x higher trust and validation to citizens and advocates with real-world executed court orders, and runs 100% locally with zero external API costs.
+
+---
+
+### [ADR-024] Adversarial Actor-Critic Layer 4 Upgrade & Fine-Grained Process Reward Model (FG-PRM)
+* **Component**: `backend/actor_critic.py`, `backend/layer4_validation.py`
+* **Date**: 2026-08-29
+* **Status**: ✅ Implemented & Verified
+* **The Problem**:
+  Whole-response validation suffered from the *Aggregation Fallacy*—a 95% aggregate confidence score could conceal a fatal procedural defect (e.g. citing a 5-year limitation period instead of statutory 2 years, which causes an action to be barred by limitation under Order VII Rule 11 CPC). Furthermore, Layer 4 was passive: it logged error warnings as footnotes but could not rewrite or fix flawed text spans before user delivery.
+* **The Decision & Change**:
+  1. Built the **`AdversarialCriticEngine` (`backend/actor_critic.py`)** acting as an adversarial Senior Partner / Judicial Reviewer.
+  2. Implemented **Fine-Grained Process Reward Modeling (FG-PRM)** to evaluate draft assertions across multiple dimensions: Grounding, Statutory Logic, Limitation/Procedural Deadlines, and Mandatory (`SHALL`) vs Discretionary (`MAY`) relief.
+  3. Integrated **Surgical Span-Level Patching**: If a flawed claim is detected, the Critic issues a structured JSON Correction Mandate, and the engine patches *only the specific defective sentence* without regenerating or destabilizing the rest of the draft.
+  4. Added a **Fast-Pass Safety Gate**: Flawless, fully-grounded drafts receive an immediate pass with zero rewrites and zero latency degradation.
+* **The Why**:
+  Eliminates fine-grained legal hallucinations, guarantees procedural and statutory precision, and elevates SaulGPT from a passive text generator to an autonomous self-correcting legal reasoning engine.

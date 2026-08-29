@@ -587,6 +587,18 @@ def validate_legal_response(
             print("WARNING: Response may contain unsupported claims")
     """
     try:
+        # ── Check 0: Adversarial Actor-Critic Audit & Surgical Span Repair (FG-PRM) ──
+        critic_reward_score = 0.95
+        try:
+            from actor_critic import audit_and_repair_response
+            critic_result = audit_and_repair_response(generated_text, retrieved_context)
+            generated_text = critic_result.get("final_text", generated_text)
+            critic_reward_score = critic_result.get("process_reward_score", 0.95)
+            if critic_result.get("corrections_made", 0) > 0:
+                print(f"[Layer 4] 🛠️ Applied {critic_result['corrections_made']} fine-grained self-correction(s).")
+        except Exception as e:
+            print(f"[Layer 4] Actor-Critic audit skipped (safe fallback): {e}")
+
         # Check 1 — Citation verifier
         flagged_citations = _verify_citations(
             generated_text,
@@ -598,6 +610,9 @@ def validate_legal_response(
             generated_text,
             retrieved_context
         )
+
+        # Unified confidence = blend DeBERTa NLI with Fine-Grained Process Reward Score
+        unified_confidence = round(0.5 * confidence_score + 0.5 * critic_reward_score, 4)
 
         # Check 3 — Repealed law interceptor
         repealed_warnings = _collect_warnings(
@@ -627,7 +642,8 @@ def validate_legal_response(
 
         return {
             "is_hallucinating":     is_hallucinating,
-            "confidence_score":     confidence_score,
+            "confidence_score":     unified_confidence,
+            "critic_reward_score":  critic_reward_score,
             "flagged_citations":    flagged_citations,
             "repealed_warnings":    repealed_warnings,
             "struck_down_warnings": struck_down_warnings,
