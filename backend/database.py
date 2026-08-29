@@ -72,13 +72,24 @@ def init_db():
 def create_user(email: str, username: str, password_hash: str) -> Optional[int]:
     conn = _get_conn()
     try:
+        base_username = (username or email.split("@")[0]).strip()
+        candidate = base_username
+        counter = 1
+        while True:
+            existing = conn.execute("SELECT id FROM users WHERE username = ? AND email != ?", (candidate, email)).fetchone()
+            if not existing:
+                break
+            candidate = f"{base_username}_{counter}"
+            counter += 1
+
         cur = conn.execute(
             "INSERT INTO users (email, username, password) VALUES (?, ?, ?)",
-            (email, username, password_hash)
+            (email.strip().lower(), candidate, password_hash)
         )
         conn.commit()
         return cur.lastrowid
-    except sqlite3.IntegrityError:
+    except Exception as e:
+        print(f"[Database] create_user error: {e}")
         return None
     finally:
         conn.close()

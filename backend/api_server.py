@@ -1934,22 +1934,26 @@ def _get_user_id(authorization: str = "") -> int:
 async def signup(req: AuthRequest):
     if not req.email or not req.password:
         raise HTTPException(400, "Email and password required")
+    norm_email = req.email.strip().lower()
     if not req.username:
-        req.username = req.email.split("@")[0]
-    existing = get_user_by_email(req.email)
+        req.username = norm_email.split("@")[0]
+    existing = get_user_by_email(norm_email)
     if existing:
-        raise HTTPException(409, "Email already registered")
+        raise HTTPException(409, "Email already registered. Please log in.")
     hashed = hash_password(req.password)
-    user_id = create_user(req.email, req.username, hashed)
+    user_id = create_user(norm_email, req.username, hashed)
     if not user_id:
-        raise HTTPException(500, "Failed to create user")
+        raise HTTPException(500, "Failed to create user account. Please try again.")
     token = create_token(user_id)
-    return AuthResponse(token=token, user_id=user_id, email=req.email, username=req.username)
+    return AuthResponse(token=token, user_id=user_id, email=norm_email, username=req.username)
 
 
 @app.post("/api/auth/login")
 async def login(req: AuthRequest):
-    user = get_user_by_email(req.email)
+    if not req.email or not req.password:
+        raise HTTPException(400, "Email and password required")
+    norm_email = req.email.strip().lower()
+    user = get_user_by_email(norm_email)
     if not user or not verify_password(req.password, user["password"]):
         raise HTTPException(401, "Invalid email or password")
     token = create_token(user["id"])
