@@ -106,7 +106,61 @@ def extract_legal_citations(text: str) -> list:
 
 
 # ─────────────────────────────────────────────────────────────
-# TECHNIQUE 2 — QUERY REFORMULATOR
+# TECHNIQUE 1B — TEMPORAL INCIDENT DATE DETECTOR
+# Classifies query into PRE_2024, POST_2024, or UNDATED
+# for Article 20(1) & Section 531 BNSS compliance
+# ─────────────────────────────────────────────────────────────
+
+def extract_temporal_context(text: str) -> dict:
+    """
+    Extracts temporal incident date indicators from the query and determines
+    whether the dispute is PRE_2024 (pre-July 1, 2024), POST_2024 (post-July 1, 2024),
+    or UNDATED.
+    """
+    text_lower = text.lower()
+
+    # 1. Check for PRE_2024 indicators (incident committed before July 1, 2024)
+    pre_year_match = re.search(r'\b(19\d\d|200\d|201\d|202[0-3])\b', text_lower)
+    pre_2024_months = re.search(r'\b(january|jan|february|feb|march|mar|april|apr|may|june|jun)\b.*?\b2024\b', text_lower)
+    pre_2024_phrases = any(p in text_lower for p in [
+        "before july 2024", "prior to july 2024", "pending since", 
+        "old fir", "pre-2024", "before 2024", "in 2023", "in 2022", "in 2021"
+    ])
+
+    if pre_year_match or pre_2024_months or pre_2024_phrases:
+        date_str = pre_year_match.group(0) if pre_year_match else (pre_2024_months.group(0) if pre_2024_months else "pre-July 2024")
+        return {
+            "temporal_status": "PRE_2024",
+            "detected_date_str": date_str,
+            "primary_statutes": ["IPC", "CrPC", "IEA"],
+            "reason": "Incident occurred prior to July 1, 2024. Governed by IPC/CrPC under Article 20(1) and Section 531 BNSS."
+        }
+
+    # 2. Check for POST_2024 indicators (incident committed on or after July 1, 2024)
+    post_year_match = re.search(r'\b(202[5-9]|203\d)\b', text_lower)
+    post_2024_months = re.search(r'\b(july|jul|august|aug|september|sep|sept|october|oct|november|nov|december|dec)\b.*?\b2024\b', text_lower)
+    post_2024_phrases = any(p in text_lower for p in [
+        "after july 2024", "post july 2024", "yesterday", "today", "last week",
+        "last month", "recently", "new criminal laws", "under bns", "under bnss", "under bsa"
+    ])
+
+    if post_year_match or post_2024_months or post_2024_phrases:
+        date_str = post_year_match.group(0) if post_year_match else (post_2024_months.group(0) if post_2024_months else "post-July 1, 2024")
+        return {
+            "temporal_status": "POST_2024",
+            "detected_date_str": date_str,
+            "primary_statutes": ["BNS", "BNSS", "BSA"],
+            "reason": "Incident occurred on or after July 1, 2024. Governed by BNS/BNSS/BSA."
+        }
+
+    # 3. Default: UNDATED
+    return {
+        "temporal_status": "UNDATED",
+        "detected_date_str": None,
+        "primary_statutes": ["BNS", "BNSS", "BSA"],
+        "reason": "No specific date provided. Defaults to current active 2024 law (BNS) with legacy parenthetical mapping and timeline caveat."
+    }
+
 # Converts colloquial Hindi/English mixed queries into
 # formal legal English optimised for ChromaDB vector search
 # ─────────────────────────────────────────────────────────────
@@ -374,6 +428,9 @@ def analyze_query(user_query: str, conversation_history: list = None) -> dict:
     print("[4/5] Extracting legal citations...")
     explicit_citations = extract_legal_citations(user_query)
 
+    # ── Step 4b: Temporal Incident Date Extraction (Art 20(1) / BNSS 531) ──
+    temporal_context = extract_temporal_context(user_query)
+
     # ── Step 5: Query Reformulation (dual-output: HyDE + Keywords) ──
     print("[5/5] Reformulating query for vector search...")
     reformulated = reformulate_query(user_query)
@@ -394,6 +451,7 @@ def analyze_query(user_query: str, conversation_history: list = None) -> dict:
         "web_fallback_recommended": web_fallback_recommended,
         "named_entities":         named_entities,
         "explicit_citations":     explicit_citations,
+        "temporal_context":       temporal_context,
         "search_optimized_query": search_optimized_query,
         "hyde_paragraph":         hyde_paragraph,
         "keyword_synonyms":       keyword_synonyms,

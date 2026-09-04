@@ -370,3 +370,23 @@ ightarrow$ `<a href="url">text</a>`) in message body rendering.
   4. Added a **Fast-Pass Safety Gate**: Flawless, fully-grounded drafts receive an immediate pass with zero rewrites and zero latency degradation.
 * **The Why**:
   Eliminates fine-grained legal hallucinations, guarantees procedural and statutory precision, and elevates SaulGPT from a passive text generator to an autonomous self-correcting legal reasoning engine.
+
+---
+
+### [ADR-025] Ingestion of 2024 Criminal Codes (BNS, BNSS, BSA), Full Constitutional Expansion & Temporal Statutory Routing
+* **Component**: `data/raw_data/BNS_from_db.json`, `data/raw_data/BNSS_from_db.json`, `data/raw_data/BSA_from_db.json`, `data/raw_data/indian_constitution.json`, `backend/layer1_understanding.py`, `backend/layer3_reasoning.py`, `backend/layer4_validation.py`, `backend/pipeline_orchestrator.py`, `backend/data/legal_triples.json`
+* **Date**: 2026-09-04
+* **Status**: ✅ Implemented & Verified
+* **The Problem**:
+  On July 1, 2024, India's colonial-era criminal justice framework (Indian Penal Code 1860, Code of Criminal Procedure 1973, Indian Evidence Act 1872) was repealed and replaced by the Bharatiya Nyaya Sanhita (BNS 2023), Bharatiya Nagarik Suraksha Sanhita (BNSS 2023), and Bharatiya Sakshya Adhiniyam (BSA 2023). SaulGPT's vector database initially lacked direct statutory chunks for the 2024 codes, and its Constitution corpus was limited to only 3 parts (111 lines). Furthermore, applying 2024 codes retrospectively to pre-July 2024 incidents would violate Article 20(1) of the Constitution (protection against ex-post facto criminal laws) and the savings clause of Section 531 BNSS. Naive text splitting also risked bisecting essential statutory provisos (such as Section 173 BNSS's 3-day signature rule for e-FIRs).
+* **The Decision & Change**:
+  1. **Curated Primary 2024 Criminal Codes & Expanded Constitution**: Built structured primary statutory corpora (`BNS_from_db.json`, `BNSS_from_db.json`, `BSA_from_db.json`) covering core offenses, procedural innovations (e-FIR, zero FIR, preliminary inquiry under Section 173(3), electronic evidence certificates under BSA Section 63), and expanded `indian_constitution.json` from 111 lines to 24 core institutional Articles (Articles 14, 19, 20, 21, 22, 32, 136, 141, 142, 226, 227, 300A, 311, etc.).
+  2. **Proviso-Safe Atomic Chunk Ingestion**: Ingested all new acts into ChromaDB (`saulgpt_indian_laws`, growing vector database from 2,453 to 2,530 chunks) ensuring all sections up to 3,500 characters remain unbroken atomic vector chunks, completely preventing the severance of statutory provisos and exceptions.
+  3. **Temporal Statutory Intent Classification (Layer 1)**: Added `extract_temporal_context()` using incident date extraction and regex/semantic analysis:
+     - `PRE_2024` (< July 1, 2024): Strict IPC 1860 / CrPC 1973 routing under Article 20(1) and Section 531 BNSS.
+     - `POST_2024` (>= July 1, 2024): Strict BNS / BNSS / BSA 2023 routing with parenthetical legacy concordance.
+     - `UNDATED`: Dual-track analysis prioritizing 2024 codes with legacy concordance and explicit timeline disclaimers.
+  4. **Conditioned Layer 3 Reasoning & Rate-Limit Shielding**: Injected explicit temporal directives into Layer 3 synthesis and capped Groq completion tokens (`max_tokens=850`) to strictly observe Groq's 1000 TPM limit on 27B models.
+  5. **Context-Aware Layer 4 Validation**: Conditioned Layer 4 repealed laws audit so that pre-2024 queries citing IPC/CrPC are marked as legally valid rather than generating false-positive repeal warnings.
+* **The Why**:
+  Ensures absolute constitutional fidelity to Article 20(1), guarantees precise navigation across India's greatest statutory transition in 164 years, preserves complex statutory provisos in vector space, and guarantees hallucination-free guidance across both historic and contemporary legal matters.

@@ -1,0 +1,65 @@
+[
+  {
+    "chapter": 1,
+    "chapter_title": "Preliminary",
+    "section": "1",
+    "section_title": "Short title, extent and commencement",
+    "section_desc": "This Act may be called the Bharatiya Sakshya Adhiniyam, 2023. It shall come into force on the 1st day of July, 2024. It applies to all judicial proceedings in or before any Court."
+  },
+  {
+    "chapter": 2,
+    "chapter_title": "Relevancy of Facts",
+    "section": "22",
+    "section_title": "Confession caused by inducement, threat or promise, when irrelevant in criminal proceeding",
+    "section_desc": "A confession made by an accused person is irrelevant in a criminal proceeding, if the making of the confession appears to the Court to have been caused by any inducement, threat or promise having reference to the charge against the accused person, proceeding from a person in authority."
+  },
+  {
+    "chapter": 2,
+    "chapter_title": "Relevancy of Facts",
+    "section": "23",
+    "section_title": "Confession to police officer not to be proved",
+    "section_desc": "No confession made to a police officer shall be proved as against a person accused of any offence."
+  },
+  {
+    "chapter": 2,
+    "chapter_title": "Relevancy of Facts",
+    "section": "39",
+    "section_title": "Opinions of experts",
+    "section_desc": "When the Court has to form an opinion upon a point of foreign law or of science or art, or any other field, or as to identity of handwriting or finger impressions, or electronic evidence, the opinions upon that point of persons specially skilled in such field are relevant facts. Such persons are called experts."
+  },
+  {
+    "chapter": 5,
+    "chapter_title": "Of Documentary and Electronic Evidence",
+    "section": "57",
+    "section_title": "Primary evidence",
+    "section_desc": "Primary evidence means the document itself produced for the inspection of the Court. Explanation 1: Where a document is executed in several parts, each part is primary evidence of the document. Explanation 2: Where a document is produced by electronic or digital storage, and multiple files or copies are created simultaneously, each such file is primary evidence."
+  },
+  {
+    "chapter": 5,
+    "chapter_title": "Of Documentary and Electronic Evidence",
+    "section": "61",
+    "section_title": "Admissibility of electronic or digital record",
+    "section_desc": "Nothing in this Adhiniyam shall apply to deny the admissibility, of an electronic or digital record in the evidence on the ground that it is an electronic or digital record and such record shall have the same legal effect, validity and enforceability as other document."
+  },
+  {
+    "chapter": 5,
+    "chapter_title": "Of Documentary and Electronic Evidence",
+    "section": "63",
+    "section_title": "Admissibility of electronic records and electronic certificate (Replaces Section 65B IEA)",
+    "section_desc": "(1) Notwithstanding anything contained in this Adhiniyam, any information contained in an electronic record which is printed on a paper, stored, recorded or copied in optical or magnetic media or cloud storage or semiconductor memory produced by a computer shall be deemed to be also a document. (2) The conditions mentioned in sub-section (1) in respect of an electronic record shall be the following: (a) computer output was produced during the period of lawful control; (b) information was regularly fed into computer in the ordinary course of activities; (c) computer was operating properly. (4) In any proceedings where it is desired to give a statement in evidence by virtue of this section, a certificate doing any of the following things, that is to say: identifying the electronic record containing the statement and describing the manner in which it was produced; giving particulars of device; signed by a person in charge of the computer or device, or an authorized expert (Schedule Certificate), shall be evidence of any matter stated in the certificate."
+  },
+  {
+    "chapter": 7,
+    "chapter_title": "Of the Burden of Proof",
+    "section": "104",
+    "section_title": "Burden of proof",
+    "section_desc": "Whoever desires any Court to give judgment as to any legal right or liability dependent on the existence of facts which he asserts, must prove that those facts exist. When a person is bound to prove the existence of any fact, it is said that the burden of proof lies on that person."
+  },
+  {
+    "chapter": 8,
+    "chapter_title": "Estoppel",
+    "section": "121",
+    "section_title": "Estoppel",
+    "section_desc": "When one person has, by his declaration, act or omission, intentionally caused or permitted another person to believe a thing to be true and to act upon such belief, neither he nor his representative shall be allowed, in any suit or proceeding between himself and such person or his representative, to deny the truth of that thing."
+  }
+]

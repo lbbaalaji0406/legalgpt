@@ -558,33 +558,12 @@ def enforce_legal_terminology(text: str) -> str:
 
 def validate_legal_response(
     generated_text:   str,
-    retrieved_context: list
+    retrieved_context: list,
+    temporal_status:  str = "UNDATED"
 ) -> dict:
     """
     Master validation function for Layer 4.
     Runs all 5 checks and returns complete validation result.
-
-    Args:
-        generated_text   : final response string from Layer 3
-        retrieved_context: list of dicts from Layer 2 retrieval
-                          each with: content, act_name,
-                          section_number, is_repealed
-
-    Returns:
-        dict with keys:
-        - is_hallucinating    : bool
-        - confidence_score    : float (0.0 to 1.0)
-        - flagged_citations   : list of unverified citations
-        - repealed_warnings   : list of repealed law warnings
-        - struck_down_warnings: list of struck down warnings
-        - disclaimer_present  : bool
-        - final_response      : cleaned validated response string
-
-    Example:
-        result = validate_legal_response(layer3_text, layer2_results)
-        print(result["final_response"])
-        if result["is_hallucinating"]:
-            print("WARNING: Response may contain unsupported claims")
     """
     try:
         # ── Check 0: Adversarial Actor-Critic Audit & Surgical Span Repair (FG-PRM) ──
@@ -619,6 +598,14 @@ def validate_legal_response(
             generated_text,
             REPEALED_ACT_PATTERNS
         )
+
+        # TEMPORAL GUARD: If incident is PRE_2024, IPC/CrPC/IEA are constitutionally mandatory!
+        # Do not warn that they are repealed if the user is asking about a pre-July 2024 matter.
+        if temporal_status == "PRE_2024":
+            repealed_warnings = [
+                w for w in repealed_warnings 
+                if "Indian Penal Code" not in w and "Code of Criminal Procedure" not in w and "Indian Evidence Act" not in w
+            ]
 
         # Check 4 — Struck down section detector
         struck_down_warnings = _collect_warnings(

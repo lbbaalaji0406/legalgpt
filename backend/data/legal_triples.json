@@ -1599,5 +1599,96 @@
     "tail": "Article_21_Constitution_of_India",
     "desc": "Common Cause v. Union of India (Living Will) establishes landmark Supreme Court ratio on Article_21_Constitution_of_India",
     "weight": 0.98
+  },
+  {
+    "head": "Post_Employment_Non_Compete_Clause",
+    "relation": "prohibited_by",
+    "tail": "Right_to_Livelihood",
+    "desc": "The judiciary has consistently held that post-employment non-compete clauses are unenforceable as they violate the fundamental right to livelihood.",
+    "weight": 0.98
+  },
+  {
+    "head": "Right_to_Livelihood",
+    "relation": "overrides",
+    "tail": "Commercial_Necessity",
+    "desc": "The fundamental right to livelihood takes precedence over any commercial necessity or investment in human capital when assessing the validity of restrictive covenants.",
+    "weight": 0.95
+  },
+  {
+    "head": "Non_Compete_Enforceability",
+    "relation": "governed_by",
+    "tail": "Contractual_Context",
+    "desc": "The rules governing the enforceability of non-compete clauses in India differ categorically depending on whether the clause is in an employment contract or a shareholder agreement.",
+    "weight": 0.92
+  },
+  {
+    "head": "Non_Compete_Clauses",
+    "relation": "governed_by",
+    "tail": "Section_27_Indian_Contract_Act_1872",
+    "desc": "Non-compete clauses in India are primarily governed by Section 27 of the Indian Contract Act, 1872.",
+    "weight": 0.98
+  },
+  {
+    "head": "Section_27_Indian_Contract_Act_1872",
+    "relation": "voids",
+    "tail": "Agreements_Restraining_Lawful_Profession",
+    "desc": "Section 27 generally voids agreements that restrain any person from exercising any lawful profession, trade, or business.",
+    "weight": 0.95
+  },
+  {
+    "head": "Post_Termination_Non_Competes",
+    "relation": "exception_under",
+    "tail": "Sale_of_Goodwill",
+    "desc": "Post-termination non-competes are usually void unless they fall under specific exceptions such as the sale of goodwill.",
+    "weight": 0.9
+  },
+  {
+    "head": "Restrictions_During_Employment",
+    "relation": "enforceable_due_to",
+    "tail": "Employee_Duty_of_Fidelity",
+    "desc": "Restrictions during employment are typically enforceable due to an employee's inherent duty of fidelity to the employer.",
+    "weight": 0.88
+  },
+  {
+    "head": "Section_27_Indian_Contract_Act_1872",
+    "relation": "prohibits",
+    "tail": "Post_Employment_Non_Compete_Agreements",
+    "desc": "Section 27 of the Indian Contract Act, 1872, renders every agreement in restraint of trade, including post-employment non-compete clauses, void to the extent of such restraint.",
+    "weight": 0.98
+  },
+  {
+    "head": "Post_Employment_Non_Compete_Agreements",
+    "relation": "governed_by",
+    "tail": "Section_27_Indian_Contract_Act_1872",
+    "desc": "The enforceability of post-employment non-compete clauses in India is primarily determined by the statutory prohibition found in Section 27 of the Indian Contract Act.",
+    "weight": 0.95
+  },
+  {
+    "head": "Section_27_Indian_Contract_Act_1872",
+    "relation": "overrides",
+    "tail": "Contractual_Non_Compete_Terms",
+    "desc": "The statutory mandate of Section 27 overrides any contractual terms that attempt to restrain an individual from exercising any lawful profession, trade, or business after employment ends.",
+    "weight": 0.92
+  },
+  {
+    "head": "Section_27_Indian_Contract_Act_1872",
+    "relation": "prohibits",
+    "tail": "Post_Employment_Non_Compete_Clauses",
+    "desc": "Section 27 of the Indian Contract Act, 1872, renders every agreement that restrains any person from exercising a lawful profession, trade, or business void.",
+    "weight": 0.98
+  },
+  {
+    "head": "Post_Employment_Non_Compete_Clauses",
+    "relation": "governed_by",
+    "tail": "Section_27_Indian_Contract_Act_1872",
+    "desc": "The legal enforceability of post-employment non-compete restrictions in India is primarily determined by the provisions of Section 27 of the Indian Contract Act.",
+    "weight": 0.95
+  },
+  {
+    "head": "Section_27_Indian_Contract_Act_1872",
+    "relation": "voids",
+    "tail": "Restraint_of_Trade_Agreements",
+    "desc": "The statute explicitly voids agreements that restrain trade or business activities, including those imposed after the termination of employment.",
+    "weight": 0.92
   }
 ]

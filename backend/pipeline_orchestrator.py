@@ -539,9 +539,11 @@ def run_saulgpt_pipeline(
         # Validates after streaming is complete
         # Appends repealed/struck down warnings + disclaimer
         print("[4/5] 🔍 Validating response...")
+        temporal_status = layer1_payload.get("temporal_context", {}).get("temporal_status", "UNDATED")
         validation = validate_legal_response(
             final_answer,
-            layer2_results
+            layer2_results,
+            temporal_status=temporal_status
         )
         final_answer = validation["final_response"]
 

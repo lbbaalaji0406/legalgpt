@@ -70,14 +70,17 @@ TEMPERATURE = 0.1
 
 ACT_NAME_MAP = {
     "IEA_from_db":    "Indian Evidence Act, 1872",
-    "IPC_from_db":    "Indian Penal Code, 1860 (replaced by BNS 2023)",
-    "CRPC_from_db":   "Code of Criminal Procedure, 1973 (replaced by BNSS 2023)",
+    "IPC_from_db":    "Indian Penal Code, 1860",
+    "CRPC_from_db":   "Code of Criminal Procedure, 1973",
     "CPC_from_db":    "Code of Civil Procedure, 1908",
     "NIA_from_db":    "Negotiable Instruments Act, 1881",
     "HMA_from_db":    "Hindu Marriage Act, 1955",
     "MVA_from_db":    "Motor Vehicles Act, 1988",
     "IDA_from_db":    "Indian Divorce Act, 1869",
-    "indian_penal_code": "Bharatiya Nyaya Sanhita, 2023 (BNS)",
+    "BNS_from_db":    "Bharatiya Nyaya Sanhita, 2023 (BNS)",
+    "BNSS_from_db":   "Bharatiya Nagarik Suraksha Sanhita, 2023 (BNSS)",
+    "BSA_from_db":    "Bharatiya Sakshya Adhiniyam, 2023 (BSA)",
+    "indian_penal_code": "Indian Penal Code, 1860",
     "indian_constitution": "Constitution of India",
 }
 
@@ -96,7 +99,8 @@ print(f"Connecting to Groq API ({LLM_MODEL})...")
 llm = ChatGroq(
     model_name=LLM_MODEL,
     api_key=GROQ_API_KEY,
-    temperature=TEMPERATURE
+    temperature=TEMPERATURE,
+    max_tokens=850
 )
 print("Groq LLM connected.\n")
 
@@ -458,6 +462,44 @@ def format_context(
                 + "\n--- END BINDING JUDICIAL PRECEDENTS ---"
             )
             print("[Layer 3] 🏛️  Judicial Precedents context injected.")
+
+        # ── TEMPORAL STATUTORY ROUTING DIRECTIVE (Article 20(1) & BNSS 531) ──
+        temporal_info = layer1_payload.get("temporal_context", {})
+        t_status = temporal_info.get("temporal_status", "UNDATED")
+        t_date = temporal_info.get("detected_date_str")
+
+        if t_status == "PRE_2024":
+            directive = (
+                f"\n\n--- ⚖️ TEMPORAL STATUTORY DIRECTIVE: PRE-JULY 2024 INCIDENT ({t_date}) ---\n"
+                f"MANDATE: The user's query indicates this incident or dispute occurred prior to July 1, 2024 ({t_date}).\n"
+                "Under Article 20(1) of the Constitution of India (bar on ex-post facto criminal law) and Section 531 of the BNSS, 2023:\n"
+                "1. You MUST cite and apply the INDIAN PENAL CODE, 1860 (IPC) and CODE OF CRIMINAL PROCEDURE, 1973 (CrPC) as the PRIMARY governing substantive and procedural law.\n"
+                "2. Explicitly explain to the user that since the offense occurred before July 1, 2024, it is governed by IPC/CrPC pursuant to Article 20(1) and Section 531 BNSS, and cannot be charged under BNS retrospectively.\n"
+                "3. You may mention the corresponding 2024 BNS/BNSS section only as a secondary comparative note.\n"
+                "--- END TEMPORAL DIRECTIVE ---"
+            )
+            print(f"[Layer 3] ⏱️ Injected PRE_2024 temporal directive ({t_date}).")
+        elif t_status == "POST_2024":
+            directive = (
+                f"\n\n--- ⚖️ TEMPORAL STATUTORY DIRECTIVE: POST-JULY 2024 INCIDENT ({t_date}) ---\n"
+                f"MANDATE: The user's query indicates this incident occurred on or after July 1, 2024 ({t_date}).\n"
+                "1. You MUST cite and apply the BHARATIYA NYAYA SANHITA, 2023 (BNS), BHARATIYA NAGARIK SURAKSHA SANHITA, 2023 (BNSS), or BHARATIYA SAKSHYA ADHINIYAM, 2023 (BSA) as the PRIMARY governing law.\n"
+                "2. Do NOT cite IPC or CrPC as the active governing sections for this crime.\n"
+                "--- END TEMPORAL DIRECTIVE ---"
+            )
+            print(f"[Layer 3] ⏱️ Injected POST_2024 temporal directive ({t_date}).")
+        else:
+            directive = (
+                "\n\n--- ⚖️ TEMPORAL STATUTORY DIRECTIVE: UNDATED / GENERAL QUERY ---\n"
+                "MANDATE: The user did not specify an incident date. Apply the STANDARD DUAL-TRACK PROTOCOL:\n"
+                "1. CITE THE ACTIVE 2024 LAW (BNS, BNSS, BSA) AS PRIMARY: (e.g. 'Section 303(2) BNS', 'Section 173 BNSS').\n"
+                "2. PROVIDE PARENTHETICAL LEGACY MAPPING: (e.g. 'formerly Section 379 IPC', 'formerly Section 154 CrPC') so the user has the historical reference.\n"
+                "3. INCLUDE THE STATUTORY TIMELINE NOTE: Add a short note at the end of your analysis: '⚖️ Note on Timeline: If this incident occurred on or after July 1, 2024, it is governed by BNS/BNSS. If it relates to an incident or pending case prior to July 1, 2024, it is governed by IPC/CrPC under Article 20(1) and Section 531 BNSS.'\n"
+                "--- END TEMPORAL DIRECTIVE ---"
+            )
+            print("[Layer 3] ⏱️ Injected UNDATED dual-track temporal directive.")
+
+        formatted += directive
 
     return formatted
 
