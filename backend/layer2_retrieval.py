@@ -183,10 +183,12 @@ def retrieve_with_hybrid_logic(payload: dict, k: int = TOP_K) -> list:
     keyword_query  = payload.get("keyword_synonyms") or payload.get("search_optimized_query", "")
     citations = payload.get("explicit_citations", [])
     top_k     = _safe_top_k(payload.get("top_k", k))
+    temporal_status = payload.get("temporal_context", {}).get("temporal_status") or payload.get("temporal_status", "UNDATED")
 
     print(f"\n[Layer 2] Semantic  : {semantic_query[:70]}...")
     print(f"[Layer 2] Keywords  : {keyword_query[:70]}...")
     print(f"[Layer 2] Citations : {citations}")
+    print(f"[Layer 2] Temporal  : {temporal_status}")
     print(f"[Layer 2] Top K     : {top_k}")
 
     # ── TECHNIQUE 1: Semantic Search via ChromaDB ──
@@ -230,20 +232,34 @@ def retrieve_with_hybrid_logic(payload: dict, k: int = TOP_K) -> list:
         for doc, meta in zip(broad["documents"][0], broad["metadatas"][0]):
             semantic_results_raw.append((doc, meta))
 
-        # ── PARTITIONED 2024 SANHITA RETRIEVAL ──
-        # Actively retrieves 2024 Sanhitas so new criminal codes are never shadowed by CrPC/IPC
+        # ── PARTITION A: ACTIVE 2024 SANHITA RETRIEVAL (BNS / BNSS / BSA / Constitution) ──
         try:
             sanhita_broad = collection.query(
                 query_embeddings=[query_embedding],
                 where={"act_name": {"$in": ["BNS", "BNSS", "BSA", "Constitution"]}},
-                n_results=min(6, collection_count)
+                n_results=min(4, collection_count)
             )
             if sanhita_broad and sanhita_broad.get("documents") and sanhita_broad["documents"][0]:
                 for doc, meta in zip(sanhita_broad["documents"][0], sanhita_broad["metadatas"][0]):
                     semantic_results_raw.append((doc, meta))
-                print(f"[Layer 2] ⚖️ Partitioned 2024 Sanhita chunks retrieved: {len(sanhita_broad['documents'][0])}")
+                print(f"[Layer 2] ⚖️ Partition A (2024 Sanhitas): {len(sanhita_broad['documents'][0])} chunks retrieved.")
         except Exception as e_sanhita:
             pass
+
+        # ── PARTITION B: LEGACY COLONIAL CODE RETRIEVAL (IPC / CrPC / IEA) FOR UNDATED DUAL-TRACK ──
+        if temporal_status == "UNDATED":
+            try:
+                legacy_broad = collection.query(
+                    query_embeddings=[query_embedding],
+                    where={"act_name": {"$in": ["IPC_from_db", "CRPC_from_db", "IEA_from_db"]}},
+                    n_results=min(4, collection_count)
+                )
+                if legacy_broad and legacy_broad.get("documents") and legacy_broad["documents"][0]:
+                    for doc, meta in zip(legacy_broad["documents"][0], legacy_broad["metadatas"][0]):
+                        semantic_results_raw.append((doc, meta))
+                    print(f"[Layer 2] 📜 Partition B (Legacy Colonial): {len(legacy_broad['documents'][0])} chunks retrieved.")
+            except Exception as e_legacy:
+                pass
     except Exception as e:
         print(f"[Layer 2] ChromaDB query failed: {e}")
         return []
@@ -378,18 +394,44 @@ def retrieve_with_hybrid_logic(payload: dict, k: int = TOP_K) -> list:
 
     # Build final top k results (default min 5 for complete legal context)
     effective_k = max(top_k, 5)
+
+    if temporal_status == "UNDATED":
+        # Ensure representation: top 3 active 2024 Sanhita chunks (is_repealed == False)
+        # and top 2 legacy colonial chunks (is_repealed == True)
+        active_candidates = [r for score, r in ranked if not r.get("is_repealed")]
+        legacy_candidates = [r for score, r in ranked if r.get("is_repealed")]
+
+        balanced = []
+        # Add up to 3 active 2024 chunks
+        for c in active_candidates[:3]:
+            if c not in balanced:
+                balanced.append(c)
+        # Add up to 2 legacy colonial chunks
+        for c in legacy_candidates[:2]:
+            if c not in balanced:
+                balanced.append(c)
+        # Fill remaining slots up to effective_k from highest ranked
+        for score, r in ranked:
+            if len(balanced) >= effective_k:
+                break
+            if r not in balanced:
+                balanced.append(r)
+        final_list = balanced
+    else:
+        final_list = [r for score, r in ranked[:effective_k]]
+
     top_results = []
-    for score, result in ranked[:effective_k]:
+    for result in final_list:
         top_results.append({
             "content":         result["content"],
             "act_name":        result["act_name"],
             "section_number":  result["section_number"],
             "is_repealed":     result["is_repealed"],
             "law_type":        result["law_type"],
-            "relevance_score": round(float(score), 4),
+            "relevance_score": round(float(result.get("relevance_score", 0.9)), 4),
         })
 
-    print(f"[Layer 2] Final top {len(top_results)} sections ready for Layer 3.\n")
+    print(f"[Layer 2] Final top {len(top_results)} sections ready for Layer 3 (Dual-Track balanced: {temporal_status == 'UNDATED'}).\n")
     return top_results
 
 

@@ -491,10 +491,14 @@ def format_context(
         else:
             directive = (
                 "\n\n--- ⚖️ TEMPORAL STATUTORY DIRECTIVE: UNDATED / GENERAL QUERY ---\n"
-                "MANDATE: The user did not specify an incident date. Apply the STANDARD DUAL-TRACK PROTOCOL:\n"
-                "1. CITE THE ACTIVE 2024 LAW (BNS, BNSS, BSA) AS PRIMARY: (e.g. 'Section 303(2) BNS', 'Section 173 BNSS').\n"
-                "2. PROVIDE PARENTHETICAL LEGACY MAPPING: (e.g. 'formerly Section 379 IPC', 'formerly Section 154 CrPC') so the user has the historical reference.\n"
-                "3. INCLUDE THE STATUTORY TIMELINE NOTE: Add a short note at the end of your analysis: '⚖️ Note on Timeline: If this incident occurred on or after July 1, 2024, it is governed by BNS/BNSS. If it relates to an incident or pending case prior to July 1, 2024, it is governed by IPC/CrPC under Article 20(1) and Section 531 BNSS.'\n"
+                "MANDATE: The user did not specify an incident date. You MUST organize your response into these exact structural dual-tracks:\n\n"
+                "### ⚖️ Substantive Law (The Offence)\n"
+                "- **Post-July 1, 2024 Incidents**: Governed by the **Bharatiya Nyaya Sanhita, 2023 (BNS)**. State the specific BNS section, ingredients, and penalties (e.g. Section 318 BNS for cheating, Section 303 BNS for theft).\n"
+                "- **Pre-July 1, 2024 Incidents**: Governed by the **Indian Penal Code, 1860 (IPC)** as mandated by Article 20(1) of the Constitution and Section 358 BNS. State the corresponding IPC section (e.g. Section 420 IPC, Section 379 IPC).\n\n"
+                "### 🏛️ Procedural Law (Investigation & Cognizance)\n"
+                "- **New Complaints / FIRs Filed Today**: Governed by the **Bharatiya Nagarik Suraksha Sanhita, 2023 (BNSS)** (e.g. Section 173 BNSS for police station / e-FIR with the 3-day signature rule, preliminary enquiry, and digital procedures).\n"
+                "- **Pending Investigations Initiated Prior to July 1, 2024**: Governed strictly by the **Code of Criminal Procedure, 1973 (CrPC)** (e.g. Section 154 CrPC) as protected under Section 531(2)(a) of the BNSS.\n\n"
+                "Always conclude with the statutory timeline note.\n"
                 "--- END TEMPORAL DIRECTIVE ---"
             )
             print("[Layer 3] ⏱️ Injected UNDATED dual-track temporal directive.")
