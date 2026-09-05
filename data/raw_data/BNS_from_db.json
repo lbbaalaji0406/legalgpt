@@ -4,49 +4,287 @@
     "chapter_title": "Preliminary",
     "section": "1",
     "section_title": "Short title, commencement and application",
-    "section_desc": "This Act may be called the Bharatiya Nyaya Sanhita, 2023. It shall come into force on the 1st day of July, 2024. Every person shall be liable to punishment under this Sanhita for every act or omission contrary to the provisions thereof, of which he shall be guilty within India."
+    "section_desc": "(1) This Act may be called the Bharatiya Nyaya Sanhita, 2023. (2) It shall come into force on the 1st day of July, 2024. (3) Every person shall be liable to punishment under this Sanhita and not otherwise for every act or omission contrary to the provisions thereof, of which he shall be guilty within India. (4) Any person liable, by any Indian law, to be tried for an offence committed beyond India shall be dealt with according to the provisions of this Sanhita for any act committed beyond India in the same manner as if such act had been committed within India. (5) The provisions of this Sanhita apply also to any offence committed by: (a) any citizen of India in any place without and beyond India; (b) any person on any ship or aircraft registered in India wherever it may be; (c) any person in any place without and beyond India committing offence targeting a computer resource located in India. Explanation: In this section, the word 'offence' includes every act committed outside India which, if committed in India, would be punishable under this Sanhita."
+  },
+  {
+    "chapter": 1,
+    "chapter_title": "Preliminary",
+    "section": "2",
+    "section_title": "Definitions",
+    "section_desc": "In this Sanhita, unless the context otherwise requires: (1) 'act' denotes as well a series of acts as a single act; (2) 'animal' denotes any living creature, other than a human being; (3) 'child' means any person below the age of eighteen years; (4) 'cohabitation' means living together as husband and wife; (5) 'community service' means the work which the Court may order a convict to perform for the benefit of the community which is not entitled to any remuneration; (6) 'Court' denotes a Judge who is empowered by law to act judicially alone, or a body of Judges which is empowered by law to act judicially as a body; (7) 'death' denotes the death of a human being unless the contrary appears from the context; (8) 'dishonestly' means doing anything with the intention of causing wrongful gain to one person or wrongful loss to another person; (9) 'document' means any matter expressed or described upon any substance by means of letters, figures or marks, or by more than one of those means, and includes electronic and digital records; (10) 'fraudulently' means doing a thing with intent to defraud but not otherwise; (11) 'gain wrongfully' means gain by unlawful means of property to which the person gaining is not legally entitled; (12) 'good faith'—nothing is said to be done or believed in good faith which is done or believed without due care and attention; (17) 'injury' denotes any harm whatever illegally caused to any person, in body, mind, reputation or property; (18) 'judge' denotes not only every person who is officially designated as a Judge, but also every person who is empowered by law to give, in any legal proceeding, civil or criminal, a definitive judgment; (22) 'man' denotes a male human being of any age; (23) 'month' and 'year'—wherever the word 'month' or the word 'year' is used, it is to be understood that the month or the year is to be reckoned according to the Gregorian calendar; (24) 'movable property' includes property of every description, except land and things attached to the earth or permanently fastened to anything which is attached to the earth; (26) 'offence' denotes a thing made punishable by this Sanhita; (28) 'person' includes any company or association or body of persons, whether incorporated or not; (29) 'public' includes any class of the public or any community; (30) 'public servant' denotes a person falling under any of the descriptions hereinafter following, namely: every commissioned officer in the Armed Forces, every Judge, every officer of a Court of Justice, every person who holds any office by virtue of which he is empowered to place or keep any person in confinement, every officer of Government whose duty it is to prevent offences, give information of offences, or bring offenders to justice; (35) 'voluntarily'—a person is said to cause an effect voluntarily when he causes it by means whereby he intended to cause it, or by means which, at the time of employing those means, he knew or had reason to believe to be likely to cause it; (36) 'woman' denotes a female human being of any age; (37) 'wrongful gain' is gain by unlawful means of property to which the person gaining is not legally entitled; (38) 'wrongful loss' is the loss by unlawful means of property to which the person losing it is legally entitled."
+  },
+  {
+    "chapter": 1,
+    "chapter_title": "Preliminary",
+    "section": "3",
+    "section_title": "General explanations and construction",
+    "section_desc": "(1) Throughout this Sanhita every definition of an offence, every penal provision, and every illustration of every such definition or penal provision, shall be understood subject to the exceptions contained in the Chapter entitled 'General Exceptions', though those exceptions are not repeated in such definition, penal provision, or illustration. (2) Every expression which is explained in any part of this Sanhita, is used in every part of this Sanhita in conformity with the explanation. (3) When an act is criminal only by reason of its being done with a criminal knowledge or intention, each of several persons who do the act with such knowledge or intention is liable for the act in the same manner as if the act were done by him alone with that knowledge or intention."
   },
   {
     "chapter": 2,
     "chapter_title": "Of Punishments",
     "section": "4",
     "section_title": "Punishments",
-    "section_desc": "The punishments to which offenders are liable under the provisions of this Sanhita are: (a) Death; (b) Imprisonment for life; (c) Imprisonment of two descriptions, namely, rigorous or simple; (d) Forfeiture of property; (e) Fine; (f) Community service. Explanation: Community service means the work which the Court may order a convict to perform for the benefit of the community which is not entitled to any remuneration."
+    "section_desc": "The punishments to which offenders are liable under the provisions of this Sanhita are: First—Death; Secondly—Imprisonment for life; Thirdly—Imprisonment, which is of two descriptions, namely: (1) Rigorous, that is, with hard labour; (2) Simple; Fourthly—Forfeiture of property; Fifthly—Fine; Sixthly—Community service. Explanation: Community service means the work which the Court may order a convict to perform for the benefit of the community which is not entitled to any remuneration. The Court, when passing a sentence of community service, shall specify the nature and duration of the work to be performed, having regard to the age, physical condition, and vocation of the offender."
   },
   {
-    "chapter": 4,
+    "chapter": 2,
+    "chapter_title": "Of Punishments",
+    "section": "5",
+    "section_title": "Commutation of sentence",
+    "section_desc": "The appropriate Government may, without the consent of the offender, commute: (a) a sentence of death, for any other punishment provided by this Sanhita; (b) a sentence of imprisonment for life, for imprisonment for a term not exceeding fourteen years or for fine; (c) a sentence of rigorous imprisonment, for simple imprisonment for any term to which that person might have been sentenced, or for fine; (d) a sentence of simple imprisonment, for fine. In this section, the expression 'appropriate Government' means: (i) in cases where the sentence is of death or of imprisonment for life or for an offence against any law relating to a matter to which the executive power of the Union extends, the Central Government; and (ii) in other cases, the Government of the State within which the offender is sentenced."
+  },
+  {
+    "chapter": 2,
+    "chapter_title": "Of Punishments",
+    "section": "8",
+    "section_title": "Sentence of imprisonment for non-payment of fine",
+    "section_desc": "In every case of an offence punishable with imprisonment as well as fine, in which the offender is sentenced to a fine, whether with or without imprisonment, and in every case of an offence punishable with imprisonment or fine, or with fine only, in which the offender is sentenced to a fine, the Court may direct by the sentence that, in default of payment of the fine, the offender shall suffer imprisonment for a certain term, which imprisonment shall be in excess of any other imprisonment to which he may have been sentenced or to which he may be liable under a commutation of a sentence."
+  },
+  {
+    "chapter": 2,
+    "chapter_title": "Of Punishments",
+    "section": "9",
+    "section_title": "Limit to imprisonment for non-payment of fine, when imprisonment and fine awardable",
+    "section_desc": "The term for which the Court directs the offender to be imprisoned in default of payment of a fine shall not exceed one-fourth of the term of imprisonment which is the maximum fixed for the offence, if the offence be punishable with imprisonment as well as fine."
+  },
+  {
+    "chapter": 2,
+    "chapter_title": "Of Punishments",
+    "section": "11",
+    "section_title": "Imprisonment for non-payment of fine, when offence punishable with fine only",
+    "section_desc": "If the offence be punishable with fine only, the imprisonment which the Court imposes in default of payment of the fine shall be simple, and the term for which the Court directs the offender to be imprisoned, in default of payment of fine, shall not exceed the following scale, that is to say: for any term not exceeding two months when the amount of the fine shall not exceed five thousand rupees; for any term not exceeding four months when the amount of the fine shall not exceed ten thousand rupees; and for any term not exceeding one year in any other case."
+  },
+  {
+    "chapter": 2,
+    "chapter_title": "Of Punishments",
+    "section": "13",
+    "section_title": "Enhanced punishment for certain offences after previous conviction",
+    "section_desc": "Whoever, having been convicted by a Court in India of an offence punishable under Chapter X or Chapter XVII of this Sanhita with imprisonment of either description for a term of three years or upwards, shall be guilty of any offence punishable under either of those Chapters with like imprisonment for a like term, shall be subject for every such subsequent offence to imprisonment for life, or to imprisonment of either description for a term which may extend to ten years."
+  },
+  {
+    "chapter": 3,
     "chapter_title": "General Exceptions",
     "section": "14",
     "section_title": "Act done by a person bound, or by mistake of fact believing himself bound, by law",
-    "section_desc": "Nothing is an offence which is done by a person who is, or who by reason of a mistake of fact and not by reason of a mistake of law in good faith believes himself to be, bound by law to do it."
+    "section_desc": "Nothing is an offence which is done by a person who is, or who by reason of a mistake of fact and not by reason of a mistake of law in good faith believes himself to be, bound by law to do it. Illustration: A, a soldier, fires on a mob by the order of his superior officer, in conformity with the commands of the law. A has committed no offence."
+  },
+  {
+    "chapter": 3,
+    "chapter_title": "General Exceptions",
+    "section": "15",
+    "section_title": "Act of Judge when acting judicially",
+    "section_desc": "Nothing is an offence which is done by a Judge when acting judicially in the exercise of any power which is, or which in good faith he believes to be, given to him by law."
+  },
+  {
+    "chapter": 3,
+    "chapter_title": "General Exceptions",
+    "section": "16",
+    "section_title": "Act done pursuant to the judgment or order of Court",
+    "section_desc": "Nothing which is done in pursuance of, or which is warranted by the judgment or order of, a Court, if done whilst such judgment or order remains in force, is an offence, notwithstanding the Court may have had no jurisdiction to pass such judgment or order, provided the person doing the act in good faith believes that the Court had such jurisdiction."
+  },
+  {
+    "chapter": 3,
+    "chapter_title": "General Exceptions",
+    "section": "17",
+    "section_title": "Act done by a person justified, or by mistake of fact believing himself justified, by law",
+    "section_desc": "Nothing is an offence which is done by any person who is justified by law, or who by reason of a mistake of fact and not by reason of a mistake of law in good faith, believes himself to be justified by law, in doing it. Illustration: A sees Z commit what appears to A to be a murder. A, in the exercise, to the best of his judgment exerted in good faith, of the power which the law gives to all persons of apprehending murderers in the act, seizes Z, in order to bring Z before the proper authorities. A has committed no offence, though it may turn out that Z was acting in self-defence."
+  },
+  {
+    "chapter": 3,
+    "chapter_title": "General Exceptions",
+    "section": "18",
+    "section_title": "Accident in doing a lawful act",
+    "section_desc": "Nothing is an offence which is done by accident or misfortune, and without any criminal intention or knowledge in the doing of a lawful act in a lawful manner by lawful means and with proper care and caution. Illustration: A is at work with a hatchet; the head flies off and kills a man who is standing by. Here, if there was no want of proper care on the part of A, his act is excusable and not an offence."
+  },
+  {
+    "chapter": 3,
+    "chapter_title": "General Exceptions",
+    "section": "19",
+    "section_title": "Act likely to cause harm, but done without criminal intent, and to prevent other harm",
+    "section_desc": "Nothing is an offence merely by reason of its being done with the knowledge that it is likely to cause harm, if it be done without any criminal intention to cause harm, and in good faith for the purpose of preventing or avoiding other harm to person or property. Explanation: It is a question of fact in such a case whether the harm to be prevented or avoided was of such a nature and so imminent as to justify or excuse the risk of doing the act with the knowledge that it was likely to cause harm."
+  },
+  {
+    "chapter": 3,
+    "chapter_title": "General Exceptions",
+    "section": "20",
+    "section_title": "Act of a child under seven years of age",
+    "section_desc": "Nothing is an offence which is done by a child under seven years of age."
+  },
+  {
+    "chapter": 3,
+    "chapter_title": "General Exceptions",
+    "section": "21",
+    "section_title": "Act of a child above seven and under twelve of immature understanding",
+    "section_desc": "Nothing is an offence which is done by a child above seven years of age and under twelve, who has not attained sufficient maturity of understanding to judge of the nature and consequences of his conduct on that occasion."
+  },
+  {
+    "chapter": 3,
+    "chapter_title": "General Exceptions",
+    "section": "22",
+    "section_title": "Act of a person of unsound mind",
+    "section_desc": "Nothing is an offence which is done by a person who, at the time of doing it, by reason of unsoundness of mind, is incapable of knowing the nature of the act, or that he is doing what is either wrong or contrary to law."
+  },
+  {
+    "chapter": 3,
+    "chapter_title": "General Exceptions",
+    "section": "23",
+    "section_title": "Act of a person incapable of judgment by reason of intoxication caused against his will",
+    "section_desc": "Nothing is an offence which is done by a person who, at the time of doing it, is, by reason of intoxication, incapable of knowing the nature of the act, or that he is doing what is either wrong, or contrary to law: Provided that the thing which intoxicated him was administered to him without his knowledge or against his will."
+  },
+  {
+    "chapter": 3,
+    "chapter_title": "General Exceptions",
+    "section": "25",
+    "section_title": "Act not intended and not known to be likely to cause death or grievous hurt, done by consent",
+    "section_desc": "Nothing which is not intended to cause death, or grievous hurt, and which is not known by the doer to be likely to cause death or grievous hurt, is an offence by reason of any harm which it may cause, or be intended by the doer to cause, to any person, above eighteen years of age, who has given consent, whether express or implied, to suffer that harm; or by reason of any harm which it may be known by the doer to be likely to cause to any such person who has consented to take the risk of that harm."
+  },
+  {
+    "chapter": 3,
+    "chapter_title": "General Exceptions",
+    "section": "26",
+    "section_title": "Act not intended to cause death, done by consent in good faith for person's benefit",
+    "section_desc": "Nothing, which is not intended to cause death, is an offence by reason of any harm which it may cause, or be intended by the doer to cause, or be known by the doer to be likely to cause, to any person for whose benefit it is done in good faith, and who has given a consent, whether express or implied, to suffer that harm, or to take the risk of that harm. Illustration: A, a surgeon, knowing that a particular operation is likely to cause the death of Z, who suffers under a painful complaint, but not intending to cause Z's death, and intending, in good faith, Z's benefit, performs that operation with Z's consent. A has committed no offence."
+  },
+  {
+    "chapter": 3,
+    "chapter_title": "General Exceptions",
+    "section": "34",
+    "section_title": "Things done in private defence",
+    "section_desc": "Nothing is an offence which is done in the exercise of the right of private defence."
+  },
+  {
+    "chapter": 3,
+    "chapter_title": "General Exceptions",
+    "section": "35",
+    "section_title": "Right of private defence of the body and of property",
+    "section_desc": "Every person has a right, subject to the restrictions contained in Section 37, to defend: (a) his own body, and the body of any other person, against any offence affecting the human body; (b) the property, whether movable or immovable, of himself or of any other person, against any act which is an offence falling under the definition of theft, robbery, mischief or criminal trespass, or which is an attempt to commit theft, robbery, mischief or criminal trespass."
+  },
+  {
+    "chapter": 3,
+    "chapter_title": "General Exceptions",
+    "section": "37",
+    "section_title": "Acts against which there is no right of private defence",
+    "section_desc": "(1) There is no right of private defence against an act which does not reasonably cause the apprehension of death or of grievous hurt, if done, or attempted to be done, by a public servant acting in good faith under colour of his office, though that act may not be strictly justifiable by law. (2) There is no right of private defence against an act which does not reasonably cause the apprehension of death or of grievous hurt, if done, or attempted to be done, by the direction of a public servant acting in good faith under colour of his office, though that direction may not be strictly justifiable by law. (3) There is no right of private defence in cases in which there is time to have recourse to the protection of the public authorities. (4) The right of private defence in no case extends to the inflicting of more harm than it is necessary to inflict for the purpose of defence."
+  },
+  {
+    "chapter": 3,
+    "chapter_title": "General Exceptions",
+    "section": "38",
+    "section_title": "When the right of private defence of the body extends to causing death",
+    "section_desc": "The right of private defence of the body extends, under the restrictions mentioned in Section 37, to the voluntary causing of death or of any other harm to the assailant, if the offence which occasions the exercise of the right be of any of the descriptions hereinafter enumerated, namely: (a) An assault as may reasonably cause the apprehension that death will otherwise be the consequence of such assault; (b) An assault as may reasonably cause the apprehension that grievous hurt will otherwise be the consequence of such assault; (c) An assault with the intention of committing rape; (d) An assault with the intention of gratifying unnatural lust; (e) An assault with the intention of kidnapping or abducting; (f) An assault with the intention of wrongfully confining a person, under circumstances which may reasonably cause him to apprehend that he will be unable to have recourse to the public authorities for his release; (g) An act of throwing or administering acid, or an attempt to throw or administer acid which may reasonably cause the apprehension that grievous hurt will otherwise be the consequence of such act."
+  },
+  {
+    "chapter": 3,
+    "chapter_title": "General Exceptions",
+    "section": "41",
+    "section_title": "When the right of private defence of property extends to causing death",
+    "section_desc": "The right of private defence of property extends, under the restrictions mentioned in Section 37, to the voluntary causing of death or of any other harm to the wrong-doer, if the offence, the committing of which, or the attempting to commit which, occasions the exercise of the right, be an offence of any of the descriptions hereinafter enumerated, namely: (a) Robbery; (b) House-breaking after sunset and before sunrise; (c) Mischief by fire or any explosive substance committed on any building, tent or vessel, which building, tent or vessel is used as a human dwelling, or as a place for the custody of property; (d) Theft, mischief, or house-trespass, under such circumstances as may reasonably cause apprehension that death or grievous hurt will be the consequence, if such right of private defence is not exercised."
   },
   {
     "chapter": 4,
-    "chapter_title": "General Exceptions",
-    "section": "34",
-    "section_title": "Right of private defence of body and of property",
-    "section_desc": "Every person has a right, subject to the restrictions contained in Section 37, to defend: (a) his own body, and the body of any other person, against any offence affecting the human body; (b) the property, whether movable or immovable, of himself or of any other person, against any act which is an offence falling under the definition of theft, robbery, mischief or criminal trespass, or which is an attempt to commit theft, robbery, mischief or criminal trespass."
+    "chapter_title": "Of Abetment, Criminal Conspiracy and Attempt",
+    "section": "45",
+    "section_title": "Abetment of a thing",
+    "section_desc": "A person abets the doing of a thing, who: First—Instigates any person to do that thing; or Secondly—Engages with one or more other person or persons in any conspiracy for the doing of that thing, if an act or illegal omission takes place in pursuance of that conspiracy, and in order to the doing of that thing; or Thirdly—Intentionally aids, by any act or illegal omission, the doing of that thing. Explanation 1: A person who, by wilful misrepresentation, or by wilful concealment of a material fact which he is bound to disclose, voluntarily causes or procures, or attempts to cause or procure, a thing to be done, is said to instigate the doing of that thing. Explanation 2: Whoever, either prior to or at the time of the commission of an act, does anything in order to facilitate the commission of that act, and thereby facilitates the commission thereof, is said to aid the doing of that act."
+  },
+  {
+    "chapter": 4,
+    "chapter_title": "Of Abetment, Criminal Conspiracy and Attempt",
+    "section": "61",
+    "section_title": "Criminal conspiracy",
+    "section_desc": "(1) When two or more persons agree to do, or cause to be done: (a) an illegal act; or (b) an act which is not illegal by illegal means, such an agreement is designated a criminal conspiracy: Provided that no agreement except an agreement to commit an offence shall amount to a criminal conspiracy unless some act besides the agreement is done by one or more parties to such agreement in pursuance thereof. Explanation: It is immaterial whether the illegal act is the ultimate object of such agreement, or is merely incidental to that object. (2) Whoever is a party to a criminal conspiracy to commit an offence punishable with death, imprisonment for life or rigorous imprisonment for a term of two years or upwards, shall, where no express provision is made in this Sanhita for the punishment of such conspiracy, be punished in the same manner as if he had abetted such offence. (3) Whoever is a party to a criminal conspiracy other than a criminal conspiracy to commit an offence punishable as aforesaid shall be punished with imprisonment of either description for a term not exceeding six months, or with fine or with both."
+  },
+  {
+    "chapter": 4,
+    "chapter_title": "Of Abetment, Criminal Conspiracy and Attempt",
+    "section": "62",
+    "section_title": "Punishment for attempting to commit offences punishable with imprisonment for life or other imprisonment",
+    "section_desc": "Whoever attempts to commit an offence punishable by this Sanhita with imprisonment for life or imprisonment, or to cause such an offence to be committed, and in such attempt does any act towards the commission of the offence, shall, where no express provision is made by this Sanhita for the punishment of such attempt, be punished with imprisonment of any description provided for the offence, for a term which may extend to one-half of the imprisonment for life or, as the case may be, one-half of the longest term of imprisonment provided for that offence, or with such fine as is provided for the offence, or with both."
   },
   {
     "chapter": 5,
     "chapter_title": "Of Offences Against Women and Children",
     "section": "63",
     "section_title": "Rape",
-    "section_desc": "A man is said to commit rape who penetrates his penis, or inserts any object or body part, or manipulates any part of the body of a woman against her will, without her consent, or with consent obtained by putting her in fear of death or hurt. Punishment under Section 64 shall be rigorous imprisonment for not less than ten years, but which may extend to imprisonment for life, and with fine."
+    "section_desc": "A man is said to commit 'rape' if he: (a) penetrates his penis, to any extent, into the vagina, mouth, urethra or anus of a woman or makes her to do so with him or any other person; or (b) inserts, to any extent, any object or a part of the body, not being the penis, into the vagina, the urethra or anus of a woman or makes her to do so with him or any other person; or (c) manipulates any part of the body of a woman so as to cause penetration into the vagina, urethra, anus or any part of body of such woman or makes her to do so with him or any other person; or (d) applies his mouth to the vagina, anus, urethra of a woman or makes her to do so with him or any other person, under the circumstances falling under any of the following seven descriptions: First—Against her will. Secondly—Without her consent. Thirdly—With her consent, when her consent has been obtained by putting her or any person in whom she is interested, in fear of death or of hurt. Fourthly—With her consent, when the man knows that he is not her husband and that her consent is given because she believes that he is another man to whom she is or believes herself to be lawfully married. Fifthly—With her consent when, at the time of giving such consent, by reason of unsoundness of mind or intoxication or the administration by him personally or through another of any stupefying or unwholesome substance, she is unable to understand the nature and consequences of that to which she gives consent. Sixthly—With or without her consent, when she is under eighteen years of age. Seventhly—When she is unable to communicate consent. Explanation 1: A woman who does not physically resist to the act of penetration shall not by the reason only of that fact, be regarded as consenting to the sexual activity. Explanation 2: 'Consent' means an unequivocal voluntary agreement when the woman by words, gestures or any form of verbal or non-verbal communication, communicates willingness to participate in the specific sexual act. Exception: Medical procedure or intervention does not constitute rape."
+  },
+  {
+    "chapter": 5,
+    "chapter_title": "Of Offences Against Women and Children",
+    "section": "64",
+    "section_title": "Punishment for rape",
+    "section_desc": "(1) Whoever commits rape shall be punished with rigorous imprisonment of either description for a term which shall not be less than ten years, but which may extend to imprisonment for life, and shall also be liable to fine. (2) Where the rape is committed by a police officer, public servant, member of the armed forces, or person in management or staff of a jail, remand home, hospital, educational institution, or on a woman known to be pregnant, or causing grievous hurt or resulting in persistent vegetative state, the punishment shall be rigorous imprisonment for a term which shall not be less than twenty years, but which may extend to imprisonment for life, which shall mean imprisonment for the remainder of that person's natural life, and with fine. Provided that any fine imposed under this section shall be just and reasonable to meet the medical expenses and rehabilitation of the victim, and shall be paid directly to the victim."
+  },
+  {
+    "chapter": 5,
+    "chapter_title": "Of Offences Against Women and Children",
+    "section": "65",
+    "section_title": "Punishment for rape in certain cases (Victim under 16 or 12 years of age)",
+    "section_desc": "(1) Whoever commits rape on a woman under sixteen years of age shall be punished with rigorous imprisonment for a term which shall not be less than twenty years, but which may extend to imprisonment for life, which shall mean imprisonment for the remainder of that person's natural life, and with fine. (2) Whoever commits rape on a woman under twelve years of age shall be punished with rigorous imprisonment for a term which shall not be less than twenty years, but which may extend to imprisonment for life, which shall mean imprisonment for the remainder of that person's natural life, and with fine or with death."
   },
   {
     "chapter": 5,
     "chapter_title": "Of Offences Against Women and Children",
     "section": "69",
     "section_title": "Sexual intercourse by deceitful means or false promise to marry",
-    "section_desc": "Whoever, by deceitful means or by making promise to marry with a woman without any intention of fulfilling the same, and has sexual intercourse with her, such sexual intercourse not amounting to the offence of rape, shall be punished with imprisonment of either description for a term which may extend to ten years and shall also be liable to fine. Explanation: Deceitful means shall include false promise of employment or promotion, or inducement by suppressing identity."
+    "section_desc": "Whoever, by deceitful means or by making promise to marry with a woman without any intention of fulfilling the same, and has sexual intercourse with her, such sexual intercourse not amounting to the offence of rape, shall be punished with imprisonment of either description for a term which may extend to ten years and shall also be liable to fine. Explanation: 'Deceitful means' shall include the false promise of employment or promotion, inducement, or marrying after suppressing identity."
+  },
+  {
+    "chapter": 5,
+    "chapter_title": "Of Offences Against Women and Children",
+    "section": "70",
+    "section_title": "Gang rape",
+    "section_desc": "(1) Where a woman is raped by one or more persons constituting a group or acting in furtherance of a common intention, each of those persons shall be deemed to have committed the offence of gang rape and shall be punished with rigorous imprisonment for a term which shall not be less than twenty years, but which may extend to life imprisonment which shall mean imprisonment for the remainder of that person's natural life, and with fine. (2) Where the victim of gang rape is a woman under eighteen years of age, the punishment shall be imprisonment for life, which shall mean imprisonment for the remainder of that person's natural life, and fine, or with death."
+  },
+  {
+    "chapter": 5,
+    "chapter_title": "Of Offences Against Women and Children",
+    "section": "73",
+    "section_title": "Assault or use of criminal force to woman with intent to outrage her modesty",
+    "section_desc": "Whoever assaults or uses criminal force to any woman, intending to outrage or knowing it to be likely that he will thereby outrage her modesty, shall be punished with imprisonment of either description for a term which shall not be less than one year but which may extend to five years, and shall also be liable to fine."
+  },
+  {
+    "chapter": 5,
+    "chapter_title": "Of Offences Against Women and Children",
+    "section": "74",
+    "section_title": "Assault or use of criminal force to woman with intent to disrobe",
+    "section_desc": "Any man who assaults or uses criminal force to any woman or abets such act with the intention of disrobing or compelling her to be naked, shall be punished with imprisonment of either description for a term which shall not be less than three years but which may extend to seven years, and shall also be liable to fine."
+  },
+  {
+    "chapter": 5,
+    "chapter_title": "Of Offences Against Women and Children",
+    "section": "75",
+    "section_title": "Sexual harassment",
+    "section_desc": "(1) A man committing any of the following acts: (i) physical contact and advances involving unwelcome and explicit sexual overtures; or (ii) a demand or request for sexual favours; or (iii) showing pornography against the will of a woman; or (iv) making sexually coloured remarks, shall be guilty of the offence of sexual harassment. (2) Any man who commits the offence specified in clause (i) or clause (ii) or clause (iii) of sub-section (1) shall be punished with rigorous imprisonment for a term which may extend to three years, or with fine, or with both. (3) Any man who commits the offence specified in clause (iv) of sub-section (1) shall be punished with imprisonment of either description for a term which may extend to one year, or with fine, or with both."
+  },
+  {
+    "chapter": 5,
+    "chapter_title": "Of Offences Against Women and Children",
+    "section": "77",
+    "section_title": "Voyeurism",
+    "section_desc": "Any man who watches, or captures the image of a woman engaging in a private act in circumstances where she would usually have the expectation of not being observed either by the perpetrator or by any other person at the behest of the perpetrator or disseminates such image, shall be punished on first conviction with imprisonment of either description for a term which shall not be less than one year, but which may extend to three years, and shall also be liable to fine, and be punished on a second or subsequent conviction, with imprisonment of either description for a term which shall not be less than three years, but which may extend to seven years, and shall also be liable to fine."
+  },
+  {
+    "chapter": 5,
+    "chapter_title": "Of Offences Against Women and Children",
+    "section": "78",
+    "section_title": "Stalking",
+    "section_desc": "(1) Any man who: (i) follows a woman and contacts, or attempts to contact such woman to foster personal interaction repeatedly despite a clear indication of disinterest by such woman; or (ii) monitors the use by a woman of the internet, email or any other form of electronic communication, commits the offence of stalking. Provided that such conduct shall not amount to stalking if the man who pursued it proves that: (a) it was pursued for the purpose of preventing or detecting crime and the man accused of stalking had been entrusted with the responsibility of prevention and detection of crime by the State; or (b) it was pursued under any law or to comply with any condition or requirement imposed by any person under any law; or (c) in the particular circumstances such conduct was reasonable and justified. (2) Whoever commits the offence of stalking shall be punished on first conviction with imprisonment of either description for a term which may extend to three years, and shall also be liable to fine; and be punished on a second or subsequent conviction, with imprisonment of either description for a term which may extend to five years, and shall also be liable to fine."
   },
   {
     "chapter": 5,
     "chapter_title": "Of Offences Against Women and Children",
     "section": "79",
+    "section_title": "Word, gesture or act intended to insult modesty of a woman",
+    "section_desc": "Whoever, intending to insult the modesty of any woman, utters any word, makes any sound or gesture, or exhibits any object, intending that such word or sound shall be heard, or that such gesture or object shall be seen, by such woman, or intrudes upon the privacy of such woman, shall be punished with simple imprisonment for a term which may extend to three years, and also with fine."
+  },
+  {
+    "chapter": 5,
+    "chapter_title": "Of Offences Against Women and Children",
+    "section": "80",
     "section_title": "Dowry death",
-    "section_desc": "Where the death of a woman is caused by any burns or bodily injury or occurs otherwise than under normal circumstances within seven years of her marriage and it is shown that soon before her death she was subjected to cruelty or harassment by her husband or any relative of her husband for, or in connection with, any demand for dowry, such death shall be called dowry death, and such husband or relative shall be deemed to have caused her death. Whoever commits dowry death shall be punished with imprisonment for a term which shall not be less than seven years but which may extend to imprisonment for life."
+    "section_desc": "(1) Where the death of a woman is caused by any burns or bodily injury or occurs otherwise than under normal circumstances within seven years of her marriage and it is shown that soon before her death she was subjected to cruelty or harassment by her husband or any relative of her husband for, or in connection with, any demand for dowry, such death shall be called 'dowry death', and such husband or relative shall be deemed to have caused her death. (2) Whoever commits dowry death shall be punished with imprisonment for a term which shall not be less than seven years but which may extend to imprisonment for life."
   },
   {
     "chapter": 5,
@@ -59,133 +297,406 @@
     "chapter": 5,
     "chapter_title": "Of Offences Against Women and Children",
     "section": "86",
-    "section_title": "Definition of Cruelty",
-    "section_desc": "For the purposes of section 85, cruelty means: (a) any wilful conduct which is of such a nature as is likely to drive the woman to commit suicide or to cause grave injury or danger to life, limb or health (whether mental or physical) of the woman; or (b) harassment of the woman where such harassment is with a view to coercing her or any person related to her to meet any unlawful demand for any property or valuable security or is on account of failure by her or any person related to her to meet such demand."
+    "section_title": "Definition of cruelty",
+    "section_desc": "For the purposes of section 85, 'cruelty' means: (a) any wilful conduct which is of such a nature as is likely to drive the woman to commit suicide or to cause grave injury or danger to life, limb or health (whether mental or physical) of the woman; or (b) harassment of the woman where such harassment is with a view to coercing her or any person related to her to meet any unlawful demand for any property or valuable security or is on account of failure by her or any person related to her to meet such demand."
   },
   {
     "chapter": 6,
-    "chapter_title": "Of Offences Against the State",
-    "section": "152",
-    "section_title": "Act endangering sovereignty, unity and integrity of India",
-    "section_desc": "Whoever, purposely or knowingly, by words, either spoken or written, or by signs, or by visible representation, or by electronic communication or by use of financial mean, or otherwise, excites or attempts to excite, secession or armed rebellion or subversive activities, or encourages feelings of separatist activities or endangers sovereignty or unity and integrity of India; or indulges in or commits any such act shall be punished with imprisonment for life or with imprisonment which may extend to seven years, and shall also be liable to fine. Explanation: Comments expressing disapprobation of the measures, or administrative or other action of the Government with a view to obtain their alteration by lawful means without exciting the activities referred to in this section do not constitute an offence."
-  },
-  {
-    "chapter": 7,
-    "chapter_title": "Of Offences Relating to the Army, Navy and Air Force",
-    "section": "167",
-    "section_title": "Wearing garb or carrying token used by soldier, sailor or airman",
-    "section_desc": "Whoever, not being a soldier, sailor or airman in the military, naval or air service of the Government of India, wears any garb or carries any token resembling any garb or token used by such a soldier, sailor or airman, with the intention that it may be believed that he is such a soldier, sailor or airman, shall be punished with imprisonment of either description for a term which may extend to three months, or with fine, or with both."
-  },
-  {
-    "chapter": 8,
-    "chapter_title": "Of Offences Against Public Tranquillity",
-    "section": "189",
-    "section_title": "Unlawful Assembly",
-    "section_desc": "An assembly of five or more persons is designated an unlawful assembly, if the common object of the persons composing that assembly is: First—To overawe by criminal force, or show of criminal force, the Central or any State Government or Parliament or any Legislature; Second—To resist the execution of any law, or of any legal process; Third—To commit any mischief or criminal trespass, or other offence; Fourth—By means of criminal force, to enforce any right or supposed right."
-  },
-  {
-    "chapter": 9,
     "chapter_title": "Of Offences Affecting the Human Body",
     "section": "100",
-    "section_title": "Culpable Homicide",
-    "section_desc": "Whoever causes death by doing an act with the intention of causing death, or with the intention of causing such bodily injury as is likely to cause death, or with the knowledge that he is likely by such act to cause death, commits the offence of culpable homicide."
+    "section_title": "Culpable homicide",
+    "section_desc": "Whoever causes death by doing an act with the intention of causing death, or with the intention of causing such bodily injury as is likely to cause death, or with the knowledge that he is likely by such act to cause death, commits the offence of culpable homicide. Explanation 1: A person who causes bodily injury to another who is labouring under a disorder, disease or bodily infirmity, and thereby accelerates the death of that other, shall be deemed to have caused his death. Explanation 2: Where death is caused by bodily injury, the person who causes such bodily injury shall be deemed to have caused the death, although by resorting to proper remedies and skilful treatment the death might have been prevented. Explanation 3: The causing of the death of a child in the mother's womb is not homicide. But it may amount to culpable homicide to cause the death of a living child, if any part of that child has been brought forth, though the child may not have breathed or been completely born."
   },
   {
-    "chapter": 9,
+    "chapter": 6,
+    "chapter_title": "Of Offences Affecting the Human Body",
+    "section": "101",
+    "section_title": "Murder",
+    "section_desc": "Except in the cases hereinafter excepted, culpable homicide is murder, if the act by which the death is caused is done with the intention of causing death, or secondly, if it is done with the intention of causing such bodily injury as the offender knows to be likely to cause the death of the person to whom the harm is caused, or thirdly, if it is done with the intention of causing bodily injury to any person and the bodily injury intended to be inflicted is sufficient in the ordinary course of nature to cause death, or fourthly, if the person committing the act knows that it is so imminently dangerous that it must, in all probability, cause death or such bodily injury as is likely to cause death, and commits such act without any excuse for incurring the risk of causing death or such injury as aforesaid. Exception 1: Culpable homicide is not murder if the offender, whilst deprived of the power of self-control by grave and sudden provocation, causes the death of the person who gave the provocation or causes the death of any other person by mistake or accident. Exception 2: Culpable homicide is not murder if the offender, in the exercise in good faith of the right of private defence of person or property, exceeds the power given to him by law and causes the death of the person against whom he is exercising such right of defence without premeditation. Exception 3: Culpable homicide is not murder if the offender, being a public servant or aiding a public servant acting for the advancement of public justice, exceeds the powers given to him by law. Exception 4: Culpable homicide is not murder if it is committed without premeditation in a sudden fight in the heat of passion upon a sudden quarrel and without the offender having taken undue advantage or acted in a cruel or unusual manner. Exception 5: Culpable homicide is not murder when the person whose death is caused, being above the age of eighteen years, suffers death or takes the risk of death with his own consent."
+  },
+  {
+    "chapter": 6,
     "chapter_title": "Of Offences Affecting the Human Body",
     "section": "103",
-    "section_title": "Punishment for Murder",
+    "section_title": "Punishment for murder",
     "section_desc": "(1) Whoever commits murder shall be punished with death or imprisonment for life, and shall also be liable to fine. (2) When a group of five or more persons acting in concert commits murder on the ground of race, caste or community, sex, place of birth, language, personal belief or any other similar ground, each member of such group shall be punished with death or with imprisonment for life, and shall also be liable to fine."
   },
   {
-    "chapter": 9,
+    "chapter": 6,
+    "chapter_title": "Of Offences Affecting the Human Body",
+    "section": "105",
+    "section_title": "Punishment for culpable homicide not amounting to murder",
+    "section_desc": "Whoever commits culpable homicide not amounting to murder, shall be punished with imprisonment for life, or imprisonment of either description for a term which may extend to ten years, and shall also be liable to fine, if the act by which the death is caused is done with the intention of causing death, or of causing such bodily injury as is likely to cause death; or with imprisonment of either description for a term which may extend to ten years, or with fine, or with both, if the act is done with the knowledge that it is likely to cause death, but without any intention to cause death, or to cause such bodily injury as is likely to cause death."
+  },
+  {
+    "chapter": 6,
     "chapter_title": "Of Offences Affecting the Human Body",
     "section": "106",
-    "section_title": "Causing death by negligence (Hit and Run)",
-    "section_desc": "(1) Whoever causes the death of any person by doing any rash or negligent act not amounting to culpable homicide, shall be punished with imprisonment of either description for a term which may extend to five years, and shall also be liable to fine. (2) Whoever causes the death of any person by rash and negligent driving of vehicle not amounting to culpable homicide, and escapes without reporting it to a police officer or a Magistrate soon after the incident, shall be punished with imprisonment of either description of a term which may extend to ten years, and shall also be liable to fine."
+    "section_title": "Causing death by negligence (Hit-and-Run provisions)",
+    "section_desc": "(1) Whoever causes the death of any person by doing any rash or negligent act not amounting to culpable homicide, shall be punished with imprisonment of either description for a term which may extend to five years, and shall also be liable to fine; and if such act is done by a registered medical practitioner while performing medical procedure, he shall be punished with imprisonment of either description for a term which may extend to two years, and shall also be liable to fine. Explanation: For the purposes of this sub-section, 'registered medical practitioner' means a medical practitioner who possesses any medical qualification recognized under the National Medical Commission Act, 2019. (2) Whoever causes the death of any person by rash and negligent driving of vehicle not amounting to culpable homicide, and escapes without reporting it to a police officer or a Magistrate soon after the incident, shall be punished with imprisonment of either description of a term which may extend to ten years, and shall also be liable to fine."
   },
   {
-    "chapter": 9,
+    "chapter": 6,
+    "chapter_title": "Of Offences Affecting the Human Body",
+    "section": "108",
+    "section_title": "Abetment of suicide",
+    "section_desc": "If any person commits suicide, whoever abets the commission of such suicide, shall be punished with imprisonment of either description for a term which may extend to ten years, and shall also be liable to fine."
+  },
+  {
+    "chapter": 6,
+    "chapter_title": "Of Offences Affecting the Human Body",
+    "section": "109",
+    "section_title": "Attempt to murder",
+    "section_desc": "(1) Whoever does any act with such intention or knowledge, and under such circumstances that, if he by that act caused death, he would be guilty of murder, shall be punished with imprisonment of either description for a term which may extend to ten years, and shall also be liable to fine; and if hurt is caused to any person by such act, the offender shall be liable either to imprisonment for life, or to such punishment as is hereinbefore mentioned. (2) When any person offending under this section is under sentence of imprisonment for life, he may, if hurt is caused, be punished with death or with imprisonment for life, which shall mean imprisonment for the remainder of that person's natural life."
+  },
+  {
+    "chapter": 6,
     "chapter_title": "Of Offences Affecting the Human Body",
     "section": "111",
-    "section_title": "Organised Crime",
-    "section_desc": "(1) Any continuing unlawful activity including kidnapping, robbery, vehicle theft, extortion, land grabbing, contract killing, economic offences, cyber-crimes, trafficking of persons or illicit goods, committed by any person or group of persons singly or collectively, as part of an organized crime syndicate by use of violence, threat of violence, intimidation or coercion, with the objective of obtaining financial or material benefits. Punishment: If such activity results in death, death or imprisonment for life, and fine not less than ten lakh rupees. In any other case, imprisonment not less than five years up to life, and fine not less than five lakh rupees."
+    "section_title": "Organised crime",
+    "section_desc": "(1) Any continuing unlawful activity including kidnapping, robbery, vehicle theft, extortion, land grabbing, contract killing, economic offence, cyber-crimes having severe consequences, trafficking in persons, drugs or illicit goods, carried out by any person singly or jointly, as part of an organized crime syndicate, by use of violence, intimidation or other unlawful means to obtain direct or indirect material benefits, commits organized crime. Explanation: For the purposes of this sub-section, 'continuing unlawful activity' means an activity prohibited by law, which is a cognizable offence punishable with imprisonment of three years or more, undertaken by a person singly or jointly, against whom more than one charge-sheets have been filed before a competent Court within the preceding period of ten years. (2) If such organized crime results in the death of any person, the offender shall be punished with death or imprisonment for life, and shall also be liable to a fine which shall not be less than ten lakh rupees; in any other case, with imprisonment for not less than five years which may extend to imprisonment for life, and fine not less than five lakh rupees. (3) Whoever conspires or attempts to commit, or advocates, abets or knowingly facilitates the commission of any organized crime or any act preparatory to organized crime, shall be punished with imprisonment for a term which shall not be less than five years but which may extend to imprisonment for life, and shall also be liable to fine which shall not be less than five lakh rupees."
   },
   {
-    "chapter": 9,
+    "chapter": 6,
+    "chapter_title": "Of Offences Affecting the Human Body",
+    "section": "112",
+    "section_title": "Petty organised crime",
+    "section_desc": "(1) Whoever, being a member of a group or gang, singly or jointly, commits any act of theft, snatching, cheating, unauthorized selling of tickets, betting or gambling, or selling of illegal goods, shall be deemed to commit petty organized crime. Explanation: For the purposes of this sub-section, petty organized crime includes unauthorized selling of public service tickets, selling of spurious goods, taking illegal fees or commission from public carriers, or causing obstruction on public transport. (2) Whoever commits petty organized crime shall be punished with imprisonment of either description for a term which shall not be less than one year but which may extend to seven years, and shall also be liable to fine."
+  },
+  {
+    "chapter": 6,
+    "chapter_title": "Of Offences Affecting the Human Body",
+    "section": "113",
+    "section_title": "Terrorist act",
+    "section_desc": "(1) Whoever does any act with the intent to threaten or likely to threaten the unity, integrity, sovereignty, or security of India, or with intent to strike terror in the people or any section of the people in India or in any foreign country, by using bombs, dynamite or other explosive substances, firearms, or other lethal weapons, or poisonous gases or other chemicals, commits a terrorist act. (2) Whoever commits a terrorist act shall: (a) if such act has resulted in the death of any person, be punished with death or imprisonment for life, and shall also be liable to fine; (b) in any other case, be punished with imprisonment for a term which shall not be less than five years but which may extend to imprisonment for life, and shall also be liable to fine. (3) Whoever conspires, attempts, advocates, abets, or knowingly facilitates the commission of a terrorist act shall be punished with imprisonment for a term which shall not be less than five years but which may extend to imprisonment for life, and shall also be liable to fine."
+  },
+  {
+    "chapter": 6,
     "chapter_title": "Of Offences Affecting the Human Body",
     "section": "115",
     "section_title": "Voluntarily causing hurt",
-    "section_desc": "(1) Whoever does any act with the intention of thereby causing hurt to any person, or with the knowledge that he is likely thereby to cause hurt to any person, and does thereby cause hurt to any person, is said voluntarily to cause hurt. (2) Whoever, except in the case provided for by sub-section (1) of section 122, voluntarily causes hurt, shall be punished with imprisonment of either description for a term which may extend to one year, or with fine which may extend to ten thousand rupees, or with both, or with community service."
+    "section_desc": "(1) Whoever causes bodily pain, disease or infirmity to any person is said to cause hurt. (2) Whoever, except in the case provided for by sub-section (1) of section 122, voluntarily causes hurt, shall be punished with imprisonment of either description for a term which may extend to one year, or with fine which may extend to ten thousand rupees, or with both."
   },
   {
-    "chapter": 9,
+    "chapter": 6,
+    "chapter_title": "Of Offences Affecting the Human Body",
+    "section": "116",
+    "section_title": "Grievous hurt",
+    "section_desc": "The following kinds of hurt only are designated as 'grievous': First—Emasculation. Secondly—Permanent privation of the sight of either eye. Thirdly—Permanent privation of the hearing of either ear. Fourthly—Privation of any member or joint. Fifthly—Destruction or permanent impairing of the powers of any member or joint. Sixthly—Permanent disfiguration of the head or face. Seventhly—Fracture or dislocation of a bone or tooth. Eighthly—Any hurt which endangers life or which causes the sufferer to be during the space of fifteen days in severe bodily pain, or unable to follow his ordinary pursuits."
+  },
+  {
+    "chapter": 6,
     "chapter_title": "Of Offences Affecting the Human Body",
     "section": "117",
     "section_title": "Voluntarily causing grievous hurt",
-    "section_desc": "The following kinds of hurt only are designated as grievous: (a) Emasculation; (b) Permanent privation of the sight of either eye; (c) Permanent privation of the hearing of either ear; (d) Privation of any member or joint; (e) Destruction or permanent impairing of the powers of any member or joint; (f) Permanent disfiguration of the head or face; (g) Fracture or dislocation of a bone or tooth; (h) Any hurt which endangers life or which causes the sufferer to be during the space of fifteen days in severe bodily pain. Punishment under sub-section (2) extends to seven years and fine."
+    "section_desc": "(1) Whoever voluntarily causes hurt, if the hurt which he intends to cause or knows himself to be likely to cause is grievous hurt, and if the hurt which he causes is grievous hurt, is said 'voluntarily to cause grievous hurt'. (2) Whoever, except in the case provided for by sub-section (2) of section 122, voluntarily causes grievous hurt, shall be punished with imprisonment of either description for a term which may extend to seven years, and shall also be liable to fine. (3) Whoever causes permanent disability or persistent vegetative state to the victim while causing grievous hurt shall be punished with rigorous imprisonment for a term which shall not be less than ten years, which may extend to imprisonment for life, and with fine."
   },
   {
-    "chapter": 9,
+    "chapter": 6,
+    "chapter_title": "Of Offences Affecting the Human Body",
+    "section": "118",
+    "section_title": "Voluntarily causing hurt or grievous hurt by dangerous weapons or means",
+    "section_desc": "(1) Whoever, except in the case provided for by sub-section (1) of section 122, voluntarily causes hurt by means of any instrument for shooting, stabbing or cutting, or any instrument which, used as a weapon of offence, is likely to cause death, or by means of fire or any heated substance, or by means of any poison or any corrosive substance, or by means of any explosive substance, or by means of any substance which it is deleterious to the human body to inhale, to swallow, or to receive into the blood, or by means of any animal, shall be punished with imprisonment of either description for a term which may extend to three years, or with fine, or with both. (2) Whoever voluntarily causes grievous hurt by any such means shall be punished with imprisonment for life, or with imprisonment of either description for a term which shall not be less than one year but which may extend to ten years, and shall also be liable to fine."
+  },
+  {
+    "chapter": 6,
+    "chapter_title": "Of Offences Affecting the Human Body",
+    "section": "124",
+    "section_title": "Voluntarily causing hurt or grievous hurt by use of acid, etc.",
+    "section_desc": "(1) Whoever causes permanent or partial damage or deformity to, or burls or maims or disfigures or disables, any part or parts of the body of a person or causes grievous hurt by throwing acid on or by administering acid to that person, or by using any other means with the intention of causing or with the knowledge that he is likely to cause such injury or hurt, shall be punished with imprisonment of either description for a term which shall not be less than ten years but which may extend to imprisonment for life, and with fine. Provided that such fine shall be just and reasonable to meet the medical expenses of the treatment of the victim, and shall be paid to the victim. (2) Whoever throws or attempts to throw acid on any person or attempts to administer acid to any person, or attempts to use any other means, with the intention of causing permanent or partial damage or deformity, shall be punished with imprisonment of either description for a term which shall not be less than five years but which may extend to seven years, and shall also be liable to fine."
+  },
+  {
+    "chapter": 6,
+    "chapter_title": "Of Offences Affecting the Human Body",
+    "section": "126",
+    "section_title": "Wrongful restraint",
+    "section_desc": "(1) Whoever voluntarily obstructs any person so as to prevent that person from proceeding in any direction in which that person has a right to proceed, is said wrongfully to restrain that person. Exception: The obstruction of a private way over land or water which a person in good faith believes himself to have a lawful right to obstruct, is not an offence within the meaning of this section. (2) Whoever wrongfully restrains any person shall be punished with simple imprisonment for a term which may extend to one month, or with fine which may extend to five thousand rupees, or with both."
+  },
+  {
+    "chapter": 6,
+    "chapter_title": "Of Offences Affecting the Human Body",
+    "section": "127",
+    "section_title": "Wrongful confinement",
+    "section_desc": "(1) Whoever wrongfully restrains any person in such a manner as to prevent that person from proceeding beyond certain circumscribing limits, is said 'wrongfully to confine' that person. (2) Whoever wrongfully confines any person shall be punished with imprisonment of either description for a term which may extend to one year, or with fine which may extend to five thousand rupees, or with both. (3) Whoever wrongfully confines any person for three days or more, shall be punished with imprisonment of either description for a term which may extend to two years, or with fine, or with both. (4) Whoever wrongfully confines any person for ten days or more, shall be punished with imprisonment of either description for a term which may extend to three years, and shall also be liable to fine."
+  },
+  {
+    "chapter": 6,
     "chapter_title": "Of Offences Affecting the Human Body",
     "section": "137",
     "section_title": "Kidnapping",
-    "section_desc": "(1) Kidnapping is of two kinds: kidnapping from India, and kidnapping from lawful guardianship. (2) Whoever takes or entices any child under sixteen years of age if a male, or under eighteen years of age if a female, or any person of unsound mind, out of the keeping of the lawful guardian without the consent of such guardian, is said to kidnap such child or person from lawful guardianship. Punishment under section 138: Imprisonment for a term which may extend to seven years, and shall also be liable to fine."
+    "section_desc": "(1) Kidnapping is of two kinds: kidnapping from India, and kidnapping from lawful guardianship. (2) Whoever conveys any person beyond the limits of India without the consent of that person, or of some person legally authorized to consent on behalf of that person, is said to kidnap that person from India. (3) Whoever takes or entices any child under eighteen years of age, or any person of unsound mind, out of the keeping of the lawful guardian without the consent of such guardian, is said to kidnap such child or person from lawful guardianship. Explanation: The words 'lawful guardian' in this section include any person lawfully entrusted with the care or custody of such child or other person."
+  },
+  {
+    "chapter": 6,
+    "chapter_title": "Of Offences Affecting the Human Body",
+    "section": "140",
+    "section_title": "Kidnapping or abducting in order to murder or for ransom",
+    "section_desc": "(1) Whoever kidnaps or abducts any person in order that such person may be murdered or may be so disposed of as to be put in danger of being murdered, shall be punished with imprisonment for life or rigorous imprisonment for a term which may extend to ten years, and shall also be liable to fine. (2) Whoever kidnaps or abducts any person and keeps him in detention and threatens to cause death or hurt to such person, or by his conduct gives rise to a reasonable apprehension that such person may be put to death or hurt, in order to compel the Government or any other person to pay a ransom, shall be punished with death or imprisonment for life, and shall also be liable to fine."
+  },
+  {
+    "chapter": 6,
+    "chapter_title": "Of Offences Affecting the Human Body",
+    "section": "143",
+    "section_title": "Trafficking of person",
+    "section_desc": "(1) Whoever, for the purpose of exploitation, recruits, transports, harbours, transfers, or receives a person, by using threats, force, coercion, abduction, fraud, deception, abuse of power, or inducement, commits the offence of trafficking. Explanation 1: The expression 'exploitation' shall include any act of physical exploitation, sexual exploitation, slavery, forced labour, or removal of organs. (2) Whoever commits the offence of trafficking shall be punished with rigorous imprisonment for a term which shall not be less than seven years, but which may extend to ten years, and shall also be liable to fine. (3) Where the offence involves the trafficking of more than one person, it shall be punishable with rigorous imprisonment for a term which shall not be less than fourteen years, but which may extend to imprisonment for life, and shall also be liable to fine."
+  },
+  {
+    "chapter": 7,
+    "chapter_title": "Of Offences Against the State",
+    "section": "152",
+    "section_title": "Act endangering sovereignty, unity and integrity of India",
+    "section_desc": "Whoever, purposely or knowingly, by words, either spoken or written, or by signs, or by visible representation, or by electronic communication or by use of financial mean, or otherwise, excites or attempts to excite, secession or armed rebellion or subversive activities, or encourages feelings of separatist activities or endangers sovereignty or unity and integrity of India; or indulges in or commits any such act shall be punished with imprisonment for life or with imprisonment which may extend to seven years, and shall also be liable to fine. Explanation: Comments expressing disapprobation of the measures, or administrative or other action of the Government with a view to obtain their alteration by lawful means without exciting or attempting to excite the activities referred to in this section do not constitute an offence under this section."
   },
   {
     "chapter": 10,
-    "chapter_title": "Of Offences Against Property",
-    "section": "303",
-    "section_title": "Theft",
-    "section_desc": "(1) Whoever, intending to take dishonestly any movable property out of the possession of any person without that person's consent, moves that property in order to such taking, is said to commit theft. (2) Whoever commits theft shall be punished with imprisonment of either description for a term which may extend to three years, or with fine, or with both; and in case of second or subsequent conviction of any person under this section, he shall be punished with rigorous imprisonment for a term which shall not be less than one year but which may extend to five years and with fine: Provided that on first conviction for theft where the value of stolen property is less than five thousand rupees and the person convicted returns the property or pays for its value, the punishment may be community service."
+    "chapter_title": "Of Contempts of the Lawful Authority of Public Servants",
+    "section": "206",
+    "section_title": "Absconding to avoid service of summons, notice or order",
+    "section_desc": "Whoever absconds in order to avoid being served with a summons, notice or order proceeding from any public servant legally empowered, as such public servant, to issue such summons, notice or order, shall be punished with simple imprisonment for a term which may extend to one month, or with fine which may extend to five thousand rupees, or with both; or, if the summons or notice or order is to attend in person or by agent, or to produce a document or electronic record in a Court of Justice, with simple imprisonment for a term which may extend to six months, or with fine which may extend to ten thousand rupees, or with both."
   },
   {
     "chapter": 10,
-    "chapter_title": "Of Offences Against Property",
-    "section": "308",
-    "section_title": "Extortion",
-    "section_desc": "(1) Whoever intentionally puts any person in fear of any injury to that person, or to any other, and thereby dishonestly induces the person so put in fear to deliver to any person any property, or valuable security or anything signed or sealed which may be converted into a valuable security, commits extortion. (2) Whoever commits extortion shall be punished with imprisonment of either description for a term which may extend to seven years, or with fine, or with both."
+    "chapter_title": "Of Contempts of the Lawful Authority of Public Servants",
+    "section": "221",
+    "section_title": "Obstructing public servant in discharge of public functions",
+    "section_desc": "Whoever voluntarily obstructs any public servant in the discharge of his public functions, shall be punished with imprisonment of either description for a term which may extend to three months, or with fine which may extend to two thousand five hundred rupees, or with both."
   },
   {
     "chapter": 10,
-    "chapter_title": "Of Offences Against Property",
-    "section": "309",
-    "section_title": "Robbery",
-    "section_desc": "(1) In all robbery there is either theft or extortion. Theft is robbery if, in order to the committing of the theft, or in committing the theft, or in carrying away or attempting to carry away property obtained by the theft, the offender, for that end, voluntarily causes or attempts to cause to any person death or hurt or wrongful restraint, or fear of instant death or of instant hurt, or of instant wrongful restraint. Punishment under Section 310: Rigorous imprisonment for a term which may extend to ten years, and shall also be liable to fine."
-  },
-  {
-    "chapter": 10,
-    "chapter_title": "Of Offences Against Property",
-    "section": "316",
-    "section_title": "Criminal Breach of Trust",
-    "section_desc": "(1) Whoever, being in any manner entrusted with property, or with any dominion over property, dishonestly misappropriates or converts to his own use that property, or dishonestly uses or disposes of that property in violation of any direction of law prescribing the mode in which such trust is to be discharged, commits criminal breach of trust. (2) Whoever commits criminal breach of trust shall be punished with imprisonment of either description for a term which may extend to five years, or with fine, or with both."
-  },
-  {
-    "chapter": 10,
-    "chapter_title": "Of Offences Against Property",
-    "section": "318",
-    "section_title": "Cheating",
-    "section_desc": "(1) Whoever, by deceiving any person, fraudulently or dishonestly induces the person so deceived to deliver any property to any person, or to consent that any person shall retain any property, or intentionally induces the person so deceived to do or omit to do anything which he would not do or omit if he were not so deceived, is said to cheat. (2) Whoever cheats shall be punished with imprisonment of either description for a term which may extend to three years, or with fine, or with both. (4) Whoever cheats and thereby dishonestly induces the person deceived to deliver any property, shall be punished with imprisonment of either description for a term which may extend to seven years, and shall also be liable to fine."
-  },
-  {
-    "chapter": 10,
-    "chapter_title": "Of Offences Against Property",
-    "section": "329",
-    "section_title": "Criminal Trespass and House-trespass",
-    "section_desc": "(1) Whoever enters into or upon property in the possession of another with intent to commit an offence or to intimidate, insult or annoy any person in possession of such property, or having lawfully entered, unlawfully remains there with that intent, is said to commit criminal trespass. (3) Whoever commits criminal trespass shall be punished with imprisonment of either description for a term which may extend to three months, or with fine which may extend to five thousand rupees, or with both."
+    "chapter_title": "Of Contempts of the Lawful Authority of Public Servants",
+    "section": "223",
+    "section_title": "Disobedience to order duly promulgated by public servant",
+    "section_desc": "Whoever, knowing that, by an order promulgated by a public servant lawfully empowered to promulgate such order, he is directed to abstain from a certain act, or to take certain order with certain property in his possession or under his management, disobeys such direction, shall, if such disobedience causes or tends to cause obstruction, annoyance or injury, or risk of obstruction, annoyance or injury, to any person lawfully employed, be punished with simple imprisonment for a term which may extend to six months, or with fine which may extend to two thousand five hundred rupees, or with both; and if such disobedience causes or tends to cause danger to human life, health or safety, or causes or tends to cause a riot or affray, shall be punished with imprisonment of either description for a term which may extend to one year, or with fine which may extend to five thousand rupees, or with both."
   },
   {
     "chapter": 11,
+    "chapter_title": "Of False Evidence and Offences Against Public Justice",
+    "section": "227",
+    "section_title": "Giving false evidence",
+    "section_desc": "Whoever, being legally bound by an oath or by an express provision of law to state the truth, or being bound by law to make a declaration upon any subject, makes any statement which is false, and which he either knows or believes to be false or does not believe to be true, is said to give false evidence. Explanation 1: A statement is within the meaning of this section, whether it is made verbally or otherwise. Explanation 2: A false statement as to the belief of the person attesting is within the meaning of this section, as where a person states that he believes a thing to be true when he does not believe it to be true."
+  },
+  {
+    "chapter": 11,
+    "chapter_title": "Of False Evidence and Offences Against Public Justice",
+    "section": "228",
+    "section_title": "Fabricating false evidence",
+    "section_desc": "Whoever causes any circumstance to exist or makes any false entry in any book or record, or electronic record or makes any document or electronic record containing a false statement, intending that such circumstance, false entry or false statement may appear in evidence in a judicial proceeding, or in a proceeding taken by law before a public servant as such, or before an arbitrator, and that such circumstance, false entry or false statement may cause any person who in such proceeding is to form an opinion upon the evidence, to entertain an erroneous opinion touching any point material to the result of such proceeding, is said 'to fabricate false evidence'."
+  },
+  {
+    "chapter": 11,
+    "chapter_title": "Of False Evidence and Offences Against Public Justice",
+    "section": "229",
+    "section_title": "Punishment for false evidence",
+    "section_desc": "Whoever intentionally gives false evidence in any stage of a judicial proceeding, or fabricates false evidence for the purpose of being used in any stage of a judicial proceeding, shall be punished with imprisonment of either description for a term which may extend to seven years, and shall also be liable to fine; and whoever intentionally gives or fabricates false evidence in any other case, shall be punished with imprisonment of either description for a term which may extend to three years, and shall also be liable to fine."
+  },
+  {
+    "chapter": 11,
+    "chapter_title": "Of False Evidence and Offences Against Public Justice",
+    "section": "238",
+    "section_title": "Causing disappearance of evidence of offence, or giving false information to screen offender",
+    "section_desc": "Whoever, knowing or having reason to believe that an offence has been committed, causes any evidence of the commission of that offence to disappear, with the intention of screening the offender from legal punishment, or with that intention gives any information respecting the offence which he knows or believes to be false, shall: (a) if the offence is punishable with death, be punished with imprisonment of either description for a term which may extend to seven years, and shall also be liable to fine; (b) if the offence is punishable with imprisonment for life or with imprisonment which may extend to ten years, be punished with imprisonment of either description for a term which may extend to three years, and shall also be liable to fine; (c) if the offence is punishable with imprisonment for any term not extending to ten years, be punished with imprisonment of the description provided for the offence for a term which may extend to one-fourth part of the longest term of the imprisonment provided for the offence, or with fine, or with both."
+  },
+  {
+    "chapter": 15,
+    "chapter_title": "Of Offences Affecting Public Health, Safety, Convenience, Decency and Morals",
+    "section": "270",
+    "section_title": "Public nuisance",
+    "section_desc": "A person is guilty of a public nuisance who does any act or is guilty of an illegal omission which causes any common injury, danger or annoyance to the public or to the people in general who dwell or occupy property in the vicinity, or which must necessarily cause injury, obstruction, danger or annoyance to persons who may have occasion to use any public right. A common nuisance is not excused on the ground that it causes some convenience or advantage."
+  },
+  {
+    "chapter": 15,
+    "chapter_title": "Of Offences Affecting Public Health, Safety, Convenience, Decency and Morals",
+    "section": "281",
+    "section_title": "Rash driving or riding on a public way",
+    "section_desc": "Whoever drives any vehicle, or rides, on any public way in a manner so rash or negligent as to endanger human life, or to be likely to cause hurt or injury to any other person, shall be punished with imprisonment of either description for a term which may extend to six months, or with fine which may extend to one thousand rupees, or with both."
+  },
+  {
+    "chapter": 15,
+    "chapter_title": "Of Offences Affecting Public Health, Safety, Convenience, Decency and Morals",
+    "section": "294",
+    "section_title": "Sale, etc., of obscene books and digital material",
+    "section_desc": "(1) For the purposes of this Sanhita, a book, pamphlet, paper, writing, drawing, painting, representation, figure, electronic record or any other object, shall be deemed to be obscene if it is lascivious or appeals to the prurient interest or if its effect is, if taken as a whole, such as to tend to deprave and corrupt persons who are likely, having regard to all relevant circumstances, to read, see or hear the matter contained or embodied in it. (2) Whoever sells, lets to hire, distributes, publicly exhibits or in any manner puts into circulation, or for purposes of sale or circulation produces or has in his possession any obscene object or electronic record, shall be punished on first conviction with imprisonment of either description for a term which may extend to two years, and with fine which may extend to five thousand rupees, and, in the event of a second or subsequent conviction, with imprisonment of either description for a term which may extend to five years, and also with fine which may extend to ten thousand rupees."
+  },
+  {
+    "chapter": 15,
+    "chapter_title": "Of Offences Affecting Public Health, Safety, Convenience, Decency and Morals",
+    "section": "296",
+    "section_title": "Obscene acts and songs",
+    "section_desc": "Whoever, to the annoyance of others: (a) does any obscene act in any public place; or (b) sings, recites or utters any obscene song, ballad or words, in or near any public place, shall be punished with imprisonment of either description for a term which may extend to three months, or with fine which may extend to one thousand rupees, or with both."
+  },
+  {
+    "chapter": 16,
+    "chapter_title": "Of Offences Relating to Religion",
+    "section": "298",
+    "section_title": "Injuring or defiling place of worship with intent to insult religion of any class",
+    "section_desc": "Whoever destroys, damages or defiles any place of worship, or any object held sacred by any class of persons with the intention of thereby insulting the religion of any class of persons or with the knowledge that any class of persons is likely to consider such destruction, damage or defilement as an insult to their religion, shall be punished with imprisonment of either description for a term which may extend to two years, or with fine, or with both."
+  },
+  {
+    "chapter": 16,
+    "chapter_title": "Of Offences Relating to Religion",
+    "section": "299",
+    "section_title": "Deliberate and malicious acts intended to outrage religious feelings",
+    "section_desc": "Whoever, with deliberate and malicious intention of outraging the religious feelings of any class of citizens of India, by words, either spoken or written, or by signs, or by visible representations or through electronic means or otherwise, insults or attempts to insult the religion or the religious beliefs of that class, shall be punished with imprisonment of either description for a term which may extend to three years, or with fine, or with both."
+  },
+  {
+    "chapter": 17,
+    "chapter_title": "Of Offences Against Property",
+    "section": "303",
+    "section_title": "Theft",
+    "section_desc": "(1) Whoever, intending to take dishonestly any movable property out of the possession of any person without that person's consent, moves that property in order to such taking, is said to commit theft. Explanation 1: A thing so long as it is attached to the earth, not being movable property, is not the subject of theft; but it becomes capable of being the subject of theft as soon as it is severed from the earth. Explanation 2: A moving effected by the same act which affects the severance may be a theft. Explanation 3: A person is said to cause a thing to move by removing an obstacle which prevented it from moving, or by separating it from any other thing, as well as by actually moving it. (2) Whoever commits theft shall be punished with imprisonment of either description for a term which may extend to three years, or with fine, or with both; and in case of second or subsequent conviction of any person under this section, he shall be punished with rigorous imprisonment for a term which shall not be less than one year but which may extend to five years and with fine: Provided that where the value of the stolen property is less than five thousand rupees, and the person has not been previously convicted of any offence, he shall, upon return of the stolen property or payment of the value thereof, be punished with community service."
+  },
+  {
+    "chapter": 17,
+    "chapter_title": "Of Offences Against Property",
+    "section": "304",
+    "section_title": "Snatching",
+    "section_desc": "(1) Theft is snatching if, in order to commit theft, the offender suddenly or quickly or forcibly seizes, secures, grabs or takes away from any person or from his possession, any movable property. (2) Whoever commits snatching shall be punished with imprisonment of either description for a term which may extend to three years, and shall also be liable to fine."
+  },
+  {
+    "chapter": 17,
+    "chapter_title": "Of Offences Against Property",
+    "section": "305",
+    "section_title": "Theft in dwelling house, or in vehicle or place of worship",
+    "section_desc": "Whoever commits theft in any building, tent or vessel used as a human dwelling, or used for the custody of property, or in any place of worship, or in any means of transport, shall be punished with imprisonment of either description for a term which may extend to seven years, and shall also be liable to fine."
+  },
+  {
+    "chapter": 17,
+    "chapter_title": "Of Offences Against Property",
+    "section": "306",
+    "section_title": "Theft by clerk or servant of property in possession of master",
+    "section_desc": "Whoever, being a clerk or servant, or being employed in the capacity of a clerk or servant, commits theft in respect of any property in the possession of his master or employer, shall be punished with imprisonment of either description for a term which may extend to seven years, and shall also be liable to fine."
+  },
+  {
+    "chapter": 17,
+    "chapter_title": "Of Offences Against Property",
+    "section": "308",
+    "section_title": "Extortion",
+    "section_desc": "(1) Whoever intentionally puts any person in fear of any injury to that person, or to any other, and thereby dishonestly induces the person so put in fear to deliver to any person any property, or valuable security, or anything signed or sealed which may be converted into a valuable security, commits extortion. (2) Whoever commits extortion shall be punished with imprisonment of either description for a term which may extend to seven years, or with fine, or with both. (3) Whoever puts any person in fear of death or of grievous hurt to that person or to any other, in order to the committing of extortion, shall be punished with imprisonment of either description for a term which may extend to ten years, and shall also be liable to fine. (4) Whoever puts any person in fear of an accusation, against that person or any other, of having committed or attempted to commit any offence punishable with death, or with imprisonment for life, in order to commit extortion, shall be punished with imprisonment of either description for a term which may extend to ten years, and shall also be liable to fine."
+  },
+  {
+    "chapter": 17,
+    "chapter_title": "Of Offences Against Property",
+    "section": "309",
+    "section_title": "Robbery",
+    "section_desc": "(1) In all robbery there is either theft or extortion. When theft is robbery: Theft is 'robbery' if, in order to the committing of the theft, or in committing the theft, or in carrying away or attempting to carry away property obtained by the theft, the offender, for that end, voluntarily causes or attempts to cause to any person death or hurt or wrongful restraint, or fear of instant death or of instant hurt, or of instant wrongful restraint. When extortion is robbery: Extortion is 'robbery' if the offender, at the time of committing the extortion, is in the presence of the person put in fear, and commits the extortion by putting that person in fear of instant death, of instant hurt, or of instant wrongful restraint to that person or to some other person, and, by so putting in fear, induces the person so put in fear then and there to deliver up the thing extorted. Explanation: The offender is said to be present if he is sufficiently near to put the other person in fear of instant death, of instant hurt, or of instant wrongful restraint. (2) Whoever commits robbery shall be punished with rigorous imprisonment for a term which may extend to ten years, and shall also be liable to fine; and, if the robbery be committed on the highway between sunset and sunrise, the imprisonment may be extended to fourteen years."
+  },
+  {
+    "chapter": 17,
+    "chapter_title": "Of Offences Against Property",
+    "section": "310",
+    "section_title": "Dacoity",
+    "section_desc": "(1) When five or more persons conjointly commit or attempt to commit a robbery, or where the whole number of persons conjointly committing or attempting to commit a robbery, and persons present and aiding such commission or attempt, amount to five or more, every person so committing, attempting or aiding, is said to commit 'dacoity'. (2) Whoever commits dacoity shall be punished with imprisonment for life, or with rigorous imprisonment for a term which may extend to ten years, and shall also be liable to fine."
+  },
+  {
+    "chapter": 17,
+    "chapter_title": "Of Offences Against Property",
+    "section": "311",
+    "section_title": "Robbery, or dacoity, with attempt to cause death or grievous hurt",
+    "section_desc": "If, at the time of committing or attempting to commit robbery or dacoity, the offender uses any deadly weapon, or causes grievous hurt to any person, or attempts to cause death or grievous hurt to any person, the imprisonment with which such offender shall be punished shall not be less than seven years."
+  },
+  {
+    "chapter": 17,
+    "chapter_title": "Of Offences Against Property",
+    "section": "314",
+    "section_title": "Dishonest misappropriation of property",
+    "section_desc": "(1) Whoever dishonestly misappropriates or converts to his own use any movable property, shall be punished with imprisonment of either description for a term which may extend to two years, or with fine, or with both. (2) Dishonest misappropriation of property possessed by deceased person at the time of his death shall be punished with imprisonment of either description for a term which may extend to three years, and shall also be liable to fine."
+  },
+  {
+    "chapter": 17,
+    "chapter_title": "Of Offences Against Property",
+    "section": "316",
+    "section_title": "Criminal breach of trust",
+    "section_desc": "(1) Whoever, being in any manner entrusted with property, or with any dominion over property, dishonestly misappropriates or converts to his own use that property, or dishonestly uses or disposes of that property in violation of any direction of law prescribing the mode in which such trust is to be discharged, or of any legal contract, express or implied, which he has made touching the discharge of such trust, or wilfully suffers any other person so to do, commits criminal breach of trust. (2) Whoever commits criminal breach of trust shall be punished with imprisonment of either description for a term which may extend to five years, or with fine, or with both. (3) Whoever, being a clerk or servant or employed as a clerk or servant, and being in any manner entrusted in such capacity with property, or with any dominion over property, commits criminal breach of trust, shall be punished with imprisonment of either description for a term which may extend to seven years, and shall also be liable to fine. (4) Whoever, being an agent, banker, merchant, factor, broker, attorney, or public servant commits criminal breach of trust, shall be punished with imprisonment for life, or with imprisonment of either description for a term which may extend to ten years, and shall also be liable to fine."
+  },
+  {
+    "chapter": 17,
+    "chapter_title": "Of Offences Against Property",
+    "section": "317",
+    "section_title": "Stolen property and receiving stolen property",
+    "section_desc": "(1) Property, the possession whereof has been transferred by theft, or by extortion, or by robbery, or which has been criminally misappropriated or in respect of which criminal breach of trust has been committed, is designated as 'stolen property', whether the transfer has been made, or the misappropriation or breach of trust has been committed, within or without India. (2) Whoever dishonestly receives or retains any stolen property, knowing or having reason to believe the same to be stolen property, shall be punished with imprisonment of either description for a term which may extend to three years, or with fine, or with both. (3) Whoever habitually receives or deals in stolen property shall be punished with imprisonment for life, or with imprisonment of either description for a term which may extend to ten years, and shall also be liable to fine."
+  },
+  {
+    "chapter": 17,
+    "chapter_title": "Of Offences Against Property",
+    "section": "318",
+    "section_title": "Cheating",
+    "section_desc": "(1) Whoever, by deceiving any person, fraudulently or dishonestly induces the person so deceived to deliver any property to any person, or to consent that any person shall retain any property, or intentionally induces the person so deceived to do or omit to do anything which he would not do or omit if he were not so deceived, and which act or omission causes or is likely to cause damage or harm to that person in body, mind, reputation or property, is said to 'cheat'. Explanation: A dishonest concealment of facts is a deception within the meaning of this section. (2) Whoever cheats shall be punished with imprisonment of either description for a term which may extend to three years, or with fine, or with both. (3) Whoever cheats with the knowledge that he is likely thereby to cause wrongful loss to a person whose interest in the transaction to which the cheating relates, he was bound by law, or by a legal contract, to protect, shall be punished with imprisonment of either description for a term which may extend to five years, or with fine, or with both. (4) Whoever cheats and thereby dishonestly induces the person deceived to deliver any property to any person, or to make, alter or destroy the whole or any part of a valuable security, or anything which is signed or sealed, and which is capable of being converted into a valuable security, shall be punished with imprisonment of either description for a term which may extend to seven years, and shall also be liable to fine."
+  },
+  {
+    "chapter": 17,
+    "chapter_title": "Of Offences Against Property",
+    "section": "319",
+    "section_title": "Cheating by personation",
+    "section_desc": "(1) A person is said to 'cheat by personation' if he cheats by pretending to be some other person, or by knowingly substituting one person for another, or representing that he or any other person is a person other than he or such other person really is. (2) Whoever cheats by personation shall be punished with imprisonment of either description for a term which may extend to five years, or with fine, or with both."
+  },
+  {
+    "chapter": 17,
+    "chapter_title": "Of Offences Against Property",
+    "section": "324",
+    "section_title": "Mischief",
+    "section_desc": "(1) Whoever with intent to cause, or knowing that he is likely to cause, wrongful loss or damage to the public or to any person, causes the destruction of any property, or any such change in any property or in the situation thereof as destroys or diminishes its value or utility, or affects it injuriously, commits mischief. (2) Whoever commits mischief shall be punished with imprisonment of either description for a term which may extend to six months, or with fine, or with both. (3) Whoever commits mischief and thereby causes damage to property to the amount of twenty thousand rupees or upwards but less than one lakh rupees, shall be punished with imprisonment of either description for a term which may extend to two years, or with fine, or with both. (4) Whoever commits mischief and thereby causes damage to property to the amount of one lakh rupees or upwards, shall be punished with imprisonment of either description for a term which may extend to five years, or with fine, or with both."
+  },
+  {
+    "chapter": 17,
+    "chapter_title": "Of Offences Against Property",
+    "section": "329",
+    "section_title": "Criminal trespass and house-trespass",
+    "section_desc": "(1) Whoever enters into or upon property in the possession of another with intent to commit an offence or to intimidate, insult or annoy any person in possession of such property, or having lawfully entered into or upon such property, unlawfully remains there with intent thereby to intimidate, insult or annoy any such person, or with intent to commit an offence, is said to commit 'criminal trespass'. (2) Whoever commits criminal trespass by entering into or remaining in any building, tent or vessel used as a human dwelling or any building used as a place for worship, or as a place for the custody of property, is said to commit 'house-trespass'. (3) Whoever commits criminal trespass shall be punished with imprisonment of either description for a term which may extend to three months, or with fine which may extend to five thousand rupees, or with both. (4) Whoever commits house-trespass shall be punished with imprisonment of either description for a term which may extend to one year, or with fine which may extend to five thousand rupees, or with both."
+  },
+  {
+    "chapter": 17,
+    "chapter_title": "Of Offences Against Property",
+    "section": "331",
+    "section_title": "Lurking house-trespass and house-breaking",
+    "section_desc": "(1) Whoever commits house-trespass having taken precautions to conceal such house-trespass from some person who has a right to exclude or eject the trespasser from the building, tent or vessel which is the subject of the trespass, is said to commit 'lurking house-trespass'. (2) A person is said to commit 'house-breaking' who commits house-trespass if he effects his entrance into the house or any part of it, or if he effects his exit from the house or any part of it, by opening any lock, through any wall, passage, or unfastening any door. Whoever commits lurking house-trespass or house-breaking shall be punished with imprisonment of either description for a term which may extend to two years, and shall also be liable to fine. (3) Whoever commits lurking house-trespass or house-breaking after sunset and before sunrise, shall be punished with imprisonment of either description for a term which may extend to three years, and shall also be liable to fine."
+  },
+  {
+    "chapter": 18,
+    "chapter_title": "Of Offences Relating to Documents and to Property Marks",
+    "section": "335",
+    "section_title": "Making a false document or false electronic record",
+    "section_desc": "A person is said to make a false document or false electronic record: First—Who dishonestly or fraudulently makes, signs, seals or executes a document or part of a document, or makes or transmits any electronic record or part of any electronic record, or affixes any electronic signature on any electronic record, with the intention of causing it to be believed that such document or part of document, electronic record or electronic signature was made, signed, sealed, executed, transmitted or affixed by or by the authority of a person by whom or by whose authority he knows that it was not made, signed, sealed, executed or affixed; Secondly—Who, without lawful authority, dishonestly or fraudulently, by cancellation or otherwise, alters a document or an electronic record in any material part thereof, after it has been made, executed or affixed with electronic signature; Thirdly—Who dishonestly or fraudulently causes any person to sign, seal, execute or alter a document or an electronic record or to affix his electronic signature on any electronic record knowing that such person by reason of unsoundness of mind or intoxication cannot, or that by reason of deception practised upon him, he does not know the contents of the document or electronic record or the nature of the alteration."
+  },
+  {
+    "chapter": 18,
     "chapter_title": "Of Offences Relating to Documents and to Property Marks",
     "section": "336",
     "section_title": "Forgery",
-    "section_desc": "(1) Whoever makes any false document or false electronic record or part of a document or electronic record, with intent to cause damage or injury, to the public or to any person, or to support any claim or title, or to cause any person to part with property, or to enter into any express or implied contract, or with intent to commit fraud or that fraud may be committed, commits forgery. (2) Whoever commits forgery shall be punished with imprisonment of either description for a term which may extend to two years, or with fine, or with both."
+    "section_desc": "(1) Whoever makes any false document or false electronic record or part of a document or electronic record, with intent to cause damage or injury, to the public or to any person, or to support any claim or title, or to cause any person to part with property, or to enter into any express or implied contract, or with intent to commit fraud or that fraud may be committed, commits forgery. (2) Whoever commits forgery shall be punished with imprisonment of either description for a term which may extend to two years, or with fine, or with both. (3) Whoever commits forgery of a record of Court of Justice or of a register of birth, baptism, marriage or burial, or of a certificate or document purporting to be made by a public servant in his official capacity, shall be punished with imprisonment of either description for a term which may extend to seven years, and shall also be liable to fine. (4) Whoever commits forgery of a valuable security, will, or authority to adopt shall be punished with imprisonment for life, or with imprisonment of either description for a term which may extend to seven years, and shall also be liable to fine."
   },
   {
-    "chapter": 12,
-    "chapter_title": "Of Defamation",
+    "chapter": 18,
+    "chapter_title": "Of Offences Relating to Documents and to Property Marks",
+    "section": "340",
+    "section_title": "Using as genuine a forged document or electronic record",
+    "section_desc": "Whoever fraudulently or dishonestly uses as genuine any document or electronic record which he knows or has reason to believe to be a forged document or electronic record, shall be punished in the same manner as if he had forged such document or electronic record."
+  },
+  {
+    "chapter": 19,
+    "chapter_title": "Of Criminal Intimidation, Insult, Annoyance, Defamation, etc.",
+    "section": "351",
+    "section_title": "Criminal intimidation",
+    "section_desc": "(1) Whoever threatens another with any injury to his person, reputation or property, or to the person or reputation of any one in whom that person is interested, with intent to cause alarm to that person, or to cause that person to do any act which he is not legally bound to do, or to omit to do any act which that person is legally entitled to do, as the means of avoiding the execution of such threat, commits criminal intimidation. (2) Whoever commits the offence of criminal intimidation shall be punished with imprisonment of either description for a term which may extend to two years, or with fine, or with both. (3) If the threat be to cause death or grievous hurt, or to cause the destruction of any property by fire, or to cause an offence punishable with death or imprisonment for life, the offender shall be punished with imprisonment of either description for a term which may extend to seven years, or with fine, or with both."
+  },
+  {
+    "chapter": 19,
+    "chapter_title": "Of Criminal Intimidation, Insult, Annoyance, Defamation, etc.",
+    "section": "352",
+    "section_title": "Intentional insult with intent to provoke breach of peace",
+    "section_desc": "Whoever intentionally insults, and thereby gives provocation to any person, intending or knowing it to be likely that such provocation will cause him to break the public peace, or to commit any other offence, shall be punished with imprisonment of either description for a term which may extend to two years, or with fine, or with both."
+  },
+  {
+    "chapter": 19,
+    "chapter_title": "Of Criminal Intimidation, Insult, Annoyance, Defamation, etc.",
+    "section": "353",
+    "section_title": "Statements conducing to public mischief",
+    "section_desc": "(1) Whoever makes, publishes or circulates any statement, false info, rumour or report, including through electronic communication: (a) with intent to cause, or which is likely to cause, any officer, soldier, sailor or airman in the Army, Navy or Air Force to mutiny or otherwise disregard or fail in his duty; or (b) with intent to cause, or which is likely to cause, fear or alarm to the public, or to any section of the public whereby any person may be induced to commit an offence against the State or against the public tranquillity; or (c) with intent to incite, or which is likely to incite, any class or community of persons to commit any offence against any other class or community, shall be punished with imprisonment which may extend to three years, or with fine, or with both. (2) Whoever makes, publishes or circulates any statement or report containing false information, rumour or alarming news with intent to create or promote feelings of enmity, hatred or ill-will between different religious, racial, language or regional groups or castes or communities, shall be punished with imprisonment which may extend to three years, or with fine, or with both."
+  },
+  {
+    "chapter": 19,
+    "chapter_title": "Of Criminal Intimidation, Insult, Annoyance, Defamation, etc.",
     "section": "356",
     "section_title": "Defamation",
-    "section_desc": "(1) Whoever, by words either spoken or intended to be read, or by signs or by visible representations, makes or publishes in any manner, any imputation concerning any person intending to harm, or knowing or having reason to believe that such imputation will harm, the reputation of such person, is said to defame that person. (2) Whoever defames another shall be punished with simple imprisonment for a term which may extend to two years, or with fine, or with both, or with community service."
+    "section_desc": "(1) Whoever, by words either spoken or intended to be read, or by signs or by visible representations, makes or publishes in any manner, including electronic communication, any imputation concerning any person intending to harm, or knowing or having reason to believe that such imputation will harm, the reputation of such person, is said, except in the cases hereinafter excepted, to defame that person. Explanation 1: It may amount to defamation to impute anything to a deceased person, if the imputation would harm the reputation of that person if living, and is intended to be hurtful to the feelings of his family or other near relatives. Explanation 2: It may amount to defamation to make an imputation concerning a company or an association or collection of persons as such. Explanation 3: An imputation in the form of an alternative or expressed ironically, may amount to defamation. Explanation 4: No imputation is said to harm a person's reputation, unless that imputation directly or indirectly, in the estimation of others, lowers the moral or intellectual character of that person, or lowers the character of that person in respect of his caste or of his calling, or lowers the credit of that person, or causes it to be believed that the body of that person is in a loathsome state, or in a state generally considered as disgraceful. Exceptions: First—Imputation of truth which public good requires to be made or published; Second—Public conduct of public servants; Third—Conduct of any person touching any public question; Fourth—Publication of reports of proceedings of Courts; Fifth—Merits of case decided in Court or conduct of witnesses and others concerned; Sixth—Merits of public performance; Seventh—Censure passed in good faith by person having lawful authority over another; Eighth—Accusation preferred in good faith to authorized person; Ninth—Imputation made in good faith by person for protection of his or other's interests; Tenth—Caution intended for good of person to whom conveyed or for public good. (2) Whoever defames another shall be punished with simple imprisonment for a term which may extend to two years, or with fine, or with both or with community service."
   }
 ]

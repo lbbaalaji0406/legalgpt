@@ -3,105 +3,602 @@
     "chapter": 1,
     "chapter_title": "Preliminary",
     "section": "1",
-    "section_title": "Short title, extent and commencement",
-    "section_desc": "This Act may be called the Bharatiya Nagarik Suraksha Sanhita, 2023. It shall come into force on the 1st day of July, 2024. It extends to the whole of India."
+    "section_title": "Short title, commencement and extent",
+    "section_desc": "(1) This Act may be called the Bharatiya Nagarik Suraksha Sanhita, 2023. (2) It shall come into force on the 1st day of July, 2024. (3) It extends to the whole of India: Provided that the provisions of this Sanhita, other than those relating to Chapters IX, XI and XII thereof, shall not apply: (a) to the State of Nagaland; (b) to the tribal areas, but the concerned State Government may, by notification, apply such provisions or any of them to the whole or part of the State of Nagaland or such tribal areas."
+  },
+  {
+    "chapter": 1,
+    "chapter_title": "Preliminary",
+    "section": "2",
+    "section_title": "Definitions",
+    "section_desc": "In this Sanhita, unless the context otherwise requires: (1)(a) 'audio-video electronic means' includes use of any communication device for video conferencing, recording of processes of identification, search and seizure, evidence, transmission of electronic communication and for such other purposes as may be specified by the State Government; (b) 'bail' means release of a person accused of, or suspected of, the commission of an offence from the custody of law upon certain conditions imposed by an officer or Court on execution of a bond or bail bond; (c) 'bailable offence' means an offence which is shown as bailable in the First Schedule, or which is made bailable by any other law for the time being in force; and 'non-bailable offence' means any other offence; (e) 'charge' includes any head of charge when the charge contains more heads than one; (f) 'cognizable offence' means an offence for which, and 'cognizable case' means a case in which, a police officer may, in accordance with the First Schedule or under any other law for the time being in force, arrest without warrant; (g) 'complaint' means any allegation made orally or in writing to a Magistrate, with a view to his taking action under this Sanhita, that some person, whether known or unknown, has committed an offence, but does not include a police report; (i) 'electronic communication' means communication of any message, information, or document by wire, radio, optical or other electromagnetic systems including email, tele-facsimile, short message service, or audio-video electronic means; (l) 'inquiry' means every inquiry, other than a trial, conducted under this Sanhita by a Magistrate or Court; (m) 'investigation' includes all the proceedings under this Sanhita for the collection of evidence conducted by a police officer or by any person (other than a Magistrate) who is authorized by a Magistrate in this behalf; (o) 'non-cognizable offence' means an offence for which, and 'non-cognizable case' means a case in which, a police officer has no authority to arrest without warrant; (q) 'place' includes a house, building, tent, vehicle and vessel; (r) 'police report' means a report forwarded by a police officer to a Magistrate under sub-section (3) of section 193; (t) 'summons-case' means a case relating to an offence, and not being a warrant-case; (u) 'victim' means a person who has suffered any loss or injury caused by reason of the act or omission for which the accused person has been charged and the expression 'victim' includes his or her guardian or legal heir; (v) 'warrant-case' means a case relating to an offence punishable with death, imprisonment for life or imprisonment for a term exceeding two years."
+  },
+  {
+    "chapter": 2,
+    "chapter_title": "Constitution of Criminal Courts and Offices",
+    "section": "6",
+    "section_title": "Classes of Criminal Courts",
+    "section_desc": "Besides the High Courts and the Courts constituted under any law, other than this Sanhita, there shall be, in every State, the following classes of Criminal Courts, namely: (i) Courts of Session; (ii) Judicial Magistrates of the first class; (iii) Judicial Magistrates of the second class; and (iv) Executive Magistrates."
+  },
+  {
+    "chapter": 2,
+    "chapter_title": "Constitution of Criminal Courts and Offices",
+    "section": "8",
+    "section_title": "Court of Session",
+    "section_desc": "(1) The State Government shall establish a Court of Session for every sessions division. (2) Every Court of Session shall be presided over by a Judge, to be appointed by the High Court. (3) The High Court may also appoint Additional Sessions Judges to exercise jurisdiction in a Court of Session. (4) The Sessions Judge of one sessions division may be appointed by the High Court to be also an Additional Sessions Judge of another division, and in such case he may sit for the disposal of cases at either place."
+  },
+  {
+    "chapter": 2,
+    "chapter_title": "Constitution of Criminal Courts and Offices",
+    "section": "9",
+    "section_title": "Courts of Judicial Magistrates",
+    "section_desc": "(1) In every district (not being a metropolitan area), there shall be established as many Courts of Judicial Magistrates of the first class and of the second class, and at such places, as the State Government may, after consultation with the High Court, by notification, specify. (2) The presiding officers of such Courts shall be appointed by the High Court."
+  },
+  {
+    "chapter": 2,
+    "chapter_title": "Constitution of Criminal Courts and Offices",
+    "section": "11",
+    "section_title": "Chief Judicial Magistrate and Additional Chief Judicial Magistrate",
+    "section_desc": "(1) In every district, the High Court shall appoint a Judicial Magistrate of the first class to be the Chief Judicial Magistrate. (2) The High Court may appoint any Judicial Magistrate of the first class to be an Additional Chief Judicial Magistrate, and such Magistrate shall have all or any of the powers of a Chief Judicial Magistrate under this Sanhita or under any other law for the time being in force as the High Court may direct."
+  },
+  {
+    "chapter": 2,
+    "chapter_title": "Constitution of Criminal Courts and Offices",
+    "section": "14",
+    "section_title": "Executive Magistrates",
+    "section_desc": "(1) In every district, the State Government may appoint as many persons as it thinks fit to be Executive Magistrates and shall appoint one of them to be the District Magistrate. (2) The State Government may appoint any Executive Magistrate to be an Additional District Magistrate, and such Magistrate shall have such of the powers of a District Magistrate under this Sanhita or under any other law as may be directed by the State Government."
+  },
+  {
+    "chapter": 2,
+    "chapter_title": "Constitution of Criminal Courts and Offices",
+    "section": "18",
+    "section_title": "Public Prosecutors",
+    "section_desc": "(1) For every High Court, the Central Government or the State Government shall, after consultation with the High Court, appoint a Public Prosecutor and one or more Additional Public Prosecutors for conducting in such Court, any prosecution, appeal or other proceeding on behalf of the Central Government or State Government, as the case may be. (2) For every district, the State Government shall appoint a Public Prosecutor and may also appoint one or more Additional Public Prosecutors: Provided that no person shall be eligible to be appointed as a Public Prosecutor or an Additional Public Prosecutor unless he has been in practice as an advocate for not less than seven years."
+  },
+  {
+    "chapter": 3,
+    "chapter_title": "Power of Courts",
+    "section": "21",
+    "section_title": "Sentences which High Courts and Sessions Judges may pass",
+    "section_desc": "(1) A High Court may pass any sentence authorized by law. (2) A Sessions Judge or Additional Sessions Judge may pass any sentence authorized by law; but any sentence of death passed by any such Judge shall be subject to confirmation by the High Court."
+  },
+  {
+    "chapter": 3,
+    "chapter_title": "Power of Courts",
+    "section": "22",
+    "section_title": "Sentences which Magistrates may pass",
+    "section_desc": "(1) The Court of a Chief Judicial Magistrate may pass any sentence authorized by law except a sentence of death or of imprisonment for life or of imprisonment for a term exceeding seven years. (2) The Court of a Magistrate of the first class may pass a sentence of imprisonment for a term not exceeding three years, or of fine not exceeding fifty thousand rupees, or of both, or of community service. (3) The Court of a Magistrate of the second class may pass a sentence of imprisonment for a term not exceeding one year, or of fine not exceeding ten thousand rupees, or of both, or of community service."
+  },
+  {
+    "chapter": 4,
+    "chapter_title": "Powers of Superior Officers of Police and Aid to the Magistrates and the Police",
+    "section": "29",
+    "section_title": "Powers of superior officers of police",
+    "section_desc": "Police officers superior in rank to an officer in charge of a police station may exercise the same powers, throughout the local area to which they are appointed, as may be exercised by such officer within the limits of his station."
+  },
+  {
+    "chapter": 4,
+    "chapter_title": "Powers of Superior Officers of Police and Aid to the Magistrates and the Police",
+    "section": "30",
+    "section_title": "Public when to assist Magistrates and police",
+    "section_desc": "Every person is bound to assist a Magistrate or police officer reasonably demanding his aid: (a) in the taking or preventing the escape of any other person whom such Magistrate or police officer is authorized to arrest; or (b) in the prevention or suppression of a breach of the peace; or (c) in the prevention of any injury attempted to be committed to any railway, canal, telegraph or public property."
+  },
+  {
+    "chapter": 4,
+    "chapter_title": "Powers of Superior Officers of Police and Aid to the Magistrates and the Police",
+    "section": "33",
+    "section_title": "Public to give information of certain offences",
+    "section_desc": "Every person, aware of the commission of, or of the intention of any other person to commit, any offence punishable under Chapter VI or Chapter VII or Chapter XVII of the Bharatiya Nyaya Sanhita, 2023, shall, in the absence of any reasonable excuse, the burden of proving which excuse shall lie upon the person so aware, forthwith give information to the nearest Magistrate or police officer of such commission or intention."
   },
   {
     "chapter": 5,
     "chapter_title": "Arrest of Persons",
     "section": "35",
-    "section_title": "When police may arrest without warrant and Notice of Appearance",
-    "section_desc": "(1) Any police officer may without an order from a Magistrate and without a warrant, arrest any person who commits, in the presence of a police officer, a cognizable offence. (3) The police officer shall, in all cases where the arrest of a person is not required under sub-section (1), issue a notice of appearance directing the person against whom a reasonable complaint has been made, to appear before him or at such other place as may be specified in the notice. (4) Where such a notice is issued to any person, it shall be the duty of that person to comply with the terms of the notice. (5) Where such person complies and continues to comply with the notice, he shall not be arrested in respect of the offence referred to in the notice unless, for reasons to be recorded, the police officer is of the opinion that he ought to be arrested."
+    "section_title": "Notice of appearance before police officer and arrest procedure",
+    "section_desc": "(1) Any police officer may without an order from a Magistrate and without a warrant, arrest any person: (a) who commits, in the presence of a police officer, a cognizable offence; (b) against whom a reasonable complaint has been made, or credible information has been received, or a reasonable suspicion exists that he has committed a cognizable offence punishable with imprisonment for a term which may be less than seven years or which may extend to seven years, whether with or without fine, if the police officer is satisfied that such arrest is necessary: (i) to prevent such person from committing any further offence; or (ii) for proper investigation of the offence; or (iii) to prevent such person from causing the evidence of the offence to disappear or tampering with such evidence in any manner; or (iv) to prevent such person from making any inducement, threat or promise to any person acquainted with the facts of the case; or (v) as unless such person is arrested, his presence in the Court cannot be ensured: Provided that the police officer shall, in all cases where the arrest of a person is not required under the provisions of this sub-section, record the reasons in writing for not making the arrest. (3) The police officer shall, in all cases where the arrest of a person is not required under sub-section (1), issue a notice directing the person against whom a reasonable complaint has been made, or credible information received, to appear before him or at such other place as may be specified in the notice. (4) Where such a notice is issued to any person, it shall be the duty of that person to comply with the terms of the notice. (5) Where such person complies and continues to comply with the notice, he shall not be arrested in respect of the offence referred to in the notice unless, for reasons to be recorded, the police officer is of the opinion that he ought to be arrested. (6) Where such person, at any time, fails to comply with the terms of the notice or is unwilling to identify himself, the police officer may, subject to such orders as may have been passed by a competent Court in this behalf, arrest him for the offence mentioned in the notice."
+  },
+  {
+    "chapter": 5,
+    "chapter_title": "Arrest of Persons",
+    "section": "36",
+    "section_title": "Designated Police Officer in every district and police station",
+    "section_desc": "(1) The State Government shall designate a police officer in every district and in every police station, not below the rank of Assistant Sub-Inspector of Police, who shall be responsible for maintaining the information regarding the arrest of persons and display the names and addresses of the persons arrested on the notice board outside the police stations and at the district headquarters. (2) The information under sub-section (1) shall also be made available through digital or electronic mode."
+  },
+  {
+    "chapter": 5,
+    "chapter_title": "Arrest of Persons",
+    "section": "37",
+    "section_title": "Right of arrested person to meet an advocate of his choice during interrogation",
+    "section_desc": "When any person is arrested and interrogated by the police, he shall be entitled to meet an advocate of his choice during interrogation, though not throughout interrogation."
+  },
+  {
+    "chapter": 5,
+    "chapter_title": "Arrest of Persons",
+    "section": "38",
+    "section_title": "Arrest on refusal to give name and residence",
+    "section_desc": "(1) When any person who in the presence of a police officer has committed or has been accused of committing a non-cognizable offence refuses, on demand of such officer, to give his name and residence, or gives a name or residence which such officer has reason to believe to be false, he may be arrested by such officer in order that his name or residence may be ascertained. (2) When the true name and residence of such person have been ascertained, he shall be released on his executing a bond, with or without sureties, to appear before a Magistrate if so required. (3) Should the true name and residence of such person not be ascertained within twenty-four hours from the time of arrest or should he fail to execute the bond, he shall forthwith be forwarded to the nearest Magistrate having jurisdiction."
   },
   {
     "chapter": 5,
     "chapter_title": "Arrest of Persons",
     "section": "43",
-    "section_title": "Use of handcuffs",
-    "section_desc": "A police officer may, keeping in view the nature and gravity of the offence, use handcuffs while making the arrest of a person or producing that person before the court who is a habitual, repeat offender, or who has escaped from custody, or who has committed offence of organized crime, terrorism, drug trafficking, illegal possession of firearms, murder, rape, acid attack, or offence against the State: Provided that no handcuffs shall be used in economic offences or minor offences."
+    "section_title": "Arrest by private person and procedure on such arrest",
+    "section_desc": "(1) Any private person may arrest or cause to be arrested any person who in his presence commits a non-bailable and cognizable offence, or any proclaimed offender, and, without unnecessary delay, and shall within six hours make over or cause to be made over any person so arrested to a police officer, or, in the absence of a police officer, take such person or cause him to be taken in custody to the nearest police station. (2) If there is reason to believe that such person comes under the provisions of section 35, a police officer shall re-arrest him."
+  },
+  {
+    "chapter": 5,
+    "chapter_title": "Arrest of Persons",
+    "section": "46",
+    "section_title": "Arrest how made and special safeguards for women",
+    "section_desc": "(1) In making an arrest the police officer or other person making the same shall actually touch or confine the body of the person to be arrested, unless there be a submission to the custody by word or action: Provided that where a woman is to be arrested, unless the circumstances indicate to the contrary, her submission to custody on an oral intimation of arrest shall be presumed and, unless the circumstances otherwise require or unless the police officer is a female, the police officer shall not touch the person of the woman for making her arrest. (2) If such person forcibly resists the endeavour to arrest him, or attempts to evade the arrest, such police officer or other person may use all means necessary to effect the arrest. (3) Nothing in this section gives a right to cause the death of a person who is not accused of an offence punishable with death or with imprisonment for life. (4) Save in exceptional circumstances, no woman shall be arrested after sunset and before sunrise, and where such exceptional circumstances exist, the woman police officer shall, by making a written report, obtain the prior permission of the Judicial Magistrate of the first class within whose local jurisdiction the offence is committed or the arrest is to be made."
+  },
+  {
+    "chapter": 5,
+    "chapter_title": "Arrest of Persons",
+    "section": "47",
+    "section_title": "Search of place entered by person sought to be arrested",
+    "section_desc": "(1) If any person acting under a warrant of arrest, or any police officer having authority to arrest, has reason to believe that the person to be arrested has entered into, or is within, any place, any person residing in, or being in charge of, such place shall, on demand of such person acting as aforesaid or such police officer, allow him free ingress thereto, and afford all reasonable facilities for a search therein. (2) If ingress to such place cannot be obtained, it shall be lawful in any case for a person acting under a warrant and in any case in which a warrant may issue, but cannot be obtained without affording the person to be arrested an opportunity of escape, for a police officer to enter such place and search therein, and in order to effect an entrance into such place, to break open any outer or inner door or window of any house or place."
+  },
+  {
+    "chapter": 5,
+    "chapter_title": "Arrest of Persons",
+    "section": "49",
+    "section_title": "Power to seize offensive weapons",
+    "section_desc": "The police officer or other person making any arrest under this Sanhita may take from the person arrested any offensive weapons which he has about his person, and shall deliver all weapons so taken to the Court or officer before which or whom the officer or person making the arrest is required by this Sanhita to produce the person arrested."
+  },
+  {
+    "chapter": 5,
+    "chapter_title": "Arrest of Persons",
+    "section": "51",
+    "section_title": "Examination of accused by medical practitioner at the request of police officer",
+    "section_desc": "(1) When a person is arrested on a charge of committing an offence of such a nature and alleged to have been committed under such circumstances that there are reasonable grounds for believing that an examination of his person will afford evidence as to the commission of an offence, it shall be lawful for a registered medical practitioner, acting at the request of a police officer not below the rank of sub-inspector, and for any person acting in good faith in his aid and under his direction, to make such an examination of the person arrested as is reasonably necessary in order to ascertain the facts which may afford such evidence, and to use such force as is reasonably necessary for that purpose. (2) Whenever the person of a female is to be examined under this section, the examination shall be made only by, or under the supervision of, a female registered medical practitioner."
+  },
+  {
+    "chapter": 5,
+    "chapter_title": "Arrest of Persons",
+    "section": "53",
+    "section_title": "Examination of arrested person by medical officer",
+    "section_desc": "(1) When any person is arrested, he shall be examined by a medical officer in the service of the Central or State Government, and in case the medical officer is not available, by a registered medical practitioner soon after the arrest is made: Provided that where the arrested person is a female, the examination of the body shall be made only by, or under the supervision of, a female medical officer. (2) The medical officer or registered medical practitioner shall prepare the record of such examination, mentioning therein any injuries or marks of violence upon the person arrested, and the approximate time when such injuries or marks may have been inflicted. (3) A copy of the report of such examination shall be furnished by the medical officer to the arrested person or the person nominated by such arrested person."
+  },
+  {
+    "chapter": 5,
+    "chapter_title": "Arrest of Persons",
+    "section": "54",
+    "section_title": "Identification of person arrested",
+    "section_desc": "Where a person is arrested on a charge of committing an offence and his identification by any other person or persons is considered necessary for the purpose of investigation of such offence, the Court, having jurisdiction may, on the request of the officer in charge of a police station, direct the person so arrested to subject himself to identification by any person or persons in such manner as the Court may deem fit: Provided that if the person identifying the person arrested is mentally or physically disabled, such process of identification shall take place under the supervision of a Judicial Magistrate who shall take appropriate steps to ensure that such person identifies the person arrested using methods that person is comfortable with, and the identification process shall be videographed."
+  },
+  {
+    "chapter": 5,
+    "chapter_title": "Arrest of Persons",
+    "section": "58",
+    "section_title": "Person arrested not to be detained more than twenty-four hours",
+    "section_desc": "No police officer shall detain in custody a person arrested without warrant for a longer period than under all the circumstances of the case is reasonable, and such period shall not, in the absence of a special order of a Magistrate under section 187, exceed twenty-four hours exclusive of the time necessary for the journey from the place of arrest to the Magistrate's Court."
+  },
+  {
+    "chapter": 6,
+    "chapter_title": "Processes to Compel Appearance",
+    "section": "63",
+    "section_title": "Form of summons and summons in electronic form",
+    "section_desc": "(1) Every summons issued by a Court under this Sanhita shall be in writing, in duplicate, signed by the presiding officer of such Court or by such other officer as the High Court may, from time to time, by rule direct, and shall bear the seal of the Court. (2) Notwithstanding anything contained in sub-section (1), a summons may also be issued in electronic form bearing the digital signature of the presiding officer of the Court or by such other officer as the High Court may direct or with the seal of the Court."
+  },
+  {
+    "chapter": 6,
+    "chapter_title": "Processes to Compel Appearance",
+    "section": "64",
+    "section_title": "Summons how served",
+    "section_desc": "(1) Every summons shall be served by a police officer, or subject to such rules as the State Government may make in this behalf, by an officer of the Court issuing it or other public servant. (2) The summons shall, if practicable, be served personally on the person summoned, by delivering or tendering to him one of the duplicates of the summons. (3) Summons may also be served through electronic communication in such form and manner as the State Government may, by rules, provide."
+  },
+  {
+    "chapter": 6,
+    "chapter_title": "Processes to Compel Appearance",
+    "section": "70",
+    "section_title": "Form of warrant of arrest and duration",
+    "section_desc": "(1) Every warrant of arrest issued by a Court under this Sanhita shall be in writing, signed by the presiding officer of such Court and shall bear the seal of the Court. (2) Every such warrant shall remain in force until it is cancelled by the Court which issued it, or until it is executed."
+  },
+  {
+    "chapter": 6,
+    "chapter_title": "Processes to Compel Appearance",
+    "section": "71",
+    "section_title": "Power to direct security to be taken on warrant",
+    "section_desc": "(1) Any Court issuing a warrant for the arrest of any person may in its discretion direct by endorsement on the warrant that, if such person executes a bond with sufficient sureties for his attendance before the Court at a specified time and thereafter until otherwise directed by the Court, the officer to whom the warrant is directed shall take such security and shall release such person from custody. (2) The endorsement shall state: (a) the number of sureties; (b) the amount in which they and the person for whose arrest the warrant is issued, are to be respectively bound; (c) the time at which he is to attend before the Court."
+  },
+  {
+    "chapter": 6,
+    "chapter_title": "Processes to Compel Appearance",
+    "section": "82",
+    "section_title": "Proclamation for person absconding",
+    "section_desc": "(1) If any Court has reason to believe (whether after taking evidence or not) that any person against whom a warrant has been issued by it has absconded or is concealing himself so that such warrant cannot be executed, such Court may publish a written proclamation requiring him to appear at a specified place and at a specified time not less than thirty days from the date of publishing such proclamation. (2) The proclamation shall be published: (i) by publicly reading it in some conspicuous place of the town or village in which such person ordinarily resides; (ii) by affixing it to some conspicuous part of the house or homestead in which such person ordinarily resides; (iii) a copy thereof being affixed to some conspicuous part of the Court-house; (iv) the Court may also, if it thinks fit, direct a copy of the proclamation to be published in a daily newspaper circulating in the place in which such person ordinarily resides."
+  },
+  {
+    "chapter": 6,
+    "chapter_title": "Processes to Compel Appearance",
+    "section": "83",
+    "section_title": "Attachment of property of person absconding",
+    "section_desc": "(1) The Court issuing a proclamation under section 82 may, for reasons to be recorded in writing, at any time after the issue of the proclamation, order the attachment of any property, movable or immovable, or both, belonging to the proclaimed person: Provided that where at the time of the issue of the proclamation the Court is satisfied that the person is about to dispose of the whole or any part of his property, or remove it from the local jurisdiction of the Court, it may order the attachment simultaneously with the issue of the proclamation."
+  },
+  {
+    "chapter": 6,
+    "chapter_title": "Processes to Compel Appearance",
+    "section": "84",
+    "section_title": "Claims and objections to attachment",
+    "section_desc": "(1) If any claim is preferred to, or objection made to the attachment of, any property attached under section 83, within six months from the date of such attachment, by any person other than the proclaimed person, on the ground that the claimant or objector has an interest in such property, and that such interest is not liable to attachment under section 83, the claim or objection shall be inquired into, and may be allowed or disallowed in whole or in part. (2) Any person whose claim or objection has been disallowed in whole or in part may, within a period of one year from the date of such order, institute a suit to establish the right which he claims in respect of the property in dispute; but subject to the result of such suit, if any, the order shall be conclusive."
   },
   {
     "chapter": 7,
-    "chapter_title": "Processes to Compel Production of Things",
+    "chapter_title": "Processes to Compel the Production of Things",
+    "section": "94",
+    "section_title": "Summons to produce document or other thing",
+    "section_desc": "(1) Whenever any Court or any officer in charge of a police station considers that the production of any document, electronic communication including devices likely to contain digital evidence, or other thing is necessary or desirable for the purposes of any investigation, inquiry, trial or other proceeding under this Sanhita by or before such Court or officer, such Court may issue a summons, or such officer a written order, to the person in whose possession or power such document or thing is believed to be, requiring him to attend and produce it, or to produce it, at the time and place stated in the summons or order. (2) Any person required merely to produce a document, electronic communication or other thing shall be deemed to have complied with the requisition if he causes such document or thing to be produced instead of attending personally to produce the same."
+  },
+  {
+    "chapter": 7,
+    "chapter_title": "Processes to Compel the Production of Things",
+    "section": "100",
+    "section_title": "Search to be made in presence of independent witnesses",
+    "section_desc": "(1) Before making a search under this Chapter, the officer or other person about to make it shall call upon two or more independent and respectable inhabitants of the locality in which the place to be searched is situate or of any other locality if no such inhabitant of the said locality is available or is willing to be a witness to the search, to attend and witness the search and may issue an order in writing to them or any of them so to do. (2) The search shall be made in their presence, and a list of all things seized in the course of such search and of the places in which they are respectively found shall be prepared by such officer or other person and signed by such witnesses; but no person witnessing a search under this section shall be required to attend the Court as a witness of the search unless specially summoned by it."
+  },
+  {
+    "chapter": 7,
+    "chapter_title": "Processes to Compel the Production of Things",
     "section": "105",
     "section_title": "Recording of search and seizure through audio-video electronic means",
-    "section_desc": "The process of conducting search of a place or taking possession of any property, article or thing under this Chapter, including preparation of the list of all things seized in the course of such search and seizure and signing of such list by witnesses, shall be recorded through audio-video electronic means preferably mobile phone and the police officer shall without delay forward such recording to the District Magistrate, Sub-divisional Magistrate or Judicial Magistrate of the first class."
+    "section_desc": "The process of conducting search of a place or taking possession of any property, article or thing under this Chapter or under section 185, including preparation of the list of all things seized in the course of such search and seizure and signing of such list by witnesses, shall be recorded through any audio-video electronic means preferably mobile phone and the police officer shall forward such recording to the District Magistrate, Sub-divisional Magistrate or Judicial Magistrate of the first class without delay."
+  },
+  {
+    "chapter": 7,
+    "chapter_title": "Processes to Compel the Production of Things",
+    "section": "106",
+    "section_title": "Power of police officer to seize certain property",
+    "section_desc": "(1) Any police officer may seize any property which may be alleged or suspected to have been stolen, or which may be found under circumstances which create suspicion of the commission of any offence. (2) Such police officer, if subordinate to the officer in charge of a police station, shall forthwith report the seizure to that officer. (3) Every police officer acting under sub-section (1) shall forthwith report the seizure to the Magistrate having jurisdiction and where the property seized is such that it cannot be conveniently transported to the Court, or where there is difficulty in securing proper accommodation for the custody of such property, he may give custody thereof to any person on his executing a bond undertaking to produce the property before the Court as and when required."
+  },
+  {
+    "chapter": 8,
+    "chapter_title": "Security for Keeping the Peace and for Good Behaviour",
+    "section": "125",
+    "section_title": "Security for keeping the peace on conviction",
+    "section_desc": "(1) When a Court of Session or Court of a Judicial Magistrate of the first class convicts a person of any offence specified in sub-section (2) or of abetting any such offence, and is of opinion that it is necessary to take security from such person for keeping the peace, the Court may, at the time of passing sentence on such person, order him to execute a bond, with or without sureties, for keeping the peace for such period, not exceeding three years, as it thinks fit. (2) The offences referred to in sub-section (1) are: (a) any offence punishable under Chapter XI of the Bharatiya Nyaya Sanhita, 2023; (b) any offence which consists of, or includes, assault or using criminal force or committing mischief; (c) any offence of criminal intimidation; (d) any other offence which caused, or was intended or known to be likely to cause, a breach of the peace."
+  },
+  {
+    "chapter": 8,
+    "chapter_title": "Security for Keeping the Peace and for Good Behaviour",
+    "section": "126",
+    "section_title": "Security for keeping the peace in other cases",
+    "section_desc": "(1) When an Executive Magistrate receives information that any person is likely to commit a breach of the peace or disturb the public tranquillity or to do any wrongful act that may probably occasion a breach of the peace or disturb the public tranquillity and is of opinion that there is sufficient ground for proceeding, he may, in the manner hereinafter provided, require such person to show cause why he should not be ordered to execute a bond, with or without sureties, for keeping the peace for such period, not exceeding one year, as the Magistrate thinks fit."
+  },
+  {
+    "chapter": 9,
+    "chapter_title": "Order for Maintenance of Wives, Children and Parents",
+    "section": "144",
+    "section_title": "Order for maintenance of wives, children and parents",
+    "section_desc": "(1) If any person having sufficient means neglects or refuses to maintain: (a) his wife, unable to maintain herself; or (b) his legitimate or illegitimate minor child, whether married or not, unable to maintain itself; or (c) his legitimate or illegitimate child (not being a married daughter) who has attained majority, where such child is, by reason of any physical or mental abnormality or injury unable to maintain itself; or (d) his father or mother, unable to maintain himself or herself, a Magistrate of the first class may, upon proof of such neglect or refusal, order such person to make a monthly allowance for the maintenance of his wife or such child, father or mother, at such monthly rate as such Magistrate thinks fit and to pay the same to such person as the Magistrate may from time to time direct: Provided that the Magistrate may order the father of a minor female child referred to in clause (b) to make such allowance, until she attains her majority, if the Magistrate is satisfied that the husband of such minor female child, if married, is not possessed of sufficient means: Provided further that the Magistrate may, during the pendency of the proceeding, order such person to make a monthly allowance for the interim maintenance and the expenses of such proceeding. (2) Any such allowance for the interim maintenance and expenses of proceeding shall be payable from the date of the order, or, if so ordered, from the date of the application for maintenance. (3) If any person so ordered fails without sufficient cause to comply with the order, any such Magistrate may, for every breach of the order, issue a warrant for levying the amount due in the manner provided for levying fines, and may sentence such person, for the whole or any part of each month's allowance remaining unpaid after the execution of the warrant, to imprisonment for a term which may extend to one month or until payment if sooner made. (4) No wife shall be entitled to receive an allowance for the maintenance or the interim maintenance and expenses of proceeding from her husband under this section if she is living in adultery, or if, without any sufficient reason, she refuses to live with her husband, or if they are living separately by mutual consent."
+  },
+  {
+    "chapter": 9,
+    "chapter_title": "Order for Maintenance of Wives, Children and Parents",
+    "section": "145",
+    "section_title": "Procedure for maintenance application and enforcement",
+    "section_desc": "(1) Proceedings under section 144 may be taken against any person in any district: (a) where he is; or (b) where he or his wife resides; or (c) where he last resided with his wife, or as the case may be, with the mother of the illegitimate child. (2) All evidence in such proceedings shall be taken in the presence of the person against whom an order for payment of maintenance is proposed to be made, or, when his personal attendance is dispensed with, in the presence of his pleader, and shall be recorded in the manner prescribed for summons-cases: Provided that if the Magistrate is satisfied that the person against whom an order for payment of maintenance is proposed to be made is wilfully avoiding service, or wilfully neglecting to attend the Court, the Magistrate may proceed to hear and determine the case ex parte. (3) The Court in dealing with applications under section 144 shall have power to make such order as to costs as may be just."
+  },
+  {
+    "chapter": 9,
+    "chapter_title": "Order for Maintenance of Wives, Children and Parents",
+    "section": "146",
+    "section_title": "Alteration in allowance",
+    "section_desc": "(1) On proof of a change in the circumstances of any person, receiving, under section 144 a monthly allowance for the maintenance or interim maintenance, or ordered under the same section to pay a monthly allowance for the maintenance, or interim maintenance, to his wife, child, father or mother, as the case may be, the Magistrate may make such alteration in the allowance as he thinks fit. (2) Where it appears to the Magistrate that, in consequence of any decision of a competent Civil Court, any order made under section 144 should be cancelled or varied, he shall cancel the order or, as the case may be, vary the same accordingly."
+  },
+  {
+    "chapter": 10,
+    "chapter_title": "Maintenance of Public Order and Tranquillity",
+    "section": "163",
+    "section_title": "Power to issue order in urgent cases of nuisance or apprehended danger",
+    "section_desc": "(1) In cases where, in the opinion of a District Magistrate, a Sub-divisional Magistrate or any other Executive Magistrate specially empowered by the State Government in this behalf, there is sufficient ground for proceeding under this section and immediate prevention or speedy remedy is desirable, such Magistrate may, by a written order stating the material facts of the case and served in the manner provided by section 153, direct any person to abstain from a certain act or to take certain order with respect to certain property in his possession or under his management, if such Magistrate considers that such direction is likely to prevent, or tends to prevent, obstruction, annoyance or injury to any person lawfully employed, or danger to human life, health or safety, or a disturbance of the public tranquillity, or a riot, or an affray. (2) An order under this section may, in cases of emergency or in cases where the circumstances do not admit of the serving in due time of a notice upon the person against whom the order is directed, be passed ex parte. (3) An order under this section may be directed to a particular individual, or to persons residing in a particular place or area, or to the public generally when frequenting or visiting a particular place or area. (4) No order under this section shall remain in force for more than two months from the making thereof; but if the State Government considers it necessary so to do for preventing danger to human life, health or safety or for preventing a riot or any affray, it may, by notification, direct that an order made by a Magistrate under this section shall remain in force for such further period not exceeding six months from the date on which the order made by the Magistrate would have, but for such order, expired, as it may specify in the said notification."
+  },
+  {
+    "chapter": 11,
+    "chapter_title": "Preventive Action of the Police",
+    "section": "168",
+    "section_title": "Police to prevent cognizable offences",
+    "section_desc": "Every police officer may interpose for the purpose of preventing, and shall, to the best of his ability, prevent, the commission of any cognizable offence."
+  },
+  {
+    "chapter": 11,
+    "chapter_title": "Preventive Action of the Police",
+    "section": "172",
+    "section_title": "Arrest to prevent the commission of cognizable offences",
+    "section_desc": "(1) A police officer knowing of a design to commit any cognizable offence may arrest, without orders from a Magistrate and without a warrant, the person so designing, if it appears to such officer that the commission of the offence cannot be otherwise prevented. (2) No person arrested under sub-section (1) shall be detained in custody for a period exceeding twenty-four hours from the time of his arrest unless his further detention is required or authorized under any other provisions of this Sanhita or of any other law for the time being in force."
   },
   {
     "chapter": 12,
-    "chapter_title": "Information to Police and Their Powers to Investigate",
+    "chapter_title": "Information to the Police and Their Powers to Investigate",
     "section": "173",
-    "section_title": "Information in cognizable cases (Mandatory FIR, Zero FIR, and e-FIR)",
-    "section_desc": "(1) Every information relating to the commission of a cognizable offence, if given orally to an officer in charge of a police station, shall be reduced to writing by him or under his direction, and be read over to the informant; and every such information, whether given in writing or reduced to writing as aforesaid, shall be signed by the person giving it, and the substance thereof shall be entered in a book: Provided that if the information is given by the woman against whom an offence under section 64, 65, 66, 67, 68, 69, 70, 71, 74, 75, 76, 77, 78 or section 79 of the Bharatiya Nyaya Sanhita, 2023 is alleged to have been committed, such information shall be recorded by a woman police officer: Provided further that: (i) information may be given irrespective of the area where the offence was committed (Zero FIR); (ii) information may be given through electronic communication (e-FIR), which shall be taken on record by the police station, provided that such information is signed within three days by the person giving it before the FIR is formally registered. (3) Without prejudice to the provisions contained in this section, on receipt of information relating to commission of any cognizable offence, which is made punishable for three years or more but less than seven years, the officer in charge of the police station may with the prior permission from an officer not below the rank of Deputy Superintendent of Police: (i) proceed to conduct preliminary enquiry to ascertain whether there exists a prima facie case for proceeding in the matter within fourteen days; or (ii) proceed with investigation when there exists a prima facie case. (4) Any person aggrieved by a refusal on the part of an officer in charge of a police station to record the information referred to in sub-section (1) may send the substance of such information, in writing and by post, to the Superintendent of Police concerned who, if satisfied that such information discloses the commission of a cognizable offence, shall either investigate the case himself or direct an investigation to be made by any police officer subordinate to him."
+    "section_title": "Information in cognizable cases (FIR, Zero FIR, e-FIR & Preliminary Inquiry)",
+    "section_desc": "(1) Every information relating to the commission of a cognizable offence, irrespective of the area where the offence is committed may be given orally or by electronic communication to an officer in charge of a police station, and if given: (i) orally, it shall be reduced to writing by him or under his direction, and be read over to the informant; and every such information, whether given in writing or reduced to writing as aforesaid, shall be signed by the person giving it; (ii) by electronic communication, it shall be taken on record by him on being signed within three days by the person giving it, and the substance thereof shall be entered in a book to be kept by such officer in such form as the State Government may prescribe in this behalf: Provided that if the information is given by the woman against whom an offence under section 64, section 65, section 66, section 67, section 68, section 69, section 70, section 71, section 74, section 75, section 76, section 77, section 78 or section 79 of the Bharatiya Nyaya Sanhita, 2023 is alleged to have been committed or attempted, then such information shall be recorded, by a woman police officer or any woman officer: Provided further that: (a) in the event that the person against whom an offence under section 64, section 65, section 66, section 67, section 68, section 69, section 70, section 71, section 74, section 75, section 76, section 77, section 78 or section 79 of the Bharatiya Nyaya Sanhita, 2023 is alleged to have been committed or attempted, is temporarily or permanently mentally or physically disabled, then such information shall be recorded by a police officer, at the residence of the person seeking to report such offence or at a convenient place of such person's choice, in the presence of an interpreter or a special educator, as the case may be; (b) the recording of such information shall be videographed; (c) the police officer shall get the statement of the person recorded by a Judicial Magistrate under clause (a) of sub-section (6) of section 183 as soon as possible. (2) A copy of the information as recorded under sub-section (1) shall be given forthwith, free of cost, to the informant or the victim. (3) Without prejudice to the provisions contained in section 175, on receipt of information relating to the commission of any cognizable offence, which is made punishable for three years or more but less than seven years, the officer in charge of the police station may with the prior permission from an officer not below the rank of Deputy Superintendent of Police, considering the nature and gravity of the offence: (i) proceed to conduct preliminary enquiry to ascertain whether there exists a prima facie case for proceeding in the matter within a period of fourteen days; or (ii) proceed with investigation when there exists a prima facie case. (4) Any person aggrieved by a refusal on the part of an officer in charge of a police station to record the information referred to in sub-section (1) may send the substance of such information, in writing and by post, to the Superintendent of Police concerned who, if satisfied that such information discloses the commission of a cognizable offence, shall either investigate the case himself or direct an investigation to be made by any police officer subordinate to him, in the manner provided by this Sanhita, and such officer shall have all the powers of an officer in charge of the police station in relation to that offence."
   },
   {
     "chapter": 12,
-    "chapter_title": "Information to Police and Their Powers to Investigate",
+    "chapter_title": "Information to the Police and Their Powers to Investigate",
     "section": "174",
     "section_title": "Information as to non-cognizable cases and investigation of such cases",
-    "section_desc": "(1) When information is given to an officer in charge of a police station of the commission within the limits of such station of a non-cognizable offence, he shall enter or cause to be entered the substance of the information in a book and refer the informant to the Magistrate. (2) No police officer shall investigate a non-cognizable case without the order of a Magistrate having power to try such case or commit the case for trial."
+    "section_desc": "(1) When information is given to an officer in charge of a police station of the commission within the limits of such station of a non-cognizable offence, he shall enter or cause to be entered the substance of the information in a book to be kept by such officer in such form as the State Government may prescribe in this behalf, and refer the informant to the Magistrate. (2) No police officer shall investigate a non-cognizable case without the order of a Magistrate having power to try such case or commit the case for trial. (3) Any police officer receiving such order may exercise the same powers in respect of the investigation (except the power to arrest without warrant) as an officer in charge of a police station may exercise in a cognizable case."
   },
   {
     "chapter": 12,
-    "chapter_title": "Information to Police and Their Powers to Investigate",
+    "chapter_title": "Information to the Police and Their Powers to Investigate",
     "section": "175",
-    "section_title": "Police officer's power to investigate cognizable case and Magistrate's referral",
-    "section_desc": "(1) Any officer in charge of a police station may, without the order of a Magistrate, investigate any cognizable case which a Court having jurisdiction over the local area would have power to inquire into or try. (3) Any Magistrate empowered under section 210 may order such an investigation as above-mentioned: Provided that before ordering investigation under this sub-section, the Magistrate shall examine the complainant on oath and verify that an application under sub-section (4) of section 173 was submitted to the Superintendent of Police."
+    "section_title": "Police officer's power to investigate cognizable case",
+    "section_desc": "(1) Any officer in charge of a police station may, without the order of a Magistrate, investigate any cognizable case which a Court having jurisdiction over the local area within the limits of such station would have power to inquire into or try under the provisions of Chapter XIII. (2) No proceeding of a police officer in any such case shall at any stage be called in question on the ground that the case was one which such officer was not empowered under this section to investigate. (3) Any Magistrate empowered under section 210 may order such an investigation as above-mentioned."
   },
   {
     "chapter": 12,
-    "chapter_title": "Information to Police and Their Powers to Investigate",
+    "chapter_title": "Information to the Police and Their Powers to Investigate",
     "section": "176",
     "section_title": "Procedure for investigation and mandatory forensic investigation",
-    "section_desc": "(1) If, from information received or otherwise, an officer in charge of a police station has reason to suspect the commission of an offence which he is empowered under section 175 to investigate, he shall forthwith send a report of the same to a Magistrate empowered to take cognizance. (3) On receipt of information of an offence punishable for seven years or more, the officer in charge of a police station shall cause the forensic expert to visit the crime scene to collect forensic evidence, and cause videography of the process on mobile phone or any other electronic device: Provided that where forensic facility is not available in the State, the State Government shall notify the utilization of such facility from another State."
+    "section_desc": "(1) If, from information received or otherwise, an officer in charge of a police station has reason to suspect the commission of an offence which he is empowered under section 175 to investigate, he shall forthwith send a report of the same to a Magistrate empowered to take cognizance of such offence upon a police report and shall proceed in person, or shall depute one of his subordinate officers not being below such rank as the State Government may, by general or special order, prescribe in this behalf, to proceed, to the spot, to investigate the facts and circumstances of the case, and, if necessary, to take measures for the discovery and arrest of the offender. (2) When any information as to the commission of any such offence is given against any person by name and the case is not of a serious nature, the officer in charge of a police station need not proceed in person or depute a subordinate officer to make an investigation on the spot. (3) On receipt of every information relating to the commission of an offence which is made punishable for seven years or more, the officer in charge of a police station shall, from such date, as may be notified within a period of five years by the State Government in this behalf, cause the forensic experts to visit the crime scene to collect forensic evidence in the offence and also cause videography of the process on mobile phone or any other electronic device: Provided that where forensic facility is not available in respect of any State, the State Government shall until the facility in the State is developed, notify the utilization of such facility of any other State."
   },
   {
     "chapter": 12,
-    "chapter_title": "Information to Police and Their Powers to Investigate",
+    "chapter_title": "Information to the Police and Their Powers to Investigate",
+    "section": "179",
+    "section_title": "Police officer's power to require attendance of witnesses",
+    "section_desc": "(1) Any police officer making an investigation under this Chapter may, by order in writing, require the attendance before himself of any person being within the limits of his own or any adjoining station who, from the information given or otherwise, appears to be acquainted with the facts and circumstances of the case; and such person shall attend as so required: Provided that no male person under the age of fifteen years or above the age of sixty years or a woman or a mentally or physically disabled person or a person with acute illness shall be required to attend at any place other than the place in which such person resides: Provided further that the police officer may permit such person to attend at any place of his choice or through audio-video electronic means."
+  },
+  {
+    "chapter": 12,
+    "chapter_title": "Information to the Police and Their Powers to Investigate",
+    "section": "180",
+    "section_title": "Examination of witnesses by police",
+    "section_desc": "(1) Any police officer making an investigation under this Chapter, or any police officer not below such rank as the State Government may, by general or special order, prescribe in this behalf, acting on the requisition of such officer, may examine orally any person supposed to be acquainted with the facts and circumstances of the case. (2) Such person shall be bound to answer truly all questions relating to such case put to him by such officer, other than questions the answers to which would have a tendency to expose him to a criminal charge or to a penalty or forfeiture. (3) The police officer may reduce into writing any statement made to him in the course of an examination under this section; and if he does so, he shall make a separate and true record of the statement of each such person whose statement he records: Provided that statement made under this sub-section may also be recorded by audio-video electronic means."
+  },
+  {
+    "chapter": 12,
+    "chapter_title": "Information to the Police and Their Powers to Investigate",
+    "section": "183",
+    "section_title": "Recording of confessions and statements by Magistrate",
+    "section_desc": "(1) Any Judicial Magistrate may, whether or not he has jurisdiction in the case, record any confession or statement made to him in the course of an investigation under this Chapter or under any other law for the time being in force, or at any time afterwards before the commencement of the inquiry or trial: Provided that any confession or statement made under this sub-section may also be recorded by audio-video electronic means in the presence of the advocate of the person accused of an offence. (2) The Magistrate shall, before recording any such confession, explain to the person making it that he is not bound to make a confession and that, if he does so, it may be used as evidence against him; and the Magistrate shall not record any such confession unless, upon questioning the person making it, he has reason to believe that it is being made voluntarily. (3) If at any time before the confession is recorded, the person appearing before the Magistrate states that he is not willing to make the confession, the Magistrate shall not authorize the detention of such person in police custody. (4) Any such confession shall be recorded in the manner provided in section 316 for examining an accused person and shall be signed by the person making the confession; and the Magistrate shall make a memorandum at the foot of such record to the following effect: 'I have explained to (name) that he is not bound to make a confession and that, if he does so, any confession he may make may be used as evidence against him and I believe that this confession was voluntarily made. It was taken in my presence and hearing, and was read over to the person making it and admitted by him to be correct, and it contains a full and true account of the statement made by him.' (6)(a) In cases punishable under section 64, section 65, section 66, section 67, section 68, section 69, section 70, section 71, section 74, section 75, section 76, section 77, section 78 or section 79 of the Bharatiya Nyaya Sanhita, 2023, the Judicial Magistrate shall record the statement of the person against whom such offence has been committed in the manner specified in sub-section (5), as soon as the commission of the offence is brought to the notice of the police."
+  },
+  {
+    "chapter": 12,
+    "chapter_title": "Information to the Police and Their Powers to Investigate",
+    "section": "184",
+    "section_title": "Medical examination of the victim of rape",
+    "section_desc": "(1) Where, during the stage when an offence of committing rape or attempt to commit rape is under investigation, it is proposed to get the person of the woman with whom rape is alleged or attempted to have been committed or attempted, examined by a medical expert, such examination shall be conducted by a registered medical practitioner employed in a hospital run by the Government or a local authority and in the absence of such a practitioner, by any other registered medical practitioner, with the consent of such woman or of a person competent to give such consent on her behalf and such woman shall be sent to such registered medical practitioner within twenty-four hours from the time of receiving the information relating to the commission of such offence. (2) The registered medical practitioner to whom such woman is sent shall, without delay, examine her person and prepare a report of his examination giving the following particulars: (i) the name and address of the woman and of the person by whom she was brought; (ii) the age of the woman; (iii) the description of material taken from the person of the woman for DNA profiling; (iv) marks of injury, if any, on the person of the woman; (v) general mental condition of the woman; and (vi) other material particulars in reasonable detail."
+  },
+  {
+    "chapter": 12,
+    "chapter_title": "Information to the Police and Their Powers to Investigate",
+    "section": "185",
+    "section_title": "Search by police officer during investigation",
+    "section_desc": "(1) Whenever an officer in charge of a police station or a police officer making an investigation has reasonable grounds for believing that anything necessary for the purposes of an investigation into any offence which he is authorized to investigate may be found in any place within the limits of the police station of which he is in charge, or to which he is attached, and that such thing cannot in his opinion be otherwise obtained without undue delay, such officer may, after recording in writing the grounds of his belief and specifying in such writing, so far as possible, the thing for which search is to be made, search, or cause search to be made, for such thing in any place within the limits of such station. (2) A police officer proceeding under sub-section (1) shall, if practicable, conduct the search in person. (3) Copies of any record made under sub-section (1) or sub-section (3) shall immediately be sent to the nearest Magistrate empowered to take cognizance of the offence."
+  },
+  {
+    "chapter": 12,
+    "chapter_title": "Information to the Police and Their Powers to Investigate",
     "section": "187",
     "section_title": "Procedure when investigation cannot be completed in twenty-four hours (Remand & Custody)",
-    "section_desc": "(1) Whenever any person is arrested and detained in custody, and it appears that the investigation cannot be completed within the period of twenty-four hours fixed by section 58, the officer in charge of the police station shall forthwith transmit to the nearest Judicial Magistrate a copy of the entries in the diary. (2) The Magistrate may authorize the detention of the accused person in such custody as such Magistrate thinks fit, for a term not exceeding fifteen days on the whole, or in parts, at any time during the initial forty days or sixty days out of detention period of sixty days or ninety days, as the case may be: Provided that the Magistrate may authorize the detention of the accused person beyond the period of fifteen days, otherwise than in police custody, if he is satisfied that adequate grounds exist: Provided further that no Magistrate shall authorize detention in custody under this sub-section for a total period exceeding ninety days where the investigation relates to an offence punishable with death, imprisonment for life or imprisonment for a term of not less than ten years; and sixty days where the investigation relates to any other offence; and on the expiry of the said period of ninety days, or sixty days, the accused person shall be released on bail if he is prepared to and does furnish bail (Default Bail)."
+    "section_desc": "(1) Whenever any person is arrested and detained in custody, and it appears that the investigation cannot be completed within the period of twenty-four hours fixed by section 58, and there are grounds for believing that the accusation or information is well-founded, the officer in charge of the police station or the police officer making the investigation, if he is not below the rank of sub-inspector, shall forthwith transmit to the nearest Judicial Magistrate a copy of the entries in the diary hereinafter prescribed relating to the case, and shall at the same time forward the accused to such Magistrate. (2) The Magistrate to whom an accused person is forwarded under this section may, whether he has or has not jurisdiction to try the case, from time to time, authorize the detention of the accused in such custody as such Magistrate thinks fit, for a term not exceeding fifteen days in the whole, or in parts, at any time during the initial forty days or sixty days out of detention period of sixty days or ninety days, as the case may be: Provided that: (a) the Magistrate may authorize the detention of the accused person, beyond the period of fifteen days, if he is satisfied that adequate grounds exist for doing so, but no Magistrate shall authorize the detention of the accused person in custody under this paragraph for a total period exceeding: (i) ninety days, where the investigation relates to an offence punishable with death, imprisonment for life or imprisonment for a term of not less than ten years; (ii) sixty days, where the investigation relates to any other offence, and, on the expiry of the said period of ninety days, or sixty days, as the case may be, the accused person shall be released on bail if he is prepared to and does furnish bail, and every person released on bail under this sub-section shall be deemed to be so released under the provisions of Chapter XXXV for the purposes of that Chapter; (b) no Magistrate shall authorize detention of the accused in custody of the police under this section unless the accused is produced before him in person for the first time and subsequently every time till the accused remains in the custody of the police, but the Magistrate may extend further detention in judicial custody on production of the accused either in person or through the medium of electronic video linkage."
   },
   {
     "chapter": 12,
-    "chapter_title": "Information to Police and Their Powers to Investigate",
-    "section": "193",
-    "section_title": "Report of police officer on completion of investigation (Charge-sheet)",
-    "section_desc": "(1) Every investigation under this Chapter shall be completed without unnecessary delay. (2) As soon as it is completed, the officer in charge of the police station shall forward to a Magistrate empowered to take cognizance of the offence on a police report, a police report stating the names of the parties, the nature of the information, the names of persons acquainted with circumstances, whether any offence appears to have been committed and whether the accused has been arrested: Provided that the police officer shall inform the progress of investigation to the informant or the victim within ninety days by electronic communication or otherwise."
+    "chapter_title": "Information to the Police and Their Powers to Investigate",
+    "section": "190",
+    "section_title": "Cases to be sent to Magistrate, when evidence is sufficient",
+    "section_desc": "(1) If, upon an investigation under this Chapter, it appears to the officer in charge of the police station that there is sufficient evidence or reasonable ground of suspicion to justify the forwarding of the accused to a Magistrate, such officer shall forward the accused under custody to a Magistrate empowered to take cognizance of the offence upon a police report and to try the accused or commit him for trial, or, if the offence is bailable and the accused is able to give security, shall take security from him for his appearance before such Magistrate on a day fixed and for his attendance from day to day before such Magistrate until otherwise directed. (2) When the officer in charge of a police station forwards an accused person to a Magistrate or takes security for his appearance, he shall send to such Magistrate any weapon or other article which it may be necessary to produce before him."
   },
   {
-    "chapter": 31,
+    "chapter": 12,
+    "chapter_title": "Information to the Police and Their Powers to Investigate",
+    "section": "193",
+    "section_title": "Report of police officer on completion of investigation (Charge-sheet)",
+    "section_desc": "(1) Every investigation under this Chapter shall be completed without unnecessary delay. (2) The investigation in relation to an offence under sections 64, 65, 66, 67, 68, 70, 71 of the Bharatiya Nyaya Sanhita, 2023 or under sections 4, 6, 8 or 10 of the Protection of Children from Sexual Offences Act, 2012 shall be completed within two months from the date on which the information was recorded by the officer in charge of the police station. (3)(i) As soon as it is completed, the officer in charge of the police station shall forward to a Magistrate empowered to take cognizance of the offence on a police report, a report in the form as the State Government may prescribe, stating: (a) the names of the parties; (b) the nature of the information; (c) the names of the persons who appear to be acquainted with the circumstances of the case; (d) whether any offence appears to have been committed and, if so, by whom; (e) whether the accused has been arrested; (f) whether he has been released on his bond or bail bond and if so, whether with or without sureties; (g) whether he has been forwarded in custody under section 190; (h) whether the report of medical examination of the woman has been attached; (i) the sequence of custody in case of electronic device. (ii) The police officer shall also submit a report of the progress of the investigation after the expiry of every ninety days to the Informant or the victim. (iii) The police officer shall submit the report through electronic communication or in physical form. (8) Nothing in this section shall be deemed to preclude further investigation in respect of an offence after a report under sub-section (3) has been forwarded to the Magistrate and, where upon such investigation, the officer in charge of the police station obtains further evidence, oral or documentary, he shall forward to the Magistrate a further report or reports regarding such evidence in the form as the State Government may prescribe."
+  },
+  {
+    "chapter": 13,
+    "chapter_title": "Jurisdiction of the Criminal Courts in Inquiries and Trials",
+    "section": "197",
+    "section_title": "Ordinary place of inquiry and trial",
+    "section_desc": "Every offence shall ordinarily be inquired into and tried by a Court within whose local jurisdiction it was committed."
+  },
+  {
+    "chapter": 13,
+    "chapter_title": "Jurisdiction of the Criminal Courts in Inquiries and Trials",
+    "section": "203",
+    "section_title": "Offences committed by means of electronic communications, letters, etc.",
+    "section_desc": "(1) Any offence which includes cheating may, if the deception is practised by means of letters or telecommunication messages or electronic communication, be inquired into or tried by any Court within whose local jurisdiction such letters or messages were sent or were received; and any offence of dishonest misappropriation or of criminal breach of trust may be inquired into or tried by a Court within whose local jurisdiction any part of the property which is the subject of the offence was received or retained, or was required to be returned or accounted for, by the accused person."
+  },
+  {
+    "chapter": 14,
+    "chapter_title": "Conditions Requisite for Initiation of Proceedings",
+    "section": "218",
+    "section_title": "Cognizance of offences by Magistrates",
+    "section_desc": "(1) Subject to the provisions of this Chapter, any Magistrate of the first class, and any Magistrate of the second class specially empowered in this behalf under sub-section (2), may take cognizance of any offence: (a) upon receiving a complaint of facts which constitute such offence; (b) upon a police report of such facts; (c) upon information received from any person other than a police officer, or upon his own knowledge, that such offence has been committed. (2) The Chief Judicial Magistrate may empower any Magistrate of the second class to take cognizance under sub-section (1) of such offences as are within his competence to inquire into or try."
+  },
+  {
+    "chapter": 15,
+    "chapter_title": "Complaints to Magistrates",
+    "section": "223",
+    "section_title": "Examination of complainant and mandatory opportunity of hearing to accused",
+    "section_desc": "(1) A Magistrate taking cognizance of an offence on complaint shall examine upon oath the complainant and the witnesses present, if any, and the substance of such examination shall be reduced to writing and shall be signed by the complainant and the witnesses, and also by the Magistrate: Provided that no cognizance of an offence shall be taken by the Magistrate without giving the accused an opportunity of being heard: Provided further that when the complaint is made in writing, the Magistrate need not examine the complainant and the witnesses: (a) if a public servant acting or purporting to act in the discharge of his official duties or a Court has made the complaint; or (b) if the Magistrate makes over the case for inquiry or trial to another Magistrate under section 212. (2) The examination of the complainant and the witnesses under sub-section (1) may also be conducted through audio-video electronic means."
+  },
+  {
+    "chapter": 15,
+    "chapter_title": "Complaints to Magistrates",
+    "section": "227",
+    "section_title": "Dismissal of complaint",
+    "section_desc": "If, after considering the statements on oath (if any) of the complainant and of the witnesses and the result of the inquiry or investigation (if any) under section 225, the Magistrate is of opinion that there is no sufficient ground for proceeding, he shall dismiss the complaint, and in every such case he shall briefly record his reasons for so doing."
+  },
+  {
+    "chapter": 16,
+    "chapter_title": "Commencement of Proceedings Before Magistrates",
+    "section": "230",
+    "section_title": "Supply to the accused of copy of police report and other documents within fourteen days",
+    "section_desc": "In any case where the proceeding has been instituted on a police report, the Magistrate shall without delay, and in no case beyond fourteen days from the date of production or appearance of the accused, furnish to the accused and the victim (if represented by a lawyer) free of cost, a copy of each of the following: (i) the police report; (ii) the first information report recorded under section 173; (iii) the statements recorded under sub-section (3) of section 180 of all persons whom the prosecution proposes to examine as its witnesses; (iv) the confessions and statements, if any, recorded under section 183; (v) any other document or relevant extract thereof forwarded to the Magistrate with the police report under sub-section (6) of section 193: Provided that the supply of documents in electronic form shall be considered as sufficient compliance of this section."
+  },
+  {
+    "chapter": 18,
+    "chapter_title": "Trial Before a Court of Session",
+    "section": "250",
+    "section_title": "Discharge of accused in Sessions trial",
+    "section_desc": "If, upon consideration of the record of the case and the documents submitted therewith, and after hearing the submissions of the accused and the prosecution in this behalf, the Judge considers that there is not sufficient ground for proceeding against the accused, he shall discharge the accused and record his reasons for so doing."
+  },
+  {
+    "chapter": 18,
+    "chapter_title": "Trial Before a Court of Session",
+    "section": "251",
+    "section_title": "Framing of charge in Sessions trial within sixty days",
+    "section_desc": "(1) If, after such consideration and hearing as aforesaid, the Judge is of opinion that there is ground for presuming that the accused has committed an offence which: (a) is not exclusively triable by the Court of Session, he may, frame a charge against the accused and, by order, transfer the case for trial to the Chief Judicial Magistrate, or any other Judicial Magistrate of the first class and direct the accused to appear before the Chief Judicial Magistrate, or the Judicial Magistrate of the first class; (b) is exclusively triable by the Court, he shall frame in writing a charge against the accused within sixty days from the date of first hearing on charge. (2) Where the Judge frames any charge under clause (b) of sub-section (1), the charge shall be read and explained to the accused, and the accused shall be asked whether he pleads guilty of the offence charged or claims to be tried."
+  },
+  {
+    "chapter": 19,
+    "chapter_title": "Trial of Warrant-Cases by Magistrates",
+    "section": "262",
+    "section_title": "Discharge of accused in warrant case",
+    "section_desc": "If, upon considering the police report and the documents sent with it under section 193 and making such examination, if any, of the accused as the Magistrate thinks necessary and after giving the prosecution and the accused an opportunity of being heard, the Magistrate considers the charge against the accused to be groundless, he shall discharge the accused, and record his reasons for so doing."
+  },
+  {
+    "chapter": 19,
+    "chapter_title": "Trial of Warrant-Cases by Magistrates",
+    "section": "263",
+    "section_title": "Framing of charge in warrant case within sixty days",
+    "section_desc": "(1) If, upon such consideration, examination, if any, and hearing, the Magistrate is of opinion that there is ground for presuming that the accused has committed an offence triable under this Chapter, which such Magistrate is competent to try and which, in his opinion, could be adequately punished by him, he shall frame in writing a charge against the accused within sixty days from the date of first hearing on charge. (2) The charge shall then be read and explained to the accused, and he shall be asked whether he pleads guilty or has any defence to make."
+  },
+  {
+    "chapter": 20,
+    "chapter_title": "Trial of Summons-Cases by Magistrates",
+    "section": "274",
+    "section_title": "Substance of accusation to be stated",
+    "section_desc": "When in a summons-case the accused appears or is brought before the Magistrate, the particulars of the offence of which he is accused shall be stated to him, and he shall be asked whether he pleads guilty or has any defence to make, but it shall not be necessary to frame a formal charge."
+  },
+  {
+    "chapter": 21,
+    "chapter_title": "Summary Trials",
+    "section": "283",
+    "section_title": "Power to try summarily",
+    "section_desc": "(1) Notwithstanding anything contained in this Sanhita: (a) any Chief Judicial Magistrate; (b) any Magistrate of the first class specially empowered in this behalf by the High Court, may, if he thinks fit, try in a summary way all or any of the following offences: (i) offences not punishable with death, imprisonment for life or imprisonment for a term exceeding three years; (ii) theft, under section 303, section 305 or section 306 of the Bharatiya Nyaya Sanhita, 2023 where the value of the property stolen does not exceed twenty thousand rupees; (iii) receiving or retaining stolen property, under section 317 of the Bharatiya Nyaya Sanhita, 2023 where the value of the property does not exceed twenty thousand rupees; (iv) assisting in the concealment or disposal of stolen property, under section 317 of the Bharatiya Nyaya Sanhita, 2023 where the value of such property does not exceed twenty thousand rupees; (v) offences under sections 329 and 331 of the Bharatiya Nyaya Sanhita, 2023; (vi) insult with intent to provoke a breach of the peace, under section 352 of the Bharatiya Nyaya Sanhita, 2023; (vii) criminal intimidation, punishable under sub-section (2) of section 351 of the Bharatiya Nyaya Sanhita, 2023; (viii) abetment of any of the foregoing offences. (2) When, in the course of a summary trial it appears to the Magistrate that the nature of the case is such that it is undesirable to try it summarily, the Magistrate shall recall any witnesses who may have been examined and proceed to re-hear the case in the manner provided by this Sanhita."
+  },
+  {
+    "chapter": 22,
+    "chapter_title": "Plea Bargaining",
+    "section": "314",
+    "section_title": "Application of Chapter for Plea Bargaining",
+    "section_desc": "(1) This Chapter shall apply in respect of an accused against whom: (a) the report has been forwarded by the officer in charge of the police station under section 193 alleging therein that an offence appears to have been committed by him other than an offence for which the punishment of death or of imprisonment for life or of imprisonment for a term exceeding seven years has been provided under the law for the time being in force; or (b) a Magistrate has taken cognizance of an offence on complaint, other than an offence for which the punishment of death or of imprisonment for life or of imprisonment for a term exceeding seven years has been provided under the law for the time being in force, and after examining complainant and witnesses has issued process under section 227, but does not apply where such offence affects the socio-economic condition of the country or has been committed against a woman, or a child below the age of fourteen years."
+  },
+  {
+    "chapter": 22,
+    "chapter_title": "Plea Bargaining",
+    "section": "315",
+    "section_title": "Application for plea bargaining within thirty days",
+    "section_desc": "(1) A person accused of an offence may file an application for plea bargaining within a period of thirty days from the date of framing of charge in the Court in which such offence is pending for trial. (2) The application under sub-section (1) shall contain a brief description of the case relating to which the application is filed including the offence to which the case relates and shall be accompanied by an affidavit sworn by the accused stating therein that he has voluntarily preferred, after understanding the nature and extent of punishment provided under the law for the offence, the plea bargaining in his case and that he has not previously been convicted by a Court in a case in which he had been charged with the same offence."
+  },
+  {
+    "chapter": 24,
+    "chapter_title": "General Provisions as to Inquiries and Trials",
+    "section": "336",
+    "section_title": "Right of person against whom proceedings are instituted to be defended",
+    "section_desc": "Any person accused of an offence before a Criminal Court, or against whom proceedings are instituted under this Sanhita, may of right be defended by a pleader of his choice."
+  },
+  {
+    "chapter": 24,
+    "chapter_title": "General Provisions as to Inquiries and Trials",
+    "section": "349",
+    "section_title": "Power to summon material witness, or examine person present",
+    "section_desc": "Any Court may, at any stage of any inquiry, trial or other proceeding under this Sanhita, summon any person as a witness, or examine any person in attendance, though not summoned as a witness, or recall and re-examine any person already examined; and the Court shall summon and examine or recall and re-examine any such person if his evidence appears to it to be essential to the just decision of the case."
+  },
+  {
+    "chapter": 24,
     "chapter_title": "General Provisions as to Inquiries and Trials",
     "section": "356",
     "section_title": "Inquiry, trial or judgment in absentia of proclaimed offender",
-    "section_desc": "(1) When a person declared as a proclaimed offender under section 84 has absconded to evade the trial, and there is no immediate prospect of his arrest, it shall be deemed that such person has waived his right to be present at the trial, and the Court shall proceed with trial and record depositions of witnesses and pronounce judgment in the absence of such proclaimed offender: Provided that the Court shall not commence trial until the expiry of a period of ninety days from the date of framing of charge."
+    "section_desc": "(1) Notwithstanding anything contained in this Sanhita or in any other law for the time being in force, when a person declared as a proclaimed offender, whether or not the charge has been framed against him, has absconded and there is no immediate prospect of arresting him, it shall be deemed to operate as a waiver of the right of such person to be present and tried in person, and the Court may, after recording reasons in writing, proceed with the trial in the absence of such person and record the judgment. (2) The Court shall not commence the trial under sub-section (1) until the expiry of a period of ninety days from the date of the proclamation issued under sub-section (1) of section 82. (3) The Court shall appoint an advocate for the defence of the accused at the expense of the State if the accused is not represented by an advocate."
   },
   {
-    "chapter": 34,
+    "chapter": 27,
+    "chapter_title": "The Judgment",
+    "section": "392",
+    "section_title": "Language and contents of judgment within forty-five days",
+    "section_desc": "(1) The judgment in every trial in any Criminal Court of original jurisdiction shall be pronounced in open Court by the presiding officer immediately after the termination of the trial or at some subsequent time, not exceeding forty-five days, of which notice shall be given to the parties or their pleaders. (2) The presiding officer shall deliver the judgment: (a) by delivering the whole of the judgment; or (b) by reading out the whole of the judgment; or (c) by reading out the operative part of the judgment and explaining the substance of the judgment in a language which is understood by the accused or his pleader."
+  },
+  {
+    "chapter": 27,
+    "chapter_title": "The Judgment",
+    "section": "396",
+    "section_title": "Victim compensation scheme",
+    "section_desc": "(1) Every State Government in co-ordination with the Central Government shall prepare a scheme for providing funds for the purpose of compensation to the victim or his dependents who have suffered loss or injury as a result of the crime and who require rehabilitation. (2) Whenever a recommendation is made by the Court for compensation, the District Legal Services Authority or the State Legal Services Authority, as the case may be, shall decide the quantum of compensation to be awarded under the scheme referred to in sub-section (1). (3) If the trial Court, at the conclusion of the trial, is satisfied, that the compensation awarded under section 395 is not adequate for such rehabilitation, or where the cases end in acquittal or discharge and the Court recommends compensation, it may make recommendation for compensation."
+  },
+  {
+    "chapter": 29,
+    "chapter_title": "Appeals",
+    "section": "413",
+    "section_title": "Appeals from convictions",
+    "section_desc": "(1) Any person convicted on a trial held by a High Court in its extraordinary original criminal jurisdiction may appeal to the Supreme Court. (2) Any person convicted on a trial held by a Sessions Judge or an Additional Sessions Judge or on a trial held by any other Court in which a sentence of imprisonment for more than seven years has been passed against him or against any other person convicted at the same trial, may appeal to the High Court. (3) Save as otherwise provided in sub-section (2), any person: (a) convicted on a trial held by a Magistrate of the first class; or (b) sentenced under section 364, may appeal to the Court of Session."
+  },
+  {
+    "chapter": 29,
+    "chapter_title": "Appeals",
+    "section": "415",
+    "section_title": "No appeal in petty cases",
+    "section_desc": "Notwithstanding anything contained in section 413, there shall be no appeal by a convicted person in any of the following cases, namely: (a) where a High Court passes only a sentence of imprisonment for a term not exceeding six months or of fine not exceeding one thousand rupees, or of both such imprisonment and fine; (b) where a Court of Session passes only a sentence of imprisonment for a term not exceeding three months or of fine not exceeding two hundred rupees, or of both such imprisonment and fine; (c) where a Magistrate of the first class passes only a sentence of fine not exceeding one hundred rupees."
+  },
+  {
+    "chapter": 30,
+    "chapter_title": "Reference and Revision",
+    "section": "442",
+    "section_title": "Calling for records to exercise powers of revision",
+    "section_desc": "(1) The High Court or any Sessions Judge may call for and examine the record of any proceeding before any inferior Criminal Court situate within its or his local jurisdiction for the purpose of satisfying itself or himself as to the correctness, legality or propriety of any finding, sentence or order, recorded or passed, and as to the regularity of any proceedings of such inferior Court. (2) The powers of revision conferred by sub-section (1) shall not be exercised in relation to any interlocutory order passed in any appeal, inquiry, trial or other proceeding."
+  },
+  {
+    "chapter": 33,
     "chapter_title": "Provisions as to Bail and Bonds",
     "section": "478",
-    "section_title": "In what cases bail to be taken (Bailable Offences)",
-    "section_desc": "When any person other than a person accused of a non-bailable offence is arrested or detained without warrant by an officer in charge of a police station, or appears or is brought before a Court, and is prepared at any time while in the custody of such officer or at any stage of the proceedings before such Court to give bail, such person shall be released on bail: Provided that such officer or Court, if he or it thinks fit, may, and shall, if such person is an indigent person and unable to furnish surety, discharge him on his executing a bond without sureties for his appearance."
+    "section_title": "In what cases bail to be taken (Bailable offences)",
+    "section_desc": "(1) When any person other than a person accused of a non-bailable offence is arrested or detained without warrant by an officer in charge of a police station, or appears or is brought before a Court, and is prepared at any time while in the custody of such officer or at any stage of the proceeding before such Court to give bail, such person shall be released on bail: Provided that such officer or Court, if he or it thinks fit, may, and shall, if such person is indigent and is unable to furnish surety, instead of taking bail from such person, discharge him on his executing a bond without sureties for his appearance as hereinafter provided. Explanation: Where a person is unable to give bail within a week of the date of his arrest, it shall be a sufficient ground for the officer or Court to presume that he is an indigent person for the purposes of this proviso: Provided further that nothing in this section shall be deemed to affect the provisions of sub-section (3) of section 135 or section 492."
   },
   {
-    "chapter": 34,
+    "chapter": 33,
+    "chapter_title": "Provisions as to Bail and Bonds",
+    "section": "479",
+    "section_title": "Maximum period for which an undertrial prisoner can be detained (First-time offender relief)",
+    "section_desc": "(1) Where a person has, during the period of investigation, inquiry or trial under this Sanhita of an offence under any law (not being an offence for which the punishment of death or life imprisonment has been specified as one of the punishments under that law) undergone detention for a period extending up to one-half of the maximum period of imprisonment specified for that offence under that law, he shall be released by the Court on bail: Provided that where such person is a first-time offender (who has never been convicted of any offence in the past) he shall be released on bail by the Court, if he has undergone detention for the period extending up to one-third of the maximum period of imprisonment specified for such offence under that law: Provided further that the Court may, after hearing the Public Prosecutor and for reasons to be recorded by it in writing, order the continued detention of such person for a period longer than one-half of the said period or release him on bail in bond with or without sureties: Provided also that no such person shall in any case be detained during the period of investigation, inquiry or trial for more than the maximum period of imprisonment provided for the said offence under that law. (2) The Superintendent of the jail, where the accused person is detained, shall, on completion of one-half or one-third of the period of maximum imprisonment, make an application to the Court on behalf of the accused for release on bail."
+  },
+  {
+    "chapter": 33,
     "chapter_title": "Provisions as to Bail and Bonds",
     "section": "480",
-    "section_title": "When bail may be taken in case of non-bailable offence (Regular Bail)",
-    "section_desc": "(1) When any person accused of, or suspected of, the commission of any non-bailable offence is arrested or detained without warrant, he may be released on bail, but he shall not be so released if there appear reasonable grounds for believing that he has been guilty of an offence punishable with death or imprisonment for life: Provided that the Court may direct that a person referred to in clause (i) or clause (ii) be released on bail if such person is under the age of sixteen years or is a woman or is sick or infirm."
+    "section_title": "When bail may be taken in case of non-bailable offence",
+    "section_desc": "(1) When any person accused of, or suspected of, the commission of any non-bailable offence is arrested or detained without warrant by an officer in charge of a police station or appears or is brought before a Court other than the High Court or Court of Session, he may be released on bail, but: (i) such person shall not be so released if there appear reasonable grounds for believing that he has been guilty of an offence punishable with death or imprisonment for life; (ii) such person shall not be so released if such offence is a cognizable offence and he had been previously convicted of an offence punishable with death, imprisonment for life or imprisonment for seven years or more, or he had been previously convicted on two or more occasions of a cognizable offence punishable with imprisonment for three years or more but not less than seven years: Provided that the Court may direct that a person referred to in clause (i) or clause (ii) be released on bail if such person is under the age of sixteen years or is a woman or is sick or infirm: Provided further that the mere fact that an accused person may be required for being identified by witnesses during investigation shall not be sufficient ground for refusing to grant bail if he is otherwise entitled to be released on bail and gives an undertaking that he shall comply with such directions as may be given by the Court."
   },
   {
-    "chapter": 34,
+    "chapter": 33,
     "chapter_title": "Provisions as to Bail and Bonds",
     "section": "482",
     "section_title": "Direction for grant of bail to person apprehending arrest (Anticipatory Bail)",
-    "section_desc": "(1) Where any person has reason to believe that he may be arrested on accusation of having committed a non-bailable offence, he may apply to the High Court or the Court of Session for a direction under this section that in the event of such arrest he shall be released on bail; and that Court may, after taking into consideration the nature and gravity of the accusation, the antecedents of the applicant, and the possibility of the applicant to flee from justice, either reject the application forthwith or issue an interim order for the grant of anticipatory bail."
+    "section_desc": "(1) Where any person has reason to believe that he may be arrested on accusation of having committed a non-bailable offence, he may apply to the High Court or the Court of Session for a direction under this section that in the event of such arrest he shall be released on bail; and that Court may, after taking into consideration, inter alia, the following factors, namely: (i) the nature and gravity of the accusation; (ii) the antecedents of the applicant including the fact as to whether he has previously undergone imprisonment on conviction by a Court in respect of any cognizable offence; (iii) the possibility of the applicant to flee from justice; and (iv) where the accusation has been made with the object of injuring or humiliating the applicant by having him so arrested, either reject the application forthwith or issue an interim order for the grant of anticipatory bail: Provided that where the High Court or, as the case may be, the Court of Session, has not passed any interim order under this sub-section or has rejected the application for grant of anticipatory bail, it shall be open to an officer in-charge of a police station to arrest, without warrant, the applicant on the basis of the accusation apprehended in such application. (2) Where the High Court or, as the case may be, the Court of Session, grants an interim order under sub-section (1), it shall cause a notice being not less than seven days notice, together with a copy of such order to be served on the Public Prosecutor and the Superintendent of Police, with a view to give the Public Prosecutor a reasonable opportunity of being heard when the application shall be finally heard by the Court."
   },
   {
-    "chapter": 39,
-    "chapter_title": "Repeal and Savings",
+    "chapter": 33,
+    "chapter_title": "Provisions as to Bail and Bonds",
+    "section": "483",
+    "section_title": "Special powers of High Court or Court of Session regarding bail",
+    "section_desc": "(1) A High Court or Court of Session may direct: (a) that any person accused of an offence and in custody be released on bail, and if the offence is of the nature specified in sub-section (3) of section 480, may impose any condition which it considers necessary for the purposes mentioned in that sub-section; (b) that any condition imposed by a Magistrate when releasing any person on bail be set aside or modified: Provided that the High Court or the Court of Session shall, before granting bail to a person who is accused of an offence which is triable exclusively by the Court of Session or which, though not so triable, is punishable with imprisonment for life, give notice of the application for bail to the Public Prosecutor unless it is, for reasons to be recorded in writing, of opinion that it is not practicable to give such notice."
+  },
+  {
+    "chapter": 35,
+    "chapter_title": "Miscellaneous",
+    "section": "528",
+    "section_title": "Saving of inherent powers of High Court",
+    "section_desc": "Nothing in this Sanhita shall be deemed to limit or affect the inherent powers of the High Court to make such orders as may be necessary to give effect to any order under this Sanhita, or to prevent abuse of the process of any Court or otherwise to secure the ends of justice."
+  },
+  {
+    "chapter": 35,
+    "chapter_title": "Miscellaneous",
+    "section": "530",
+    "section_title": "Trial and proceedings to be held in electronic mode",
+    "section_desc": "Notwithstanding anything contained in this Sanhita, all trials, inquiries, proceedings including: (i) issuing, service and execution of summons and warrant; (ii) holding of inquiry, trial and examination of witnesses; (iii) supply of copies of police report and other documents; (iv) recording of evidence, arguments and pronouncing judgment, may be held in electronic mode, by use of electronic communication or use of audio-video electronic means."
+  },
+  {
+    "chapter": 35,
+    "chapter_title": "Miscellaneous",
     "section": "531",
     "section_title": "Repeal and savings",
-    "section_desc": "(1) The Code of Criminal Procedure, 1973 is hereby repealed. (2) Notwithstanding such repeal: (a) if, immediately before the date on which this Sanhita comes into force, there is any appeal, application, trial, inquiry or investigation pending, then, such appeal, application, trial, inquiry or investigation shall be disposed of, continued, held or made, as the case may be, in accordance with the provisions of the Code of Criminal Procedure, 1973, as in force immediately before such commencement (hereinafter referred to as the old Code), as if this Sanhita had not come into force."
+    "section_desc": "(1) The Code of Criminal Procedure, 1973 is hereby repealed. (2) Notwithstanding such repeal: (a) if, immediately before the date on which this Sanhita comes into force, there is any appeal, application, trial, inquiry or investigation pending, then, such appeal, application, trial, inquiry or investigation shall be disposed of, continued, held or made, as the case may be, in accordance with the provisions of the Code of Criminal Procedure, 1973, as in force immediately before such commencement (hereinafter referred to as the old Code), as if this Sanhita had not come into force; (b) all notifications published, proclamations issued, powers conferred, forms prescribed, local jurisdictions defined, sentences passed and orders, rules and appointments, not being appointments as Special Magistrates, made under the old Code and which are in force immediately before the commencement of this Sanhita, shall be deemed, respectively, to have been published, issued, conferred, prescribed, defined, passed or made under the corresponding provisions of this Sanhita; (c) any sanction accorded or any other action taken under the old Code, shall be deemed to have been accorded or taken under the corresponding provisions of this Sanhita."
   }
 ]
