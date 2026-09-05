@@ -229,6 +229,21 @@ def retrieve_with_hybrid_logic(payload: dict, k: int = TOP_K) -> list:
         )
         for doc, meta in zip(broad["documents"][0], broad["metadatas"][0]):
             semantic_results_raw.append((doc, meta))
+
+        # ── PARTITIONED 2024 SANHITA RETRIEVAL ──
+        # Actively retrieves 2024 Sanhitas so new criminal codes are never shadowed by CrPC/IPC
+        try:
+            sanhita_broad = collection.query(
+                query_embeddings=[query_embedding],
+                where={"act_name": {"$in": ["BNS", "BNSS", "BSA", "Constitution"]}},
+                n_results=min(6, collection_count)
+            )
+            if sanhita_broad and sanhita_broad.get("documents") and sanhita_broad["documents"][0]:
+                for doc, meta in zip(sanhita_broad["documents"][0], sanhita_broad["metadatas"][0]):
+                    semantic_results_raw.append((doc, meta))
+                print(f"[Layer 2] ⚖️ Partitioned 2024 Sanhita chunks retrieved: {len(sanhita_broad['documents'][0])}")
+        except Exception as e_sanhita:
+            pass
     except Exception as e:
         print(f"[Layer 2] ChromaDB query failed: {e}")
         return []
@@ -266,20 +281,24 @@ def retrieve_with_hybrid_logic(payload: dict, k: int = TOP_K) -> list:
 
     for doc, meta in semantic_results_raw:
         if doc not in combined:
+            act_n = meta.get("act_name") or meta.get("act_short") or meta.get("act") or ""
+            sec_n = meta.get("section_number") or meta.get("section") or ""
             combined[doc] = {
                 "content":        doc,
-                "act_name":       meta.get("act_name", ""),
-                "section_number": meta.get("section_number", ""),
+                "act_name":       act_n,
+                "section_number": sec_n,
                 "is_repealed":    meta.get("is_repealed", False),
                 "law_type":       meta.get("law_type", "Statute"),
             }
 
     for doc, meta, score in bm25_results_raw:
         if doc not in combined:
+            act_n = meta.get("act_name") or meta.get("act_short") or meta.get("act") or ""
+            sec_n = meta.get("section_number") or meta.get("section") or ""
             combined[doc] = {
                 "content":        doc,
-                "act_name":       meta.get("act_name", ""),
-                "section_number": meta.get("section_number", ""),
+                "act_name":       act_n,
+                "section_number": sec_n,
                 "is_repealed":    meta.get("is_repealed", False),
                 "law_type":       meta.get("law_type", "Statute"),
                 "bm25_score":     score,
@@ -301,23 +320,30 @@ def retrieve_with_hybrid_logic(payload: dict, k: int = TOP_K) -> list:
     # Detect primary target act mentions in query to give strong affinity
     q_lower = (semantic_query + " " + keyword_query).lower()
     
-    matched_target_act = None
-    if "negotiable" in q_lower or "cheque" in q_lower or "nia" in q_lower or "promissory" in q_lower:
-        matched_target_act = "nia"
-    elif "fir" in q_lower or "crpc" in q_lower or "bnss" in q_lower or "bail" in q_lower or "anticipatory" in q_lower:
-        matched_target_act = "crpc"
-    elif "marriage" in q_lower or "divorce" in q_lower or "hindu marriage" in q_lower or "hma" in q_lower or "restitution" in q_lower:
-        matched_target_act = "hma"
-    elif "cpc" in q_lower or "civil procedure" in q_lower or "written statement" in q_lower or "injunction" in q_lower:
-        matched_target_act = "cpc"
-    elif "motor" in q_lower or "mva" in q_lower or "vehicle" in q_lower or "traffic" in q_lower:
-        matched_target_act = "mva"
-    elif "evidence" in q_lower or "iea" in q_lower or "bsa" in q_lower or "witness" in q_lower:
-        matched_target_act = "iea"
-    elif "industrial" in q_lower or "workman" in q_lower or "ida" in q_lower or "retrenchment" in q_lower or "layoff" in q_lower:
-        matched_target_act = "ida"
-    elif "ipc" in q_lower or "penal code" in q_lower or "bns" in q_lower or "murder" in q_lower or "theft" in q_lower or "extortion" in q_lower:
-        matched_target_act = "ipc"
+    def _has_word(w, text):
+        return bool(re.search(rf"\b{re.escape(w)}\b", text, re.IGNORECASE))
+
+    matched_target_acts = []
+    if any(_has_word(w, q_lower) for w in ["negotiable", "cheque", "nia", "promissory"]):
+        matched_target_acts = ["nia"]
+    elif any(_has_word(w, q_lower) for w in ["fir", "crpc", "bnss", "bail", "anticipatory"]):
+        matched_target_acts = ["crpc", "bnss"]
+    elif any(_has_word(w, q_lower) for w in ["marriage", "divorce", "hindu marriage", "hma", "restitution"]):
+        matched_target_acts = ["hma"]
+    elif any(_has_word(w, q_lower) for w in ["cpc", "civil procedure", "written statement", "injunction"]):
+        matched_target_acts = ["cpc"]
+    elif any(_has_word(w, q_lower) for w in ["motor", "mva", "vehicle", "traffic"]):
+        matched_target_acts = ["mva"]
+    elif any(_has_word(w, q_lower) for w in ["evidence", "iea", "bsa", "witness", "certificate"]):
+        matched_target_acts = ["iea", "bsa"]
+    elif any(_has_word(w, q_lower) for w in ["industrial", "workman", "ida", "retrenchment", "layoff"]):
+        matched_target_acts = ["ida"]
+    elif any(_has_word(w, q_lower) for w in ["ipc", "penal code", "bns", "murder", "theft", "extortion", "community service"]):
+        matched_target_acts = ["ipc", "bns"]
+    elif any(_has_word(w, q_lower) for w in ["constitution", "article", "fundamental right"]):
+        matched_target_acts = ["constitution"]
+
+    is_modern_query = any(w in q_lower for w in ["today", "new law", "new", "2024", "bns", "bnss", "bsa"])
 
     boosted_ranked = []
     for score, r in zip(scores, all_results):
@@ -334,11 +360,16 @@ def retrieve_with_hybrid_logic(payload: dict, k: int = TOP_K) -> list:
                 adjusted_score += 8.0
 
         # 2. Target act affinity boost / penalty
-        if matched_target_act:
-            if matched_target_act in act:
+        if matched_target_acts:
+            act_tokens = set(re.split(r'[^a-z0-9]+', act))
+            if any(target in act_tokens or target == act for target in matched_target_acts):
                 adjusted_score += 25.0
             else:
                 adjusted_score -= 15.0  # Penalize chunks from completely unrelated acts
+
+        # 3. Modern 2024 Sanhita preference for queries with modern markers
+        if is_modern_query and any(s in act for s in ["bns", "bnss", "bsa"]):
+            adjusted_score += 10.0
 
         boosted_ranked.append((adjusted_score, r))
 

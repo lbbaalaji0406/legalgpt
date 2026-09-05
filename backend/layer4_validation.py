@@ -538,17 +538,7 @@ def enforce_legal_terminology(text: str) -> str:
         text, flags=re.IGNORECASE
     )
 
-    # 6. REPEALED LAW INLINE FIX (Avoid double-tagging)
-    repeal_map = {
-        r"\bIPC\b": "IPC (now BNS 2023)",
-        r"\bCrPC\b": "CrPC (now BNSS 2023)",
-        r"\bIndian\s+Evidence\s+Act\b": "Indian Evidence Act (now BSA 2023)"
-    }
-    for pattern, replacement in repeal_map.items():
-        # Negative lookahead to ensure we don't double-tag if already present
-        safe_pattern = f"{pattern}(?!\\s*\\(now\\s+[A-Z]+\\s+2023\\))"
-        text = re.sub(safe_pattern, replacement, text, flags=re.IGNORECASE)
-
+    # 6. REPEALED LAW INLINE FIX (Cleaned: preserves accurate natural language)
     return text
 
 
@@ -570,7 +560,11 @@ def validate_legal_response(
         critic_reward_score = 0.95
         try:
             from actor_critic import audit_and_repair_response
-            critic_result = audit_and_repair_response(generated_text, retrieved_context)
+            critic_result = audit_and_repair_response(
+                draft_text=generated_text,
+                retrieved_context=retrieved_context,
+                temporal_mode=temporal_status
+            )
             generated_text = critic_result.get("final_text", generated_text)
             critic_reward_score = critic_result.get("process_reward_score", 0.95)
             if critic_result.get("corrections_made", 0) > 0:
