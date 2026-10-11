@@ -116,24 +116,16 @@ DOCUMENT_TRIGGERS = {
 _field_llm = None
 
 def _ensure_field_llm():
-    global _field_llm
-    if _field_llm is not None:
-        return _field_llm
     try:
         from langchain_groq import ChatGroq
-        import os
-        from dotenv import load_dotenv
-        load_dotenv(os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), ".env"))
-        load_dotenv(os.path.join(os.path.dirname(os.path.abspath(__file__)), ".env"))
-        api_key = os.environ.get("GROQ_API_KEY")
-        llm = ChatGroq(
+        from key_context import get_effective_groq_key
+        api_key = get_effective_groq_key()
+        return ChatGroq(
             model=os.environ.get("GROQ_MODEL", "qwen/qwen3.8-27b"),
             groq_api_key=api_key,
             temperature=0.1,
             max_tokens=1000,
         )
-        _field_llm = llm
-        return llm
     except Exception as e:
         print(f"[InterviewState] Field LLM init failed: {e}")
         return None

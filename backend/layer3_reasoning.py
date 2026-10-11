@@ -93,16 +93,15 @@ def expand_act_name(raw_name: str) -> str:
     return ACT_NAME_MAP.get(clean, raw_name)
 
 import os
-GROQ_API_KEY = os.environ.get("GROQ_API_KEY")
+from key_context import get_effective_groq_key
 
-print(f"Connecting to Groq API ({LLM_MODEL})...")
-llm = ChatGroq(
-    model_name=LLM_MODEL,
-    api_key=GROQ_API_KEY,
-    temperature=TEMPERATURE,
-    max_tokens=2048
-)
-print("Groq LLM connected.\n")
+def get_reasoning_llm():
+    return ChatGroq(
+        model_name=LLM_MODEL,
+        api_key=get_effective_groq_key(),
+        temperature=TEMPERATURE,
+        max_tokens=2048
+    )
 
 
 # ─────────────────────────────────────────────────────────────
@@ -830,7 +829,7 @@ def generate_legal_response(
     )
 
     try:
-        chain = prompt | llm
+        chain = prompt | get_reasoning_llm()
 
         print("\n" + "=" * 40)
         print("🧠 SAULGPT IS TYPING...")
@@ -858,7 +857,7 @@ def generate_legal_response(
                 print(f"[Layer 3] Retrying generation with fallback model: {fb_model}...")
                 fb_llm = ChatGroq(
                     model_name=fb_model,
-                    api_key=GROQ_API_KEY,
+                    api_key=get_effective_groq_key(),
                     temperature=TEMPERATURE,
                     max_tokens=2048
                 )

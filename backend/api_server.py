@@ -169,6 +169,59 @@ app.add_middleware(
     allow_headers     = ["*"],
 )
 
+from key_context import set_request_groq_key, get_effective_groq_key, has_user_custom_key
+
+@app.middleware("http")
+async def byok_middleware(request: Request, call_next):
+    # Extract client key from header (case-insensitive in ASGI headers)
+    custom_key = request.headers.get("x-groq-api-key") or request.headers.get("X-Groq-Api-Key")
+    set_request_groq_key(custom_key)
+    response = await call_next(request)
+    return response
+
+class ValidateKeyRequest(BaseModel):
+    api_key: str
+
+@app.post("/api/keys/validate")
+async def validate_api_key(req: ValidateKeyRequest):
+    key = (req.api_key or "").strip()
+    if not key:
+        return {"valid": False, "error": "API key cannot be empty"}
+    if not key.startswith("gsk_"):
+        return {"valid": False, "error": "Groq API keys must begin with 'gsk_'"}
+    
+    try:
+        from groq import Groq
+        client = Groq(api_key=key, timeout=10.0)
+        models_page = client.models.list()
+        model_ids = [m.id for m in getattr(models_page, 'data', [])][:5]
+        return {
+            "valid": True,
+            "message": "Key successfully verified! Dedicated quota active.",
+            "models_available": len(getattr(models_page, 'data', [])),
+            "sample_models": model_ids
+        }
+    except Exception as e:
+        err_msg = str(e)
+        if "401" in err_msg or "Invalid API Key" in err_msg:
+            return {"valid": False, "error": "Invalid API Key. Please verify key from console.groq.com/keys"}
+        return {"valid": False, "error": f"Verification failed: {err_msg}"}
+
+@app.get("/api/keys/status")
+async def get_key_status(request: Request):
+    header_key = request.headers.get("x-groq-api-key") or request.headers.get("X-Groq-Api-Key")
+    has_custom = bool(header_key and header_key.strip().startswith("gsk_"))
+    server_has_key = bool(os.getenv("GROQ_API_KEY", "").strip())
+    masked = ""
+    if has_custom:
+        masked = header_key[:7] + "••••••••" + header_key[-4:]
+    return {
+        "using_custom_key": has_custom,
+        "masked_custom_key": masked,
+        "server_fallback_available": server_has_key,
+        "ready": has_custom or server_has_key
+    }
+
 
 # ─────────────────────────────────────────────────────────────
 # REQUEST MODELS
@@ -798,7 +851,7 @@ async def _handle_strategy_natural_query(
 
     try:
         from groq import Groq
-        groq_client = Groq(api_key=os.getenv("GROQ_API_KEY", ""))
+        groq_client = Groq(api_key=get_effective_groq_key())
         counselor_prompt = f"""You are SaulGPT, serving as Senior Legal Counsel to the client under Indian Law.
 The client has been presented with 4 strategic legal pathways, and is asking a tactical question, inquiring about costs, risks, timelines, or comparing options before deciding.
 

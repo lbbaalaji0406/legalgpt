@@ -53,18 +53,15 @@ _prompt_template = None
 
 def _ensure_llm():
     """LLM for reformulation/condensation (NOT binary gate)."""
-    global _reformulate_llm, _prompt_template
-    if _reformulate_llm is not None:
-        return _reformulate_llm, _prompt_template
     from langchain_groq import ChatGroq
     from langchain_core.prompts import PromptTemplate
-    _reformulate_llm = ChatGroq(
+    from key_context import get_effective_groq_key
+    llm = ChatGroq(
         model_name=os.environ.get("GROQ_MODEL", "qwen/qwen3.8-27b"),
-        api_key=GROQ_API_KEY,
+        api_key=get_effective_groq_key(),
         temperature=0.1
     )
-    _prompt_template = PromptTemplate
-    return _reformulate_llm, _prompt_template
+    return llm, PromptTemplate
 
 
 def _ensure_detect():

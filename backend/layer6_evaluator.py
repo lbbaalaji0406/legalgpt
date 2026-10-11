@@ -54,22 +54,24 @@ from langchain_core.prompts import PromptTemplate
 # CONFIG
 # ─────────────────────────────────────────────────────────────
 
-GROQ_API_KEY = os.environ.get("GROQ_API_KEY")
+from key_context import get_effective_groq_key
 EVAL_MODEL       = os.environ.get("EVAL_MODEL", "openai/gpt-oss-120b")
 MAX_CHUNK_CHARS  = 25000  # Evaluates up to 4,000 words in one pass without artificial splitting
 OVERLAP_CHARS    = 500    # Overlap between chunks for context continuity
 
-_primary_eval = ChatGroq(
-    model       = EVAL_MODEL,
-    api_key     = GROQ_API_KEY,
-    temperature = 0.1       # analytical — not creative
-)
-_fallback_eval = ChatGroq(
-    model       = "qwen/qwen3.8-27b",
-    api_key     = GROQ_API_KEY,
-    temperature = 0.1
-)
-eval_llm = _primary_eval.with_fallbacks([_fallback_eval])
+def get_eval_llm():
+    active_key = get_effective_groq_key()
+    primary = ChatGroq(
+        model       = EVAL_MODEL,
+        api_key     = active_key,
+        temperature = 0.1       # analytical — not creative
+    )
+    fallback = ChatGroq(
+        model       = "qwen/qwen3.8-27b",
+        api_key     = active_key,
+        temperature = 0.1
+    )
+    return primary.with_fallbacks([fallback])
 
 # ─────────────────────────────────────────────────────────────
 # TEXT EXTRACTION
@@ -320,7 +322,7 @@ def evaluate_single_chunk(text: str, chunk_num: int, total_chunks: int) -> dict:
     )
 
     try:
-        response = eval_llm.invoke(
+        response = get_eval_llm().invoke(
             EVALUATION_PROMPT.format(
                 document_text = text,
                 chunk_info    = chunk_info
@@ -367,7 +369,7 @@ def merge_chunk_results(chunk_results: list) -> dict:
     chunk_summary = json.dumps(chunk_results, indent=2)
 
     try:
-        response = eval_llm.invoke(
+        response = get_eval_llm().invoke(
             MERGE_PROMPT.format(chunk_results=chunk_summary[:8000])
         )
         raw = response.content.strip()

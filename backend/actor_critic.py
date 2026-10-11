@@ -73,10 +73,8 @@ class AdversarialCriticEngine:
 
     @classmethod
     def _get_client(cls):
-        if cls._client is None:
-            api_key = os.getenv("GROQ_API_KEY", "")
-            cls._client = Groq(api_key=api_key)
-        return cls._client
+        from key_context import get_effective_groq_key
+        return Groq(api_key=get_effective_groq_key())
 
     @classmethod
     def _normalize_span(cls, s: str) -> str:

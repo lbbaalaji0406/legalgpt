@@ -15,6 +15,7 @@ import AuthPage from "./AuthPage";
 import ConversationsSidebar from "./ConversationsSidebar";
 import TrialStudio from "./TrialStudio";
 import DecodedTermsRibbon from "./DecodedTermsRibbon";
+import ApiKeyModal from "./ApiKeyModal";
 
 
 function generateSessionId(convId = null) {
@@ -403,7 +404,18 @@ export default function App() {
   const [authLoading, setAuthLoading] = useState(false);
   const [refreshTrigger, setRefreshTrigger] = useState(0);
   const [currentView, setCurrentView] = useState("chat"); // 'chat' | 'trial_studio'
+  const [showApiKeyModal, setShowApiKeyModal] = useState(false);
+  const [rateLimitAlert, setRateLimitAlert] = useState(false);
+  const [userGroqKey, setUserGroqKey] = useState(() => localStorage.getItem("saulgpt_user_groq_key") || "");
 
+  useEffect(() => {
+    const handleRateLimit = () => {
+      setRateLimitAlert(true);
+      setShowApiKeyModal(true);
+    };
+    window.addEventListener("saulgpt-rate-limit-hit", handleRateLimit);
+    return () => window.removeEventListener("saulgpt-rate-limit-hit", handleRateLimit);
+  }, []);
 
   const bottomRef  = useRef(null);
   const inputRef   = useRef(null);
@@ -857,6 +869,16 @@ export default function App() {
               <span className="sparkle-gem">✦</span>
             </button>
 
+            <button
+              className={`api-key-header-btn ${userGroqKey ? "has-key" : ""}`}
+              onClick={() => { setShowApiKeyModal(true); setRateLimitAlert(false); }}
+              title={userGroqKey ? "Personal Groq API Key Active (Dedicated Quota)" : "Bring Your Own Key (BYOK) · Dedicated Quota"}
+            >
+              <span className="key-btn-icon">🔑</span>
+              <span className="key-btn-label">{userGroqKey ? "My Key" : "API Key"}</span>
+              <span className={`key-dot ${userGroqKey ? "active" : "fallback"}`} />
+            </button>
+
             <button className="clear-btn" onClick={clearChat}>⟳ New Matter</button>
 
 
@@ -1112,6 +1134,13 @@ export default function App() {
             setShowBenchModal(false);
             setShowEvidenceModal(true);
           }}
+        />
+
+        <ApiKeyModal
+          isOpen={showApiKeyModal}
+          onClose={() => { setShowApiKeyModal(false); setRateLimitAlert(false); }}
+          rateLimitAlert={rateLimitAlert}
+          onKeyUpdated={(newKey) => setUserGroqKey(newKey)}
         />
       </div>
     </div>

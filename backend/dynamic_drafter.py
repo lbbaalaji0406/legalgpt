@@ -50,16 +50,15 @@ from langchain_core.prompts import PromptTemplate
 # CONFIG
 # ─────────────────────────────────────────────────────────────
 
-GROQ_API_KEY = os.environ.get("GROQ_API_KEY")
-if not GROQ_API_KEY:
-    raise ValueError("GROQ_API_KEY not set in environment or .env file")
+from key_context import get_effective_groq_key
 SCOPING_MODEL = os.environ.get("GROQ_MODEL", "qwen/qwen3.8-27b")   # fast — this is a routing call
 
-scoping_llm = ChatGroq(
-    model       = SCOPING_MODEL,
-    api_key     = GROQ_API_KEY,
-    temperature = 0.1    # analytical — we want consistent JSON
-)
+def get_scoping_llm():
+    return ChatGroq(
+        model       = SCOPING_MODEL,
+        api_key     = get_effective_groq_key(),
+        temperature = 0.1    # analytical — we want consistent JSON
+    )
 
 # ─────────────────────────────────────────────────────────────
 # SCOPING PROMPT
@@ -239,7 +238,7 @@ def identify_required_fields(user_problem: str) -> dict:
     print(f"[Scoper] 🔍 Analyzing problem to generate custom fields...")
 
     try:
-        response = scoping_llm.invoke(
+        response = get_scoping_llm().invoke(
             SCOPING_PROMPT.format(user_problem=user_problem)
         )
         raw      = response.content.strip()

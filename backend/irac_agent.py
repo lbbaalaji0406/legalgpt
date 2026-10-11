@@ -30,10 +30,8 @@ class IRACAgent:
         self._groq_client = None
 
     def _get_client(self):
-        if self._groq_client is None:
-            api_key = os.getenv("GROQ_API_KEY", "")
-            self._groq_client = Groq(api_key=api_key)
-        return self._groq_client
+        from key_context import get_effective_groq_key
+        return Groq(api_key=get_effective_groq_key())
 
     def _verify_backing_precedent(self, case_name: str, citation: str, retrieved_docs: list) -> bool:
         """

@@ -11,9 +11,9 @@ import os
 from dotenv import load_dotenv
 load_dotenv(os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))), ".env"))
 
-GROQ_API_KEY = os.environ.get("GROQ_API_KEY")
-if not GROQ_API_KEY:
-    raise ValueError("GROQ_API_KEY not set. Create a .env file in the project root with GROQ_API_KEY=your_key")
+from key_context import get_effective_groq_key
+
+GROQ_API_KEY = os.environ.get("GROQ_API_KEY", "")
 
 # ============================================================
 # AVAILABLE MODELS (Active on Groq)
@@ -39,16 +39,17 @@ TRIAGE_MODEL = os.environ.get("TRIAGE_MODEL", "qwen/qwen3.8-27b")
 # ============================================================
 
 def _build_llm(primary_model: str, fallback_model: str, temperature: float, max_tokens: int):
+    active_key = get_effective_groq_key()
     primary = ChatGroq(
         model=primary_model,
-        api_key=GROQ_API_KEY,
+        api_key=active_key,
         temperature=temperature,
         max_completion_tokens=max_tokens
     )
     if primary_model != fallback_model:
         fallback = ChatGroq(
             model=fallback_model,
-            api_key=GROQ_API_KEY,
+            api_key=active_key,
             temperature=temperature,
             max_completion_tokens=max_tokens
         )

@@ -37,11 +37,11 @@ class HostileCrossExaminerAgent:
 
     @classmethod
     def _get_client(cls) -> Optional[Groq]:
-        if cls._client is None:
-            api_key = os.getenv("GROQ_API_KEY", "")
-            if api_key:
-                cls._client = Groq(api_key=api_key)
-        return cls._client
+        from key_context import get_effective_groq_key
+        api_key = get_effective_groq_key()
+        if api_key:
+            return Groq(api_key=api_key)
+        return None
 
     def _call_llm(self, system_prompt: str, user_prompt: str, max_tokens: int = 250) -> Optional[str]:
         client = self._get_client()

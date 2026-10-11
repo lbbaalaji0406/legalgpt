@@ -49,10 +49,9 @@ class EvidenceProcessor:
 
     @classmethod
     def _get_client(cls) -> Groq:
-        if cls._client is None:
-            api_key = os.getenv("GROQ_API_KEY", "")
-            cls._client = Groq(api_key=api_key)
-        return cls._client
+        from key_context import get_effective_groq_key
+        api_key = get_effective_groq_key()
+        return Groq(api_key=api_key)
 
     @classmethod
     def compute_sha256(cls, file_bytes: bytes) -> str:
