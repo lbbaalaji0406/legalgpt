@@ -22,8 +22,8 @@ When used by pipeline_orchestrator.py:
 """
 
 import re
-
 import os
+from typing import Optional, List, Dict, Tuple, Any
 from dotenv import load_dotenv
 load_dotenv(os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), ".env"))
 GROQ_API_KEY = os.environ.get("GROQ_API_KEY")
@@ -283,6 +283,83 @@ JSON:"""
 # to rewrite follow-up into complete standalone question
 # ─────────────────────────────────────────────────────────────
 
+# ─────────────────────────────────────────────────────────────
+# DOMAIN SHIFT & PERSISTENT ENTITY ROUTER
+# Prevents Over-Pruning Wipeout and Statutory Context Contamination
+# ─────────────────────────────────────────────────────────────
+
+LEGAL_DOMAINS = {
+    "taxation": [
+        "tax", "income tax", "capital gain", "capital gains", "54ec", "cgas", "assessment",
+        "gst", "tds", "exemption", "proceeds", "reinvest", "deduction", "assessee", "ltcg", "stcg"
+    ],
+    "ipr": [
+        "trademark", "trade mark", "copyright", "patent", "counterfeit", "infringement",
+        "brand name", "passing off", "piracy", "injunction", "fake parts", "ex-parte"
+    ],
+    "criminal": [
+        "fir", "police", "arrest", "bail", "theft", "murder", "bns", "ipc", "bnss",
+        "crpc", "cheating", "assault", "crime", "custody", "cognizable", "remand"
+    ],
+    "labour": [
+        "salary", "wages", "employer", "employee", "pf", "gratuity", "severance",
+        "termination", "workplace", "unpaid", "resignation"
+    ],
+    "property": [
+        "tenant", "landlord", "eviction", "rent", "property", "possession", "lease",
+        "sale deed", "mortgage", "partition", "trespass"
+    ],
+    "family": [
+        "divorce", "maintenance", "custody", "alimony", "domestic violence", "marriage",
+        "restitution", "dowry"
+    ],
+    "cheque_commercial": [
+        "cheque", "dishonour", "138", "contract", "breach", "promissory", "debt",
+        "notice period", "bank return"
+    ]
+}
+
+
+def detect_query_domain(text: str) -> Optional[str]:
+    """Detect dominant legal domain from text keywords."""
+    if not text:
+        return None
+    text_lower = text.lower()
+    best_domain = None
+    best_matches = 0
+    for domain, kws in LEGAL_DOMAINS.items():
+        matches = sum(1 for kw in kws if kw in text_lower)
+        if matches > best_matches:
+            best_matches = matches
+            best_domain = domain
+    return best_domain if best_matches >= 1 else None
+
+
+def extract_persistent_entities(history: list) -> list:
+    """
+    Extracts foundational user entities (jurisdiction, user role, party names, locations)
+    from history to PREVENT Over-Pruning Wipeout during domain shifts.
+    """
+    entities = []
+    jurisdiction_patterns = [
+        r"\b(?:in|at|near|jurisdiction of|court of|high court of)\s+([A-Z][a-zA-Z]+(?:\s+[A-Z][a-zA-Z]+)*)",
+        r"\b(Delhi|Mumbai|Bangalore|Bengaluru|Kolkata|Chennai|Hyderabad|Allahabad|Ahmedabad)\b",
+    ]
+    role_patterns = [
+        r"\b(employer|employee|claimant|petitioner|respondent|plaintiff|defendant|landlord|tenant|director|partner|purchaser|seller)\b"
+    ]
+    for turn in history:
+        q = turn.get("query", "")
+        for pat in jurisdiction_patterns:
+            for m in re.finditer(pat, q, re.IGNORECASE):
+                val = m.group(1) if m.groups() else m.group(0)
+                entities.append(f"[Jurisdiction/Location: {val.strip()}]")
+        for pat in role_patterns:
+            for m in re.finditer(pat, q, re.IGNORECASE):
+                entities.append(f"[User Role: {m.group(0).strip().title()}]")
+    return list(dict.fromkeys(entities))  # preserve order deduplication
+
+
 def condense_with_history(user_query: str, conversation_history: list) -> str:
     """
     Condenses follow-up query with conversation history
@@ -298,17 +375,26 @@ def condense_with_history(user_query: str, conversation_history: list) -> str:
 
     Returns:
         standalone condensed question ready for ChromaDB search
-
-    Example:
-        Turn 1: "My employer hasn't paid me 3 months"
-        Turn 2: "I want to drag them to court"
-        → "What is the legal procedure to file a court case
-           against an employer for 3 months of unpaid wages?"
-
-    If no history or first turn → returns original query unchanged
     """
     if not conversation_history:
         return user_query
+
+    # Detect Domain Shift (e.g. Tax -> Trademark, or Crime -> Labour)
+    current_domain = detect_query_domain(user_query)
+    prev_queries = " ".join(t.get("query", "") for t in conversation_history[-3:])
+    prev_domain = detect_query_domain(prev_queries)
+
+    is_domain_shift = current_domain and prev_domain and (current_domain != prev_domain)
+    persistent_entities = extract_persistent_entities(conversation_history)
+
+    # ANTI-TRAP GUARD: Drop statutory prior context, retain entity context
+    if is_domain_shift:
+        print(f"[Layer 1] [Domain Shift] {prev_domain} -> {current_domain}. Pruning prior statutory context while preserving foundational entities: {persistent_entities}")
+        # If query is substantial and standalone (>6 words), do NOT pollute with prior statutory history
+        if len(user_query.split()) > 6:
+            if persistent_entities:
+                return f"{user_query} ({', '.join(persistent_entities)})"
+            return user_query
 
     # Build conversation summary for LLM
     # Only use last 3 turns to keep prompt short

@@ -54,6 +54,14 @@ legal_ass/
 │   ├── interview_state.py   # Document drafting flow
 │   ├── dynamic_drafter.py   # Legal document generation
 │   ├── scrutiny_agent.py    # Contract evaluation
+│   ├── evidence_processor.py # Sec 63 BSA Digital Certs & Multimodal Audio/Cheque processor
+│   ├── infographic_generator.py # Procedural roadmap & visual flowchart synthesis
+│   ├── legal_dictionary.py  # Comprehensive Indian legal glossary
+│   ├── trial_studio/        # Adversarial Pre-Trial Studio & Precedent Intelligence
+│   │   ├── cross_examiner_agent.py
+│   │   ├── defense_fortifier_agent.py
+│   │   ├── precedent_engine.py
+│   │   └── session_manager.py
 │   ├── layer1_understanding.py
 │   ├── layer2_retrieval.py
 │   ├── layer3_reasoning.py
@@ -67,11 +75,21 @@ legal_ass/
 │   └── logs/
 ├── data/
 │   ├── raw_data/            # JSON legal acts
+│   ├── certificates/        # Generated Sec 63 BSA certificates
+│   ├── trial_studio/        # Precedent index & session persistence
 │   └── vector_db/           # ChromaDB embeddings
 ├── saulgpt-ui/              # Frontend
 │   ├── src/                 # React UI components
 │   │   ├── App.jsx         # Main app
 │   │   ├── App.css
+│   │   ├── TrialStudio.jsx # 2-Column Courtroom Chamber & Corner Coach Console
+│   │   ├── TrialStudio.css
+│   │   ├── EvidenceUploader.jsx # Sec 63 BSA uploader with 1-click sample presets
+│   │   ├── EvidenceUploader.css
+│   │   ├── DecodedTermsRibbon.jsx
+│   │   ├── LegalInfographic.jsx
+│   │   ├── ToulminMatrix.jsx
+│   │   ├── AudioPillPlayer.jsx
 │   │   ├── LegalGlossary.js
 │   │   ├── VetoCard.jsx
 │   │   ├── JurisdictionBadge.jsx

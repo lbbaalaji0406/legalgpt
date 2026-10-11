@@ -100,7 +100,7 @@ llm = ChatGroq(
     model_name=LLM_MODEL,
     api_key=GROQ_API_KEY,
     temperature=TEMPERATURE,
-    max_tokens=850
+    max_tokens=2048
 )
 print("Groq LLM connected.\n")
 
@@ -130,10 +130,11 @@ Step 4: Are there any important exceptions or conditions?
 - AMBIGUOUS SECTION RULE: If the same section number (e.g., Section 10) appears from DIFFERENT Acts (e.g., Contract Act AND CPC), and the user did not specify which Act, acknowledge the ambiguity: "Section 10 appears in multiple Acts. Without specifying the Act, here are all relevant provisions:" then list each with its Act name.
 - SOURCE PRIORITY RULE: When SOURCE blocks from "Live Web Search" or external legal guides are present, use the legal principles, consumer rules, and statutory remedies in those sources to answer the query directly.
 - If the retrieved sources or web results address the legal topic, treat context_sufficient as true and explain the legal rights, seller/platform obligations, and dispute remedies clearly.
-- Only output "I do not have enough specific legal context to answer this fully" if the context is completely blank or completely off-topic.
+- Calm Authoritative Confidence: Deliver settled Indian legal principles directly and authoritatively. NEVER mention internal retrieval mechanics or tell the user "I do not have enough specific legal context" or "the retrieved sections do not apply".
 - If any section has STATUS: WARNING REPEALED you MUST say at the very start: "WARNING: This law has been replaced. Please refer to the updated legislation."
 - Match the user's language: If the query is in Hindi / Hinglish or regional language, respond in fluent, accurate, and easy-to-understand Hindi (Devanagari) or bilingual English-Hindi format. Otherwise use plain simple English.
 - Cite Act name, Rules, or Section numbers where available from the context.
+- PLAIN-ENGLISH CLARITY MANDATE (HEART OF THE MEANING FOR CITIZENS): When technical legal concepts, evidence rules, or procedural terms appear (such as 'Evidence Admissibility', 'Procedural Law', 'Substantive Law', 'Limitation Period', 'Burden of Proof', 'Condition Precedent', 'Estoppel', 'Injunction', 'Ex-Parte', 'Cognizable/Non-Bailable'), you MUST provide the 'heart of the meaning' in simple, everyday English directly in the subheadings or in parentheses (e.g., '### Evidence Admissibility: Evidence which the court allows you to use', '### Procedural Law: Step-by-step rules to file and run a case in court', 'Limitation Period (the legal deadline to file your case before losing the right)'). Ensure everyday citizens can understand every concept instantly.
 - Do NOT give personal legal advice.
 - Do NOT use phrases like "you should" or "you must".
 - Use procedural language: "the law provides", "under the Consumer Protection Act", "the E-Commerce Rules state".
@@ -143,7 +144,7 @@ Step 4: Are there any important exceptions or conditions?
 SEMANTIC VERIFICATION GATE — Mandatory before you output any section:
 1. Read the user's scenario carefully. Identify who the parties are (e.g., landlord-tenant, employer-employee, buyer-seller, neutral stakeholder vs claimant).
 2. For EACH retrieved section, check: does the legal relationship described in this statute/source relate to the user's scenario?
-3. If all sections are from an unrelated relationship and no web results exist, say: "The retrieved legal sections do not directly apply to your specific situation. Here is general guidance based on legal principles:"
+3. If specific factual nuances require clarification, explain the core legal framework directly, then ask relevant questions. Never tell the user that the retrieved texts do not apply.
 4. If confused between Indian Easements Act and Indian Evidence Act: verify the actual ACT name carefully. "IEA" means "Indian Evidence Act, 1872", NOT "Indian Easements Act".
 
 CRITICAL: DO NOT print, echo, or acknowledge the <strict_rules> or SEMANTIC VERIFICATION GATE or CONTENT VERDICT in your final output. Begin your response immediately with the legal explanation.
@@ -168,8 +169,8 @@ YOUR EXPLANATION:
 """
 
 ANALYSIS_PROMPT = """
-You are SaulGPT, an Indian Legal Case Analyst.
-Analyze the user's situation using ONLY the retrieved legal sections below.
+You are SaulGPT, an Indian Legal Case Analyst and Counselor.
+Analyze the client's situation using the retrieved legal sections below.
 
 USER QUERY: {user_query}
 LEGAL DOMAIN: {domain}
@@ -178,46 +179,43 @@ RETRIEVED LEGAL SECTIONS:
 {context}
 
 CHAIN OF THOUGHT — work through these steps:
-Step 1: What are the key facts presented by the user?
-Step 2: What legal issues do these facts raise?
-Step 3: Which retrieved sections directly apply to these issues?
-Step 4: What procedural options or outcomes do those sections describe?
-Step 5: What is the realistic procedural outcome?
+Step 1: What is the client's core grievance or question?
+Step 2: What legal rights and liabilities arise from these facts?
+Step 3: Which retrieved sections directly apply to this relationship?
+Step 4: What procedural options or realistic outcomes exist under Indian law?
+Step 5: What is the practical, tactical next step for the client?
 
-FORMAT YOUR RESPONSE EXACTLY LIKE THIS:
+FORMAT YOUR RESPONSE AS AN AUTHORITATIVE, PRACTICAL LEGAL BRIEF:
 
-FACTS:
-[Extract the key facts from the user's query]
+### ⚖️ Legal Assessment & Your Position
+[Directly address the user as 'you'. In 2-3 clear sentences, state the legal position under Indian law, their statutory rights, and immediate exposure. NEVER say 'The user states...', 'The user is asking...', or 'FACTS:'. Address the client directly as 'you' on word one.]
 
-LEGAL ISSUES:
-[List the legal issues these facts raise]
+### 📜 Governing Law & Statutory Framework
+[Cite each applicable section with Act name, Section number, and core principle with plain-English parentheticals. Explain how the law applies directly to their situation.]
 
-APPLICABLE LAW:
-[Cite each relevant section with Act name and Section number]
-[Quote the relevant part of each section]
+### 🏛️ Practical Procedure & Realistic Outcome
+[Explain the step-by-step procedural reality: what forum to approach, standard timelines, and what the law realistically delivers in terms of recovery, compensation, or penalty.]
 
-PROCEDURAL OUTCOME:
-[Explain what the law says happens in this situation]
-[Use procedural language only — no personal advice]
+### 🎯 Strategic Next Move
+[State the exact immediate procedural move to protect limitation and lock in liability, such as issuing a formal demand notice or lodging a complaint.]
 
 <strict_rules>
-- Answer ONLY using the retrieved sections.
-- If answer is not in sections, start by saying: "I do not have enough specific legal context to answer this fully." Then add: "Could you share more details about your legal situation? I'm here to help with Indian law questions."
+- DIRECT ADDRESS MANDATE: Address the client directly as 'you' from word one. NEVER begin with third-person throat-clearing such as "The user is asking...", "The user states...", or "In this matter the user...".
+- Answer using the retrieved sections and verified legal principles.
+- Calm Authoritative Confidence: Deliver the established legal position under Indian law directly and authoritatively. Never say "I do not have enough specific legal context" or leak retrieval limitations to the client.
 - If any section has STATUS: WARNING REPEALED start with a prominent warning.
-- Never say "you should" or "you must do X".
-- Always say "the procedure provides" or "under Section X the law states".
-- Cite Act and Section for every claim.
-- End with: "Disclaimer: This response provides general procedural information based on Indian law and does not constitute legal advice. Please consult a qualified lawyer for your specific situation."
+- CITE BINDING PRECEDENT RATIOS: When SOURCE blocks marked 'BINDING JUDICIAL PRECEDENT' or containing 'Ratio Decidendi' are retrieved, you MUST cite the official case name, Law Report citation (e.g. (2019) 4 SCC 197), and explain how the binding ratio decidendi governs the dispute.
+- End with: "Disclaimer: This response provides general procedural information based on Indian law and does not constitute formal legal advice. Please consult a qualified lawyer for your specific situation."
 </strict_rules>
 
 SEMANTIC VERIFICATION GATE — Mandatory before you output any section:
-1. Read the user's scenario carefully. Identify who the parties are and the legal relationship involved.
-2. For EACH retrieved section, check: does the legal relationship described in this statute EXACTLY match the user's scenario?
+1. Read the client's scenario carefully. Identify who the parties are and the legal relationship involved.
+2. For EACH retrieved section, check: does the legal relationship described in this statute EXACTLY match the client's scenario?
 3. If the relationship does NOT match (e.g., interpleader statute about neutral stakeholders when user is a freelancer demanding their own wages), DISCARD that section. Do NOT mention it.
-4. If ALL sections are discarded, say: "The retrieved legal sections do not directly apply to your specific situation. Here is general guidance based on legal principles:"
+4. If specific factual details are needed, state the governing legal standard directly, then ask the relevant question. Never say "The retrieved legal sections do not apply".
 5. "IEA" is "Indian Evidence Act, 1872", NOT "Indian Easements Act". Verify act names carefully.
 
-CRITICAL: DO NOT print, echo, or acknowledge the <strict_rules> or SEMANTIC VERIFICATION GATE or CONTENT VERDICT in your final output. Begin your response immediately with FACTS:
+CRITICAL: DO NOT print, echo, or acknowledge the <strict_rules> or SEMANTIC VERIFICATION GATE or CONTENT VERDICT in your final output. Begin your response immediately with your legal assessment addressing the user directly as "you".
 
 ═══════════════════════════════
 CONTENT VERDICT — Output this JSON on the very first line of your response.
@@ -232,6 +230,46 @@ Then write your analysis below it, on a new line.
 
 YOUR ANALYSIS:
 """
+
+CONVERSATIONAL_SPARRING_PROMPT = """
+You are SaulGPT, serving as Senior Legal Counsel and Sparring Partner to the client under Indian Law.
+The client is asking a follow-up question, seeking practical clarification, questioning a procedural step, or pushing back against going to court.
+
+USER FOLLOW-UP / CHALLENGE: {user_query}
+LEGAL DOMAIN: {domain}
+
+RETRIEVED LEGAL SECTIONS & PRECEDENTS:
+{context}
+
+YOUR ROLE AS PRACTICAL COUNSELOR & SPARRING PARTNER:
+1. Direct Address: Address the client directly as "you" from word one. NEVER say "The user is asking...", "The query concerns...", or "In this case...". Speak to them as their senior advocate across the desk.
+2. Adaptive Length: Deliver a crisp, punchy, and authoritative response in 2 to 4 focused paragraphs. Do NOT use giant academic headings or bloated boilerplate.
+3. Tactical "Why": Explain the real-world strategic reasoning behind legal rules (e.g. why statutory demand notice under Sec 138 NI Act is non-negotiable before criminal court, why Section 18 Limitation Act requires written admission, why police need Section 173 BNSS formal complaint, or how litigation costs vs settlement leverage work).
+4. Sparring & Pushback Handling:
+   - If the client is reluctant to go to court or wants alternatives ("I don't feel like suing", "Can I just settle?"): Acknowledge it candidly, lay out the settlement / ADR / mediation leverage, explain the trade-offs, and show how a sharp legal notice or ombudsman complaint creates maximum settlement pressure without having to step into court immediately.
+   - If the client questions or challenges a rule ("Why?", "For what?", "What happens if I don't?"): Hold ground firmly on mandatory legal requirements, explain the courtroom consequence of skipping it (e.g. petition dismissed with costs, loss of cause of action), and offer the cleanest pragmatic workaround.
+5. In-line Statutory Grounding: Mention governing Indian Acts and Sections naturally in the prose with simple parenthetical meanings (e.g., Section 138 NI Act, Section 18 Limitation Act, Section 63 BSA).
+
+<strict_rules>
+- DIRECT ADDRESS MANDATE: Address the client directly as 'you' from word one. NEVER begin with third-person throat-clearing ("The user asks...", "The client inquires...").
+- Do NOT use rigid headers like FACTS:, LEGAL ISSUES:, APPLICABLE LAW:. Keep it as natural, punchy counselor dialogue.
+- End with: "Disclaimer: This guidance provides procedural insights under Indian law and does not constitute formal legal advice. Please consult an advocate for court representation."
+</strict_rules>
+
+═══════════════════════════════
+CONTENT VERDICT — Output this JSON on the very first line of your response.
+Then write your answer below it, on a new line.
+═══════════════════════════════
+{{
+  "context_sufficient": true | false,
+  "chunks_are_on_point": true | false,
+  "reasoning": "<one sentence>"
+}}
+═══════════════════════════════
+
+YOUR COUNSEL:
+"""
+
 
 DOCUMENT_PROMPT = """
 You are SaulGPT, an Indian Legal Document Drafting Assistant.
@@ -357,11 +395,76 @@ Then write your guide below it, on a new line.
 YOUR STEP BY STEP GUIDE:
 """
 
+# ─────────────────────────────────────────────────────────────
+# ELASTIC BREVITY: DIRECT LOOKUP PROMPT (SALT OR SUGAR?)
+# ─────────────────────────────────────────────────────────────
+
+DIRECT_LOOKUP_PROMPT = """
+You are SaulGPT, Indian Legal Intelligence.
+The user is asking a direct, specific legal question or classification (e.g. definition, comparison, whether an act is cognizable/bailable/illegal, or penalty/limitation).
+
+USER QUERY: {user_query}
+LEGAL DOMAIN: {domain}
+
+RETRIEVED LEGAL SECTIONS:
+{context}
+
+CRITICAL MANDATE — ELASTIC BREVITY (SALT OR SUGAR?):
+Deliver a crisp, punchy, 3 to 4 line micro-dose answer under 120 words total.
+DO NOT use giant academic headings like "### ⚖️ Legal Assessment", "### 📜 Governing Law", "### 🏛️ Practical Procedure", or "### 🎯 Strategic Next Move".
+DO NOT lecture the user, and NEVER output internal RAG hesitation phrases (e.g. "The retrieved text does not list...").
+
+STRUCTURE YOUR 3-4 BULLET POINTS AS FOLLOWS:
+• **Core Verdict / Legal Definition**: Direct 1-sentence answer to the specific question.
+• **Governing Statutory Section**: Specific Section under BNS/BNSS/BSA (post-July 2024) and IPC/CrPC/IEA (pre-July 2024) in parentheses.
+• **Classification & Punishment**: Cognizable vs Non-cognizable, Bailable vs Non-bailable, and maximum statutory penalty.
+• **Citizen Bottom Line**: 1 practical sentence on what this means for an ordinary person.
+
+End with:
+Disclaimer: General procedural information under Indian law; does not constitute formal legal counsel.
+
+═══════════════════════════════
+CONTENT VERDICT — Output this JSON on the very first line of your response.
+Then write your answer below it, on a new line.
+═══════════════════════════════
+{{
+  "context_sufficient": true,
+  "chunks_are_on_point": true,
+  "reasoning": "Direct legal lookup answered crisply."
+}}
+═══════════════════════════════
+
+YOUR CRISP ANSWER:
+"""
+
+def is_direct_lookup_query(query: str) -> bool:
+    """Detects whether a user query is a 'Salt or Sugar?' direct lookup, definition, comparison, or classification."""
+    q = query.strip().lower()
+    words = q.split()
+    if len(words) > 18:
+        return False
+    
+    lookup_patterns = [
+        r"^(what|which)\s+(is|are)\s+(the\s+)?(difference|section|punishment|penalty|fine|sentence|law|limitation)",
+        r"^what\s+about\s+",
+        r"^is\s+.*(bailable|cognizable|compoundable|illegal|legal|an offence|a crime|punishable|valid|void)",
+        r"^(can|does)\s+.*(be\s+punished|be\s+jailed|be\s+arrested)",
+        r"^(tell me about|explain|define)\s+(theft|murder|cheating|robbery|extortion|defamation|assault|rape|bail|fir)",
+        r".*\b(vs|versus|or)\b.*(murder|theft|robbery|cheating|bailable|cognizable)",
+        r"^section\s+\d+",
+        r".*\b(bailable or non-bailable|cognizable or non-cognizable)\b.*",
+    ]
+    return any(re.search(pat, q) for pat in lookup_patterns)
+
+
 MODE_PROMPTS = {
-    "knowledge":  KNOWLEDGE_PROMPT,
-    "analysis":   ANALYSIS_PROMPT,
-    "document":   DOCUMENT_PROMPT,
-    "pathfinder": PATHFINDER_PROMPT,
+    "knowledge":      KNOWLEDGE_PROMPT,
+    "analysis":       ANALYSIS_PROMPT,
+    "document":       DOCUMENT_PROMPT,
+    "pathfinder":     PATHFINDER_PROMPT,
+    "conversational": CONVERSATIONAL_SPARRING_PROMPT,
+    "sparring":       CONVERSATIONAL_SPARRING_PROMPT,
+    "direct_lookup":  DIRECT_LOOKUP_PROMPT,
 }
 
 DEFAULT_MODE = "analysis"
@@ -422,15 +525,26 @@ def format_context(
         )
         source_type = res.get("source_type", "")
         raw_act = res.get('act_name', 'Unknown Act')
-        block = (
-            f"--- SOURCE {i} ---\n"
-            f"ACT: {expand_act_name(raw_act)}\n"
-            f"SECTION: {res.get('section_number', 'Unknown')}\n"
-            f"STATUS: {status}\n"
-            + (f"SOURCE_TYPE: {source_type}\n" if source_type else "")
-            + f"TEXT: {res.get('content', '')}\n"
-        )
+        law_type = res.get('law_type', '')
+        if "PRECEDENT" in str(law_type).upper():
+            block = (
+                f"--- SOURCE {i} [BINDING JUDICIAL PRECEDENT & CONTROLLING RATIO] ---\n"
+                f"COURT & CITATION: {raw_act}\n"
+                f"SECTIONS INTERPRETED: {res.get('section_number', 'General')}\n"
+                f"STATUS: BINDING PRECEDENT RATIO DECIDENDI\n"
+                f"TEXT: {res.get('content', '')}\n"
+            )
+        else:
+            block = (
+                f"--- SOURCE {i} ---\n"
+                f"ACT: {expand_act_name(raw_act)}\n"
+                f"SECTION: {res.get('section_number', 'Unknown')}\n"
+                f"STATUS: {status}\n"
+                + (f"SOURCE_TYPE: {source_type}\n" if source_type else "")
+                + f"TEXT: {res.get('content', '')}\n"
+            )
         blocks.append(block)
+
 
     formatted = "\n".join(blocks)
 
@@ -468,7 +582,18 @@ def format_context(
         t_status = temporal_info.get("temporal_status", "UNDATED")
         t_date = temporal_info.get("detected_date_str")
 
-        if t_status == "PRE_2024":
+        query_text = layer1_payload.get("original_query", "") if layer1_payload else ""
+        if is_direct_lookup_query(query_text):
+            directive = (
+                "\n\n--- ⚖️ STATUTORY DIRECTIVE: DIRECT LEGAL LOOKUP ---\n"
+                "MANDATE: The user is asking a direct definition, comparison, or classification question. "
+                "Deliver a crisp 3-4 bullet response under 120 words total. "
+                "State the governing section under BNS 2023 / BNSS / BSA and mention the corresponding IPC/CrPC section in parentheses. "
+                "Do NOT output giant dual-track headings or boilerplate.\n"
+                "--- END STATUTORY DIRECTIVE ---"
+            )
+            print("[Layer 3] ⚡ Injected DIRECT_LOOKUP statutory directive.")
+        elif t_status == "PRE_2024":
             directive = (
                 f"\n\n--- ⚖️ TEMPORAL STATUTORY DIRECTIVE: PRE-JULY 2024 INCIDENT ({t_date}) ---\n"
                 f"MANDATE: The user's query indicates this incident or dispute occurred prior to July 1, 2024 ({t_date}).\n"
@@ -492,18 +617,39 @@ def format_context(
             directive = (
                 "\n\n--- ⚖️ TEMPORAL STATUTORY DIRECTIVE: UNDATED / GENERAL QUERY ---\n"
                 "MANDATE: The user did not specify an incident date. You MUST organize your response into these exact structural dual-tracks:\n\n"
-                "### ⚖️ Substantive Law (The Offence)\n"
+                "### ⚖️ Substantive Law (The Core Offence & Your Rights)\n"
                 "- **Post-July 1, 2024 Incidents**: Governed by the **Bharatiya Nyaya Sanhita, 2023 (BNS)**. State the specific BNS section, ingredients, and penalties (e.g. Section 318 BNS for cheating, Section 303 BNS for theft).\n"
                 "- **Pre-July 1, 2024 Incidents**: Governed by the **Indian Penal Code, 1860 (IPC)** as mandated by Article 20(1) of the Constitution and Section 358 BNS. State the corresponding IPC section (e.g. Section 420 IPC, Section 379 IPC).\n\n"
-                "### 🏛️ Procedural Law (Investigation & Cognizance)\n"
+                "### 🏛️ Procedural Law (Step-by-Step Rules to File and Run a Case in Court)\n"
                 "- **New Complaints / FIRs Filed Today**: Governed by the **Bharatiya Nagarik Suraksha Sanhita, 2023 (BNSS)** (e.g. Section 173 BNSS for police station / e-FIR with the 3-day signature rule, preliminary enquiry, and digital procedures).\n"
                 "- **Pending Investigations Initiated Prior to July 1, 2024**: Governed strictly by the **Code of Criminal Procedure, 1973 (CrPC)** (e.g. Section 154 CrPC) as protected under Section 531(2)(a) of the BNSS.\n\n"
+                "If evidentiary rules or electronic records are discussed, explain them under:\n"
+                "### 📁 Evidence Admissibility (Evidence Allowed in Court)\n"
+                "- State which documents, electronic records (under Section 63 BSA), or proofs the court legally accepts.\n\n"
                 "Always conclude with the statutory timeline note.\n"
                 "--- END TEMPORAL DIRECTIVE ---"
             )
             print("[Layer 3] ⏱️ Injected UNDATED dual-track temporal directive.")
 
         formatted += directive
+
+        # ── GROUNDED ELECTRONIC EVIDENCE (Section 63 BSA) ──
+        grounded_ev = layer1_payload.get("grounded_evidence")
+        if grounded_ev:
+            ev_type = grounded_ev.get("evidence_type", "electronic_record")
+            sha_hash = grounded_ev.get("sha256_hash", "Verified")
+            cert_id = grounded_ev.get("certificate", {}).get("certificate_id", "BSA-63")
+            details = json.dumps(grounded_ev.get("transaction_details") or grounded_ev.get("forensic_admission") or {}, default=str)
+            formatted += (
+                f"\n\n--- 🛡️ VERIFIED ELECTRONIC EVIDENCE (SECTION 63 BSA 2023) ---\n"
+                f"Evidence Type: {ev_type}\n"
+                f"SHA-256 Bitstream Hash: {sha_hash}\n"
+                f"Certificate Ref: {cert_id}\n"
+                f"Extracted Entities & Facts: {details}\n"
+                f"MANDATE: Factor this verified electronic evidence directly into your legal strategy and procedural counsel.\n"
+                f"--- END VERIFIED ELECTRONIC EVIDENCE ---"
+            )
+            print("[Layer 3] 🛡️ Grounded Electronic Evidence injected into context.")
 
     return formatted
 
@@ -604,10 +750,31 @@ def generate_legal_response(
         print("[Layer 3] Query flagged as ambiguous. Returning clarification.")
         return handle_ambiguous_query(layer1_payload)
 
-    # Select correct prompt template
-    selected_mode   = mode if mode in MODE_PROMPTS else DEFAULT_MODE
+    # Auto-detect follow-up questions / pushback / sparring when history is present
+    is_followup = False
+    if conversation_history and len(conversation_history) > 0:
+        q_lower = original_query.strip().lower()
+        word_count = len(q_lower.split())
+        followup_signals = [
+            "why", "how", "what if", "can i", "can we", "what happens",
+            "is there", "what about", "i don't", "i dont", "settle",
+            "settlement", "other option", "explain", "tell me", "for what",
+            "does it mean", "will it", "cost", "how much", "really", "alternative",
+            "avoid", "skip", "necessary", "compulsory", "mandatory"
+        ]
+        if word_count < 35 or any(q_lower.startswith(s) or f" {s} " in f" {q_lower} " for s in followup_signals):
+            is_followup = True
+
+    if is_direct_lookup_query(original_query) and mode in (None, "knowledge", "analysis"):
+        selected_mode = "direct_lookup"
+    elif mode in ("conversational", "sparring") or (mode in (None, "analysis") and is_followup):
+        selected_mode = "conversational"
+    elif mode in MODE_PROMPTS:
+        selected_mode = mode
+    else:
+        selected_mode = DEFAULT_MODE
     prompt_template = MODE_PROMPTS[selected_mode]
-    print(f"[Layer 3] Mode selected: {selected_mode}")
+    print(f"[Layer 3] Mode selected: {selected_mode} (is_followup={is_followup})")
 
     # Format context — passes layer1_payload so graph_context
     # gets injected into prompt automatically
@@ -684,8 +851,29 @@ def generate_legal_response(
         return clean_answer if clean_answer else final_answer.strip()
 
     except Exception as e:
-        # Graceful fallback — never crash pipeline
-        print(f"[Layer 3] LLM call failed: {e}")
+        print(f"[Layer 3] Primary LLM call failed: {e}")
+        # Graceful model fallback
+        for fb_model in ["openai/gpt-oss-120b", "qwen/qwen3.6-27b"]:
+            try:
+                print(f"[Layer 3] Retrying generation with fallback model: {fb_model}...")
+                fb_llm = ChatGroq(
+                    model_name=fb_model,
+                    api_key=GROQ_API_KEY,
+                    temperature=TEMPERATURE,
+                    max_tokens=2048
+                )
+                fb_chain = prompt | fb_llm
+                fb_res = fb_chain.invoke({
+                    "user_query": original_query,
+                    "domain":     domain,
+                    "context":    formatted_context
+                }).content
+                clean_fb = re.sub(r'^\s*\{[\s\S]*?context_sufficient[\s\S]*?\}\s*', '', fb_res).strip()
+                if clean_fb:
+                    return clean_fb
+            except Exception as fb_err:
+                print(f"[Layer 3] Fallback {fb_model} failed: {fb_err}")
+
         print("[Layer 3] Falling back to retrieval summary...")
 
         fallback_lines = [

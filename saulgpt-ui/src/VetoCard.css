@@ -1,4 +1,4 @@
-﻿/* ═══════════════════════════════════════════════════════
+/* ═══════════════════════════════════════════════════════
    SAULGPT — VetoCard.css
    Legal Scrutiny & Veto Alerts
    ═══════════════════════════════════════════════════════ */
@@ -165,4 +165,181 @@
   font-size: 12px;
   color: var(--ink-faint, #5A5045);
   font-style: italic;
+}
+
+/* ═══════════════════════════════════════════════════════
+   ACTOR-CRITIC DELIBERATION INSPECTOR STYLES
+   ═══════════════════════════════════════════════════════ */
+
+.veto-header-left {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.veto-header-right {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.concordance-badge {
+  font-size: 11px;
+  font-weight: 700;
+  padding: 3px 9px;
+  border-radius: 12px;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.concordance-high {
+  background: rgba(46, 204, 113, 0.15);
+  color: #2ECC71;
+  border: 1px solid rgba(46, 204, 113, 0.35);
+}
+
+.concordance-mid {
+  background: rgba(243, 156, 18, 0.15);
+  color: #F39C12;
+  border: 1px solid rgba(243, 156, 18, 0.35);
+}
+
+.concordance-low {
+  background: rgba(231, 76, 60, 0.15);
+  color: #E74C3C;
+  border: 1px solid rgba(231, 76, 60, 0.35);
+}
+
+.deliberation-container {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-top: 8px;
+  border-top: 1px solid rgba(201, 168, 76, 0.12);
+  padding-top: 12px;
+}
+
+.self-healing-banner {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: rgba(126, 184, 196, 0.12);
+  border: 1px solid rgba(126, 184, 196, 0.3);
+  border-radius: 6px;
+  padding: 8px 12px;
+  font-size: 12px;
+  color: var(--parchment, #F2E8D0);
+}
+
+.self-healing-icon {
+  font-size: 16px;
+  color: #7EB8C4;
+}
+
+.rubric-filter-tabs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-bottom: 4px;
+}
+
+.rubric-chip {
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(201, 168, 76, 0.15);
+  color: var(--ink-dim, #9A8E7A);
+  font-size: 11px;
+  padding: 4px 10px;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  text-transform: capitalize;
+}
+
+.rubric-chip:hover {
+  background: rgba(201, 168, 76, 0.1);
+  color: var(--parchment, #F2E8D0);
+}
+
+.rubric-chip.active {
+  background: rgba(201, 168, 76, 0.2);
+  border-color: var(--gold, #C9A84C);
+  color: var(--gold, #C9A84C);
+  font-weight: 600;
+}
+
+.audit-claims-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.audit-claim-item {
+  background: rgba(0, 0, 0, 0.25);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  border-radius: 6px;
+  padding: 10px 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.audit-claim-item.claim-valid {
+  border-left: 3px solid rgba(46, 204, 113, 0.6);
+}
+
+.audit-claim-item.claim-invalid {
+  border-left: 3px solid rgba(231, 76, 60, 0.7);
+}
+
+.claim-item-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.rubric-tag {
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  color: var(--gold-dim, #8A6E2E);
+  text-transform: uppercase;
+}
+
+.verdict-pill {
+  font-size: 11px;
+  font-weight: 600;
+  padding: 2px 7px;
+  border-radius: 4px;
+}
+
+.pill-pass {
+  background: rgba(46, 204, 113, 0.15);
+  color: #2ECC71;
+}
+
+.pill-rescued {
+  background: rgba(126, 184, 196, 0.2);
+  color: #7EB8C4;
+}
+
+.pill-flagged {
+  background: rgba(231, 76, 60, 0.15);
+  color: #E74C3C;
+}
+
+.claim-span-text {
+  font-size: 13px;
+  color: var(--ink, #E8DCC8);
+  line-height: 1.4;
+}
+
+.claim-grounding, .claim-reasoning {
+  font-size: 12px;
+  color: var(--ink-dim, #9A8E7A);
+  line-height: 1.35;
+}
+
+.grounding-label, .reasoning-label {
+  font-weight: 600;
+  color: var(--parchment, #F2E8D0);
 }

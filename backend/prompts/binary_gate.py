@@ -182,11 +182,11 @@ OUTPUT SCHEMA
 ═══════════════════════════════
 Return ONLY this JSON. No markdown fences. No preamble. No explanation.
 
-{
+{{
   "classification": "LEGAL" | "NON-LEGAL",
   "is_non_legal": true | false,
   "web_fallback_recommended": true | false
-}
+}}
 
 is_non_legal mirrors classification:
   classification = "NON-LEGAL" → is_non_legal: true
@@ -198,5 +198,5 @@ When classification = NON-LEGAL, always set web_fallback_recommended: false.
 ═══════════════════════════════
 QUERY TO CLASSIFY
 ═══════════════════════════════
-{{user_query}}
+{user_query}
 """

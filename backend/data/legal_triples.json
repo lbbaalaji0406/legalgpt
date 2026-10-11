@@ -1690,5 +1690,82 @@
     "tail": "Restraint_of_Trade_Agreements",
     "desc": "The statute explicitly voids agreements that restrain trade or business activities, including those imposed after the termination of employment.",
     "weight": 0.92
+  },
+  {
+    "head": "Section_54_Income_Tax_Act",
+    "relation": "grants_exemption_for",
+    "tail": "Capital_Gains_Tax",
+    "desc": "Section 54 provides an exemption from capital gains tax if the proceeds are reinvested in residential property.",
+    "weight": 0.95
+  },
+  {
+    "head": "Section_54F_Income_Tax_Act",
+    "relation": "applies_to",
+    "tail": "Non_Residential_Property",
+    "desc": "Section 54F allows exemption on capital gains from non-residential property if reinvested in residential property.",
+    "weight": 0.92
+  },
+  {
+    "head": "Section_54EC_Income_Tax_Act",
+    "relation": "requires_reinvestment_in",
+    "tail": "Specified_Bonds",
+    "desc": "Section 54EC mandates reinvestment of capital gains in specified bonds to claim tax exemption.",
+    "weight": 0.93
+  },
+  {
+    "head": "Capital_Gains_Exemption",
+    "relation": "governed_by",
+    "tail": "Income_Tax_Act_1961",
+    "desc": "The provisions for capital gains exemptions under Sections 54, 54F, and 54EC are governed by the Income Tax Act, 1961.",
+    "weight": 0.98
+  },
+  {
+    "head": "Section_54_Income_Tax_Act",
+    "relation": "imposes_cap_on",
+    "tail": "Residential_Property_Reinvestment",
+    "desc": "Section 54 limits the capital gains tax exemption for reinvestment in residential property to a maximum of ₹10 crore.",
+    "weight": 0.95
+  },
+  {
+    "head": "Section_54F_Income_Tax_Act",
+    "relation": "applies_to",
+    "tail": "Long_Term_Capital_Assets",
+    "desc": "Section 54F provides an exemption for long-term capital assets other than residential property when reinvested in residential property.",
+    "weight": 0.92
+  },
+  {
+    "head": "Section_54EC_Income_Tax_Act",
+    "relation": "requires_investment_in",
+    "tail": "Capital_Gains_Investment_Funds",
+    "desc": "Section 54EC mandates investment in specified bonds or funds with a maximum limit of ₹50 lakh to claim capital gains exemption.",
+    "weight": 0.94
+  },
+  {
+    "head": "Section_54EC_Income_Tax_Act",
+    "relation": "imposes_lock_in_period_of",
+    "tail": "Five_Years",
+    "desc": "Investments made under Section 54EC are subject to a mandatory five-year lock-in period before redemption is permitted.",
+    "weight": 0.9
+  },
+  {
+    "head": "Section_54_Income_Tax_Act",
+    "relation": "requires_reinvestment_in",
+    "tail": "Residential_Property",
+    "desc": "Section 54 mandates the reinvestment of long-term capital gains into a new residential house within two years to claim exemption, subject to a cap of ₹10 Crore.",
+    "weight": 0.95
+  },
+  {
+    "head": "Section_54EC_Income_Tax_Act",
+    "relation": "permits_investment_in",
+    "tail": "NHAI_REC_Bonds",
+    "desc": "Section 54EC allows the investment of up to ₹50 Lakh in specified bonds issued by NHAI or RECs within six months, subject to a five-year lock-in period.",
+    "weight": 0.92
+  },
+  {
+    "head": "Section_54F_Income_Tax_Act",
+    "relation": "applies_to",
+    "tail": "Non_Residential_Asset_Sale",
+    "desc": "Section 54F provides tax exemption for the sale of non-residential assets by requiring the proportional reinvestment of the net consideration into residential property.",
+    "weight": 0.9
   }
 ]

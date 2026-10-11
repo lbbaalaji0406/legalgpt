@@ -441,22 +441,7 @@ def _build_final_response(
 ) -> str:
     """
     Assembles final validated response by appending
-    all warnings and disclaimer if missing.
-
-    Warning order:
-    1. Original generated text
-    2. Repealed law warnings
-    3. Struck down warnings
-    4. Disclaimer (if missing)
-
-    Args:
-        generated_text      : original Layer 3 response
-        repealed_warnings   : list from check 3
-        struck_down_warnings: list from check 4
-        disclaimer_present  : bool from check 5
-
-    Returns:
-        complete final response string ready to show user
+    all warnings and disclaimer if missing. Idempotent against disclaimer loops.
     """
     final = generated_text.strip()
 
@@ -465,9 +450,16 @@ def _build_final_response(
     if all_warnings:
         final += "\n\n" + "\n\n".join(all_warnings)
 
-    # Inject disclaimer if missing
-    if not disclaimer_present:
+    # ANTI-TRAP GUARD: Idempotent disclaimer enforcement
+    has_disclaimer = bool(re.search(r'\bDisclaimer\s*:', final, re.IGNORECASE))
+    if not has_disclaimer:
         final += "\n\n" + DISCLAIMER_TEXT
+    else:
+        # If multiple disclaimers exist (e.g. from prompt + orchestrator), deduplicate cleanly
+        disclaimer_matches = list(re.finditer(r'\bDisclaimer\s*:.*?(?=\n\n|\Z)', final, re.IGNORECASE | re.DOTALL))
+        if len(disclaimer_matches) > 1:
+            body_clean = re.sub(r'\n*\bDisclaimer\s*:.*?(?=\n\n|\Z)', '', final, flags=re.IGNORECASE | re.DOTALL).strip()
+            final = body_clean + "\n\n" + DISCLAIMER_TEXT
 
     return final.strip()
 
@@ -538,7 +530,43 @@ def enforce_legal_terminology(text: str) -> str:
         text, flags=re.IGNORECASE
     )
 
-    # 6. REPEALED LAW INLINE FIX (Cleaned: preserves accurate natural language)
+    # 6. PLAIN-ENGLISH CLARITY ENHANCEMENT FOR CITIZENS (Heart of the Meaning)
+    # Automatically clarifies complex procedural or evidentiary terms in headings/bullets
+    terms_map = {
+        r"evidence admissibility": "Evidence which the court allows you to use",
+        r"admissibility of evidence": "Whether the court permits this evidence to be presented",
+        r"procedural law": "Step-by-step rules to file and run a case in court",
+        r"substantive law": "The core offence and your legal rights",
+        r"limitation period": "The legal deadline to file your case before losing the right",
+        r"period of limitation": "The legal deadline to file your case before losing the right",
+        r"burden of proof": "Who must prove the facts to the court",
+        r"condition precedent": "A mandatory first step required before taking legal action",
+        r"estoppel": "Being legally stopped from going back on your word",
+        r"ex-parte(?:\s+ad-interim)?\s+injunction": "Emergency freeze order issued before hearing the other party",
+        r"ad-interim injunction": "Temporary freeze order until the next court hearing",
+        r"injunction": "A court order stopping someone from doing an unlawful act",
+        r"cognizable off(?:ence|ense)": "A serious crime where police can arrest without warrant",
+        r"non-bailable off(?:ence|ense)": "An offence where bail is not automatic, court decides",
+        r"quashing of fir": "Canceling a police complaint through the High Court",
+        r"locus standi": "Your legal right to bring this case to court",
+    }
+
+    for pattern, explanation in terms_map.items():
+        # Match headings without existing parens
+        h_pattern = rf"^(#{{2,4}}\s*[^a-zA-Z\n]*\b{pattern})\s*$"
+        text = re.sub(h_pattern, lambda m: f"{m.group(1)} ({explanation})", text, flags=re.IGNORECASE | re.MULTILINE)
+        
+        # Match headings ending in colon
+        h_colon_pattern = rf"^(#{{2,4}}\s*[^a-zA-Z\n]*\b{pattern})\s*:\s*$"
+        text = re.sub(h_colon_pattern, lambda m: f"{m.group(1)} ({explanation}):", text, flags=re.IGNORECASE | re.MULTILINE)
+
+        # Match bold lead-ins e.g. **Evidence Admissibility:**
+        bold_pattern1 = rf"(\*\*(?:[^\w\s\n]*\s*)?{pattern})\s*:\*\*"
+        text = re.sub(bold_pattern1, lambda m: f"{m.group(1)} ({explanation}):**", text, flags=re.IGNORECASE)
+        # Match bold lead-ins e.g. **Evidence Admissibility**:
+        bold_pattern2 = rf"(\*\*(?:[^\w\s\n]*\s*)?{pattern}\*\*)\s*:"
+        text = re.sub(bold_pattern2, lambda m: f"{m.group(1)} ({explanation}):", text, flags=re.IGNORECASE)
+
     return text
 
 
@@ -556,8 +584,8 @@ def validate_legal_response(
     Runs all 5 checks and returns complete validation result.
     """
     try:
-        # ── Check 0: Adversarial Actor-Critic Audit & Surgical Span Repair (FG-PRM) ──
         critic_reward_score = 0.95
+        critic_deliberation = None
         try:
             from actor_critic import audit_and_repair_response
             critic_result = audit_and_repair_response(
@@ -567,8 +595,9 @@ def validate_legal_response(
             )
             generated_text = critic_result.get("final_text", generated_text)
             critic_reward_score = critic_result.get("process_reward_score", 0.95)
+            critic_deliberation = critic_result.get("sanitized_deliberation")
             if critic_result.get("corrections_made", 0) > 0:
-                print(f"[Layer 4] 🛠️ Applied {critic_result['corrections_made']} fine-grained self-correction(s).")
+                print(f"[Layer 4] Applied {critic_result['corrections_made']} fine-grained self-correction(s).")
         except Exception as e:
             print(f"[Layer 4] Actor-Critic audit skipped (safe fallback): {e}")
 
@@ -608,7 +637,7 @@ def validate_legal_response(
         )
 
         # Check 5 — Disclaimer enforcer
-        disclaimer_present = DISCLAIMER_TEXT in generated_text
+        disclaimer_present = bool(re.search(r'\bDisclaimer\s*:', generated_text, re.IGNORECASE))
 
         # First, enforce terminology on the generated text itself
         enforced_generated_text = enforce_legal_terminology(generated_text)
@@ -625,6 +654,7 @@ def validate_legal_response(
             "is_hallucinating":     is_hallucinating,
             "confidence_score":     unified_confidence,
             "critic_reward_score":  critic_reward_score,
+            "critic_deliberation":  critic_deliberation,
             "flagged_citations":    flagged_citations,
             "repealed_warnings":    repealed_warnings,
             "struck_down_warnings": struck_down_warnings,
@@ -635,7 +665,7 @@ def validate_legal_response(
     except Exception as e:
         # Graceful fallback — never crash pipeline
         print(f"[Layer 4] Validation error: {e}")
-        disclaimer_present = DISCLAIMER_TEXT in generated_text
+        disclaimer_present = bool(re.search(r'\bDisclaimer\s*:', generated_text, re.IGNORECASE))
         final_response     = generated_text.strip()
         if not disclaimer_present:
             final_response += "\n\n" + DISCLAIMER_TEXT

@@ -26,11 +26,11 @@ from dotenv import load_dotenv
 load_dotenv(os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", ".env"))
 load_dotenv(os.path.join(os.path.dirname(os.path.abspath(__file__)), ".env"))
 
-from fastapi import FastAPI, HTTPException, UploadFile, File, Header, Depends, Request
-from typing import Annotated
+from fastapi import FastAPI, HTTPException, UploadFile, File, Header, Depends, Request, Form
+from fastapi.responses import Response, FileResponse
+from typing import Annotated, Optional, Dict, Any, List
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
-from typing import Optional
 import os
 import traceback
 import uvicorn
@@ -60,6 +60,7 @@ SESSION_DOCUMENTS: dict[str, bytes] = {}
 
 # Track active conversation per user session (user_id → conv_id or session_id → conv_id)
 ACTIVE_CONVERSATIONS: dict[str, int] = {}
+SESSION_LEGAL_CONTEXT: dict[str, dict] = {}
 
 # NEW: Agents import (for testing)
 try:
@@ -109,8 +110,46 @@ except Exception as e:
     print(f"[WARNING] IRAC agent not available: {e}")
     IRAC_AVAILABLE = False
 
+try:
+    from evidence_processor import EvidenceProcessor, CERT_DIR
+    EVIDENCE_PROCESSOR_AVAILABLE = True
+except Exception as e:
+    print(f"[WARNING] EvidenceProcessor not available: {e}")
+    EVIDENCE_PROCESSOR_AVAILABLE = False
+
+try:
+    from virtual_bench import VirtualBenchEngine
+    BENCH_AVAILABLE = True
+except Exception as e:
+    print(f"[WARNING] VirtualBench not available: {e}")
+    BENCH_AVAILABLE = False
+
+try:
+    from infographic_generator import extract_oral_briefing, detect_and_build_infographic
+    INFOGRAPHIC_AVAILABLE = True
+except Exception as e:
+    print(f"[WARNING] Infographic generator not available: {e}")
+    INFOGRAPHIC_AVAILABLE = False
+
 # Pre-initialize triage agent
 _triage_agent = TriageAgent() if TRIAGE_AVAILABLE else None
+
+try:
+    from trial_studio import (
+        PrecedentEngine,
+        get_precedent_engine,
+        HostileCrossExaminerAgent,
+        DefenseStrategistAgent,
+        TrialStudioStartRequest,
+        TrialStudioTurnRequest,
+        TrialStudioConcludeRequest,
+        AdversarialTurnResponse
+    )
+    TRIAL_STUDIO_AVAILABLE = True
+except Exception as e:
+    print(f"[WARNING] TrialStudio not available: {e}")
+    TRIAL_STUDIO_AVAILABLE = False
+
 
 # ─────────────────────────────────────────────────────────────
 # APP INIT
@@ -136,10 +175,14 @@ app.add_middleware(
 # ─────────────────────────────────────────────────────────────
 
 class QueryRequest(BaseModel):
-    query:       str
+    query:       Optional[str] = None
+    message:     Optional[str] = None
     session_id:  str           = "web_session_1"
     mode:        Optional[str] = None
     conv_id:     Optional[int] = None
+
+    def get_query_text(self) -> str:
+        return (self.query or self.message or "").strip()
 
 
 class AuthRequest(BaseModel):
@@ -153,6 +196,13 @@ class AuthResponse(BaseModel):
     user_id:  int
     email:    str
     username: str
+
+
+class BenchRequest(BaseModel):
+    matter:            str
+    statutory_context: Optional[str] = None
+    evidence_data:     Optional[Dict[str, Any]] = None
+    target_role:       Optional[str] = "adverse_witness"
 
 
 # ─────────────────────────────────────────────────────────────
@@ -295,6 +345,10 @@ def _normalize_agent_response(result: dict, query: str = "", mode: str = None, s
         "case_law_found":       result.get("case_law_found", False),
         "is_hallucinating":     result.get("is_hallucinating", False),
         "confidence_score":     result.get("confidence_score", 0.85),
+        "critic_reward_score":  result.get("critic_reward_score", 0.95),
+        "critic_deliberation":  result.get("critic_deliberation"),
+        "oral_briefing":        result.get("oral_briefing", ""),
+        "infographic_data":     result.get("infographic_data"),
         "flagged_citations":    result.get("flagged_citations", []),
         "repealed_warnings":    result.get("repealed_warnings", []),
         "struck_down_warnings": result.get("struck_down_warnings", []),
@@ -304,6 +358,12 @@ def _normalize_agent_response(result: dict, query: str = "", mode: str = None, s
     raw_resp = result.get("response", "No response generated.")
     cleaned_resp = re.sub(r'^\s*\{[\s\S]*?context_sufficient[\s\S]*?\}\s*', '', raw_resp).strip()
     defaults["response"] = cleaned_resp if cleaned_resp else raw_resp
+
+    if INFOGRAPHIC_AVAILABLE:
+        if not defaults.get("oral_briefing"):
+            defaults["oral_briefing"] = extract_oral_briefing(defaults["response"])
+        if not defaults.get("infographic_data"):
+            defaults["infographic_data"] = detect_and_build_infographic(query, defaults["response"])
 
     # Populate frontend widget fields from triage state
     if session_id:
@@ -561,35 +621,240 @@ def _is_rejection(query: str) -> bool:
 
 def _resolve_triage_choice(query: str, options: list = None) -> Optional[str]:
     """
-    Check if user's query matches a triage option label, title, or id.
-    Returns the option id if matched, None otherwise.
+    Direct selection resolver for UI buttons, single-token numbers/letters, or explicit imperative commands.
+    Strictly does NOT match questions, comparisons, or inquiries!
     """
     q = query.strip().lower()
+
+    # If it contains question marks or inquiry interrogatives, it is NOT direct selection
+    inquiry_starters = ("why", "how", "what", "can i", "can we", "is there", "which", "is option", "is path", "tell me", "explain", "compare", "cost", "risk")
+    if "?" in q or any(q.startswith(s) for s in inquiry_starters):
+        return None
+
+    # Check exact option match from options list
     if options:
         for opt in options:
             opt_id = opt.get("id", "").lower()
             opt_label = opt.get("label", "").lower()
             opt_title = opt.get("title", "").lower()
-            if q == opt_id or (opt_id and opt_id in q):
+            if q == opt_id:
                 return opt.get("id")
-            if opt_label and (q == opt_label or q in opt_label or opt_label in q):
+            if opt_label and q == opt_label:
                 return opt.get("id")
-            if opt_title and (q == opt_title or q in opt_title or opt_title in q):
+            if opt_title and q == opt_title:
                 return opt.get("id")
 
-    # Match path A / Notice / Option 1
-    if re.search(r'\b(path\s*a|path_a|option\s*1)\b', q) or (q in ("1", "a", "path a", "option 1")) or "legal notice" in q or "draft notice" in q or "issue notice" in q or "issue legal notice" in q:
+    # Match single numbers or single letters or simple direct path names
+    if q in ("1", "a", "path 1", "path a", "path_a", "option 1", "option a", "opt 1", "opt a", "choice 1", "choice a"):
         return "path_a"
-    # Match path B / Lawsuit / Labour Commissioner / Court / Option 2
-    if re.search(r'\b(path\s*b|path_b|option\s*2)\b', q) or (q in ("2", "b", "path b", "option 2")) or "labour commissioner" in q or "labor commissioner" in q or "lawsuit" in q or "court" in q or "sue" in q:
+    if q in ("2", "b", "path 2", "path b", "path_b", "option 2", "option b", "opt 2", "opt b", "choice 2", "choice b"):
         return "path_b"
-    # Match path C / Summary Suit / Regulatory / Police / Option 3
-    if re.search(r'\b(path\s*c|path_c|option\s*3)\b', q) or (q in ("3", "c", "path c", "option 3")) or "summary suit" in q or "order 37" in q or "police" in q or "complaint" in q:
+    if q in ("3", "c", "path 3", "path c", "path_c", "option 3", "option c", "opt 3", "opt c", "choice 3", "choice c"):
         return "path_c"
-    # Match path D / Mediation / Settlement / Option 4
-    if re.search(r'\b(path\s*d|path_d|option\s*4)\b', q) or (q in ("4", "d", "path d", "option 4")) or "mediation" in q or "settle" in q or "settlement" in q:
+    if q in ("4", "d", "path 4", "path d", "path_d", "option 4", "option d", "opt 4", "opt d", "choice 4", "choice d"):
         return "path_d"
+
+    # Match imperative selection phrases only (e.g. "select option 1", "choose path b", "let's go with option 2")
+    for prefix in ("select ", "choose ", "go with ", "i choose ", "i pick ", "proceed with ", "start with ", "let's do "):
+        if q.startswith(prefix):
+            tail = q[len(prefix):].strip()
+            if tail in ("1", "a", "path 1", "path a", "path_a", "option 1", "option a", "opt 1", "opt a"):
+                return "path_a"
+            if tail in ("2", "b", "path 2", "path b", "path_b", "option 2", "option b", "opt 2", "opt b"):
+                return "path_b"
+            if tail in ("3", "c", "path 3", "path c", "path_c", "option 3", "option c", "opt 3", "opt c"):
+                return "path_c"
+            if tail in ("4", "d", "path 4", "path d", "path_d", "option 4", "option d", "opt 4", "opt d"):
+                return "path_d"
+            if options:
+                for opt in options:
+                    if tail == opt.get("id", "").lower() or tail == opt.get("label", "").lower() or tail == opt.get("title", "").lower():
+                        return opt.get("id")
+
     return None
+
+
+def _is_requesting_alternatives(query: str) -> bool:
+    """Check if the user is asking for alternative options beyond the 4 shown."""
+    q = query.strip().lower()
+    # If the user is asking specifically about an existing option, it is an option inquiry, not a request for new alternatives
+    if any(opt_ref in q for opt_ref in ["option 1", "option 2", "option 3", "option 4", "path a", "path b", "path c", "path d", "opt 1", "opt 2", "opt 3", "opt 4"]):
+        return False
+
+    alt_signals = [
+        "other option", "other options", "another option", "different option", "different way",
+        "anything else", "what else", "another way", "alternative", "alternatives",
+        "can we do something else", "none of these", "not satisfied", "what other",
+        "more options", "any other way", "is there something else", "outside court", "without court",
+        "other choices", "other paths", "can we do other", "out of court", "settle", "settlement",
+        "mediation", "negotiate", "ombudsman", "lok adalat", "amicable", "without litigation", "avoid court"
+    ]
+    return any(s in q for s in alt_signals)
+
+
+def _is_advocate_mode_request(query: str) -> bool:
+    """Strictly checks if user is explicitly commanding to enter Advocate / IRAC mode."""
+    clean_q = re.sub(r'[^\w\s]', '', query.strip().lower()).strip()
+    return clean_q in (
+        "advocate", "advocate mode", "irac", "irac mode", "deep legal analysis",
+        "switch to advocate", "switch to advocate mode", "start advocate mode",
+        "enter advocate mode", "open advocate mode"
+    ) or bool(re.match(r'^(?:switch\s+to\s+|enter\s+|start\s+)?(?:advocate\s+mode|irac(?:\s+mode)?|deep\s+legal\s+analysis)$', clean_q))
+
+
+async def _handle_strategy_natural_query(
+    query: str,
+    session_id: str,
+    triage_state: dict,
+    user_id,
+    conv_id,
+    state,
+    request
+) -> dict:
+    """
+    Seamlessly handles questions, comparisons, and requests for alternative options
+    after the 4 strategic options are presented, without brittle regex misclassification.
+    """
+    substantive_q = _resolve_substantive_session_query(session_id, triage_state, query, conv_id) or query
+    options = triage_state.get("options_shown", [])
+
+    # Case 1: User asks for other options / alternatives
+    if _is_requesting_alternatives(query):
+        print(f"[Strategy] User requested alternative options for session {session_id}.")
+        alternative_options = [
+            {
+                "id": "path_alt_1",
+                "label": "Pre-Institution Mediation & Conciliation",
+                "title": "Pre-Institution Mediation & Conciliation",
+                "description": "Engage a trained neutral mediator under the Commercial Courts Act or Legal Services Authorities Act. Completely confidential, cost-effective, and maintains business relationships.",
+                "pros": ["Zero court fee", "Completely confidential", "Fast-track resolution (usually 30-60 days)"],
+                "cons": ["Requires mutual consent to participate"],
+                "route_to": "pathfinder"
+            },
+            {
+                "id": "path_alt_2",
+                "label": "Statutory Ombudsman / Consumer Helpline (NCH)",
+                "title": "Statutory Ombudsman / Regulatory Redressal",
+                "description": "Lodge an online complaint before the statutory Ombudsman (RBI Ombudsman for finance, Insurance Ombudsman, or National Consumer Helpline 1915).",
+                "pros": ["Completely free to file online", "Statutory power to penalize companies", "High compliance rate"],
+                "cons": ["Limited to recognized regulated entities"],
+                "route_to": "pathfinder"
+            },
+            {
+                "id": "path_alt_3",
+                "label": "Formal Demand & Structured Settlement Table",
+                "title": "Formal Demand & Settlement Table",
+                "description": "Issue an advocate demand notice with an explicit 7-day settlement window offering structured installment terms or mutual release before escalating.",
+                "pros": ["Strong legal leverage without litigation costs", "High settlement success rate"],
+                "cons": ["Depends on debtor's willingness to avoid trial"],
+                "route_to": "document"
+            },
+            {
+                "id": "path_alt_4",
+                "label": "Lok Adalat Fast-Track Amicable Settlement",
+                "title": "National Lok Adalat Amicable Disposal",
+                "description": "Refer the dispute to National Lok Adalat (organized by NALSA/DLSA). The award is deemed a civil court decree with finality, and court fees (if paid) are 100% refunded.",
+                "pros": ["Zero or 100% refunded court fees", "Decree is final and non-appealable", "Same-day amicable settlement"],
+                "cons": ["Cannot force unwilling party if absent"],
+                "route_to": "pathfinder"
+            }
+        ]
+
+        triage_state["options_shown"] = alternative_options
+        resp_text = (
+            "I completely understand if the standard formal routes feel too cumbersome or aggressive. "
+            "Under Indian law, you have proven non-litigious and Alternative Dispute Resolution (ADR) pathways that "
+            "save time and court fees while maintaining legal pressure:\n\n"
+            "Here are **4 practical alternative pathways** tailored to your situation. Let me know which one you'd like to explore:"
+        )
+
+        triage_state["options_shown"] = alternative_options
+        triage_state["current_mode"] = "strategy"
+        if session_id in SESSION_LEGAL_CONTEXT:
+            SESSION_LEGAL_CONTEXT[session_id]["options_shown"] = alternative_options
+
+        resp = {
+            "response": resp_text,
+            "mode_used": "strategy",
+            "status": "triage",
+            "session_id": session_id,
+            "interview_active": False,
+            "triage": {
+                "swot_analysis": triage_state.get("swot_analysis"),
+                "options": alternative_options,
+                "allow_explanation": True,
+                "is_explanation": True,
+                "is_intake_needed": False
+            }
+        }
+        _populate_frontend_widgets(resp, session_id)
+        return _save_and_return(resp, user_id, conv_id)
+
+    # Case 2: User asks a specific question about an option, asks for comparison, costs, or risks
+    print(f"[Strategy] User asked follow-up / comparison question about options: '{query}'")
+    options_summary = ""
+    for opt in options:
+        options_summary += f"- {opt.get('title', opt.get('label', 'Option'))}: {opt.get('description', '')}\n"
+
+    try:
+        from groq import Groq
+        groq_client = Groq(api_key=os.getenv("GROQ_API_KEY", ""))
+        counselor_prompt = f"""You are SaulGPT, serving as Senior Legal Counsel to the client under Indian Law.
+The client has been presented with 4 strategic legal pathways, and is asking a tactical question, inquiring about costs, risks, timelines, or comparing options before deciding.
+
+CLIENT'S DISPUTE:
+{substantive_q}
+
+STRATEGIC OPTIONS CURRENTLY PRESENTED:
+{options_summary}
+
+CLIENT'S QUESTION / INQUIRY:
+"{query}"
+
+INSTRUCTIONS:
+1. Address the client directly as "you" from word one. NEVER say "The user asks...", "The query inquires...", or "In this case...". Speak as their senior advocate across the table.
+2. Answer their question directly and authoritatively in 2 to 3 crisp paragraphs.
+3. If they ask about costs/fees: Explain realistic Indian court fee calculation (ad valorem percentage on claim amount), advocate notice charges, or ADR cost savings.
+4. If they ask about risks/timelines: Explain realistic timelines (e.g. summary suits 6-12 months, standard suits 2-4 years, legal notice 15 days) and procedural hurdles.
+5. If they ask for your recommendation: Give candid tactical advice on which option gives maximum settlement leverage with minimum outlay.
+6. Conclude by encouraging them to select any of the options above, or ask any other questions.
+"""
+        counselor_res = groq_client.chat.completions.create(
+            model=os.getenv("GROQ_MODEL", "qwen/qwen3.8-27b"),
+            messages=[{"role": "user", "content": counselor_prompt}],
+            temperature=0.2,
+            max_tokens=900
+        )
+        answer_text = counselor_res.choices[0].message.content.strip()
+    except Exception as err:
+        print(f"[Strategy] Counselor LLM error: {err}")
+        answer_text = (
+            f"Regarding your question about **{query}**:\n\n"
+            "Each option carries distinct procedural timelines and cost implications. "
+            "A formal Legal Notice (Option 1) is typically the fastest and lowest-cost move (usually 15 days for compliance), "
+            "often prompting settlement before formal court proceedings. In contrast, instituting a court lawsuit involves ad valorem "
+            "court fees based on your claim amount and procedural timelines under the CPC, but creates judicial decree enforcement power.\n\n"
+            "Whenever you are ready, you can select any option above, or ask me for more details."
+        )
+
+    triage_state["current_mode"] = "strategy"
+    resp = {
+        "response": answer_text,
+        "mode_used": "strategy",
+        "status": "triage",
+        "session_id": session_id,
+        "interview_active": False,
+        "triage": {
+            "swot_analysis": triage_state.get("swot_analysis"),
+            "options": options,
+            "allow_explanation": True,
+            "is_explanation": True,
+            "is_intake_needed": False
+        }
+    }
+    _populate_frontend_widgets(resp, session_id)
+    return _save_and_return(resp, user_id, conv_id)
+
 
 
 def _maybe_offer_voluntary_intake(resp: dict, triage_state: dict, triage_result: dict) -> dict:
@@ -631,6 +896,128 @@ def _interview_response(state, response_text):
     }
 
 
+_CONTROL_PATTERNS = [
+    r'^(?:⚖\s*)?advocate(?:\s+mode)?$',
+    r'^irac(?:\s+(?:mode|analysis))?$',
+    r'^deep\s+legal(?:\s+analysis)?$',
+    r'^path_[a-d]$',
+    r'^option\s*[1-4]$',
+    r'^(?:yes|no|y|n|ok|okay|proceed|cancel|continue|skip)$',
+    r'^\d{1,8}$',
+    r'^\d{1,4}[-/\.]\d{1,2}[-/\.]\d{1,4}$',
+]
+
+def _is_control_phrase(text: str) -> bool:
+    if not text:
+        return True
+    t = text.strip().lower()
+    if len(t) < 3:
+        return True
+    for p in _CONTROL_PATTERNS:
+        if re.match(p, t, re.IGNORECASE):
+            return True
+    return False
+
+
+def _clean_substantive_query(text: str) -> str:
+    """
+    Strips internal pipeline prompt wrappers, synthetic roadmap requests,
+    and control text from query candidates to prevent prompt leakage.
+    """
+    if not text:
+        return ""
+    t = text.strip()
+    # If wrapped in 'Client Grievance: ... \nChosen Legal Action:', extract just the client grievance
+    m = re.search(r'Client Grievance:\s*(.*?)(?:\n\s*Chosen Legal Action:|\n\s*Provide a comprehensive|\Z)', t, re.DOTALL | re.IGNORECASE)
+    if m and m.group(1).strip():
+        t = m.group(1).strip()
+    # Strip any synthetic roadmap instructions
+    t = re.sub(r'Provide a comprehensive.*?(?=\n\n|\Z)', '', t, flags=re.DOTALL | re.IGNORECASE)
+    t = re.sub(r'Chosen Legal Action:\s*\w+', '', t, flags=re.IGNORECASE)
+    t = re.sub(r'Additional Details / Facts:\s*', '', t, flags=re.IGNORECASE)
+    t = re.sub(r'^(?:Subject|Re|Regarding|Query):\s*', '', t, flags=re.IGNORECASE)
+    return t.strip()
+
+
+def _resolve_substantive_session_query(
+    session_id: str,
+    triage_state: dict = None,
+    default_query: str = "",
+    conv_id: Optional[int] = None
+) -> Optional[str]:
+    """
+    Resiliently resolves the user's substantive legal dispute statement across turns.
+    Prevents commands like 'advocate', 'path_a', 'yes', or short form numbers from becoming
+    the search query for IRAC, Document Generation, or Procedural Roadmaps.
+    """
+    candidates = []
+
+    def _add_cand(raw: str):
+        cleaned = _clean_substantive_query(raw)
+        if cleaned and not _is_control_phrase(cleaned) and len(cleaned) >= 10:
+            if cleaned not in candidates:
+                candidates.append(cleaned)
+
+    # 1. Check persistent SESSION_LEGAL_CONTEXT
+    ctx = SESSION_LEGAL_CONTEXT.get(session_id, {})
+    if ctx.get("substantive_queries"):
+        for q in reversed(ctx["substantive_queries"]):
+            _add_cand(q)
+        if ctx.get("original_query"):
+            _add_cand(ctx["original_query"])
+
+    # 2. Check triage_state
+    if triage_state:
+        orig_q = triage_state.get("original_query")
+        if orig_q:
+            _add_cand(orig_q)
+
+    # 3. Check Interview State
+    state = get_interview_state(session_id)
+    if state:
+        prob = getattr(state, "problem_description", "") or getattr(state, "last_problem_description", "")
+        if prob:
+            _add_cand(prob)
+
+    # 4. Check conversation memory from pipeline_orchestrator
+    history = get_session_history(session_id)
+    if history:
+        for t in reversed(history):
+            turn_q = t.get("query") or t.get("content") or ""
+            _add_cand(turn_q)
+
+    # 5. Check SQLite DB messages if conv_id provided
+    if conv_id:
+        try:
+            msgs = get_messages(conv_id)
+            for m in reversed(msgs):
+                if m.get("role") == "user":
+                    content = m.get("content", "").strip()
+                    _add_cand(content)
+        except Exception as e:
+            print(f"[QueryResolver] DB message retrieval error: {e}")
+
+    # Merge facts if multiple distinct substantive turns exist
+    if candidates:
+        earliest = candidates[-1]  # first user grievance
+        latest = candidates[0]    # most recent user elaboration
+        if earliest != latest and len(earliest) >= 15 and len(latest) >= 15:
+            if earliest in latest:
+                return latest
+            elif latest in earliest:
+                return earliest
+            return f"{earliest}\n\nAdditional Details / Facts:\n{latest}"
+        return latest or earliest
+
+    # 6. Fallback to default_query if substantive
+    if default_query:
+        clean_def = _clean_substantive_query(default_query)
+        if clean_def and not _is_control_phrase(clean_def) and len(clean_def) >= 10:
+            return clean_def
+
+    return None
+
+
 async def _handle_strategy_choice(choice: str, query: str, session_id: str, triage_state: dict, user_id, conv_id, state, request):
     """Handles execution of user-selected strategy path (Drafting vs Procedural Roadmap)."""
     triage_state["chosen_path"] = choice
@@ -639,14 +1026,7 @@ async def _handle_strategy_choice(choice: str, query: str, session_id: str, tria
 
     # If user selected legal notice / drafting path
     if "notice" in query.lower() or "draft" in query.lower() or choice == "path_a" or mode == "document":
-        orig_q = triage_state.get("original_query")
-        if not orig_q or len(orig_q) < 10:
-            history = get_session_history(session_id)
-            user_turns = [t.get("content", "") for t in history if t.get("role") == "user" and len(t.get("content", "")) > 15]
-            if not user_turns and conv_id:
-                msgs = get_messages(conv_id)
-                user_turns = [m.get("content", "") for m in msgs if m.get("role") == "user" and len(m.get("content", "")) > 15]
-            orig_q = user_turns[0] if user_turns else query
+        orig_q = _resolve_substantive_session_query(session_id, triage_state, query, conv_id) or query
 
         doc_type = detect_document_type(orig_q) or triage_state.get("doc_type") or "legal_notice"
         doc_family = map_doc_type_to_family(doc_type) or triage_state.get("doc_family") or "letter"
@@ -681,14 +1061,7 @@ async def _handle_strategy_choice(choice: str, query: str, session_id: str, tria
         return _save_and_return(_interview_response(state, intro), user_id, conv_id)
 
     # Otherwise, it's a procedural path (Labour Commissioner, Summary Suit, Police Complaint, Consumer Forum)
-    orig_q = triage_state.get("original_query")
-    if not orig_q or len(orig_q) < 10:
-        history = get_session_history(session_id)
-        user_turns = [t.get("content", "") for t in history if t.get("role") == "user" and len(t.get("content", "")) > 15]
-        if not user_turns and conv_id:
-            msgs = get_messages(conv_id)
-            user_turns = [m.get("content", "") for m in msgs if m.get("role") == "user" and len(m.get("content", "")) > 15]
-        orig_q = user_turns[0] if user_turns else query
+    orig_q = _resolve_substantive_session_query(session_id, triage_state, query, conv_id) or query
 
     triage_state["current_mode"] = "idle"
     roadmap_query = (
@@ -797,6 +1170,10 @@ def _generate_document_docx(session_id: str, state) -> dict:
         "document_url": f"/api/document/{session_id}",
     }
 
+    if hasattr(state, "problem_description") and state.problem_description:
+        state.last_problem_description = state.problem_description
+    if session_id in SESSION_LEGAL_CONTEXT:
+        SESSION_LEGAL_CONTEXT[session_id]["last_problem_description"] = getattr(state, "problem_description", "")
     state.reset()
     if TRIAGE_STATE_AVAILABLE:
         reset_triage_state(session_id)
@@ -840,6 +1217,70 @@ def _save_and_return(result: dict, user_id, conv_id):
         _save_assistant_response(conv_id, result)
         result["conv_id"] = conv_id  # inject conv_id so frontend persists it to localStorage
     return result
+
+
+async def _execute_advocate_mode(session_id: str, triage_state: dict, query: str, user_id, conv_id):
+    """
+    Executes IRAC Advocate Mode with robust factual grievance recovery.
+    Never searches on control phrases or the literal word 'advocate'.
+    """
+    resolved_q = _resolve_substantive_session_query(session_id, triage_state, query, conv_id)
+    if not resolved_q:
+        resp = {
+            "response": (
+                "⚖ **Advocate Mode (IRAC Deep Legal Analysis)** requires an active legal scenario or dispute.\n\n"
+                "Please describe your legal issue (for example: an employment grievance, PF settlement, "
+                "property dispute, contract breach, or cheque bounce), and I will generate an exhaustive IRAC legal brief "
+                "citing relevant statutory sections, High Court & Supreme Court precedents, and actionable strategy."
+            ),
+            "mode_used": "irac",
+            "domain": "civil",
+            "interview_active": False,
+            "laws_retrieved": 0,
+            "citations": [],
+            "graph_insights": [],
+            "case_law_found": False,
+            "is_hallucinating": False,
+            "confidence_score": 0.85,
+            "flagged_citations": [],
+            "repealed_warnings": [],
+            "struck_down_warnings": [],
+            "elapsed_seconds": 0,
+        }
+        _populate_frontend_widgets(resp, session_id)
+        return _save_and_return(resp, user_id, conv_id)
+
+    profile = (
+        triage_state.get("discovery_profile")
+        or SESSION_LEGAL_CONTEXT.get(session_id, {}).get("discovery_profile")
+        or {}
+    )
+    options = (
+        triage_state.get("options_shown")
+        or SESSION_LEGAL_CONTEXT.get(session_id, {}).get("options_shown")
+        or []
+    )
+
+    if not IRAC_AVAILABLE:
+        resp = {
+            "response": "Deep legal analysis (IRAC Advocate Mode) is not available right now. Please try standard options above.",
+            "mode_used": "irac",
+            "domain": "civil",
+            "interview_active": False,
+        }
+        _populate_frontend_widgets(resp, session_id)
+        return _save_and_return(resp, user_id, conv_id)
+
+    irac_agent = IRACAgent()
+    irac_result = await irac_agent.run(
+        resolved_q,
+        profile,
+        options
+    )
+    triage_state["current_mode"] = "idle"
+    _populate_frontend_widgets(irac_result, session_id)
+    return _save_and_return(irac_result, user_id, conv_id)
+
 
 
 # ─────────────────────────────────────────────────────────────
@@ -1097,7 +1538,23 @@ async def chat_endpoint(
     """
     try:
         session_id = request.session_id
-        query      = request.query.strip()
+        query      = request.get_query_text()
+
+        # Maintain persistent substantive legal context across turns
+        if session_id not in SESSION_LEGAL_CONTEXT:
+            SESSION_LEGAL_CONTEXT[session_id] = {
+                "original_query": "",
+                "substantive_queries": [],
+                "discovery_profile": {},
+                "options_shown": [],
+                "last_document_type": "",
+            }
+        if not _is_control_phrase(query):
+            s_ctx = SESSION_LEGAL_CONTEXT[session_id]
+            if not s_ctx.get("original_query"):
+                s_ctx["original_query"] = query
+            if query not in s_ctx.get("substantive_queries", []):
+                s_ctx.setdefault("substantive_queries", []).append(query)
 
         # ── Extract authenticated user (optional) ──
         authorization = fastapi_request.headers.get("authorization", "")
@@ -1336,30 +1793,13 @@ async def chat_endpoint(
                 triage_state["discovery_profile"] = {}
                 return _save_and_return(resp, user_id, conv_id)
 
-            # Universal Advocate / IRAC check across all phases
-            user_lower = query.strip().lower()
-            is_advocate_request = any(kw == user_lower or kw in user_lower for kw in [
-                "advocate", "advocate mode", "⚖ advocate mode", "irac", "deep legal analysis", "deep legal"
-            ])
-            if is_advocate_request and IRAC_AVAILABLE:
-                orig_q = triage_state.get("original_query")
-                if not orig_q or len(orig_q) < 10:
-                    history = get_session_history(session_id)
-                    user_turns = [t.get("content", "") for t in history if t.get("role") == "user" and len(t.get("content", "")) > 20]
-                    orig_q = user_turns[0] if user_turns else query
-                irac_agent = IRACAgent()
-                irac_result = await irac_agent.run(
-                    orig_q,
-                    triage_state.get("discovery_profile") or {},
-                    triage_state.get("options_shown") or []
-                )
-                triage_state["current_mode"] = "idle"
-                _populate_frontend_widgets(irac_result, session_id)
-                return _save_and_return(irac_result, user_id, conv_id)
+            # Universal Advocate / IRAC check across all phases (strict command check)
+            if _is_advocate_mode_request(query):
+                return await _execute_advocate_mode(session_id, triage_state, query, user_id, conv_id)
 
             # Universal Strategy Path Selection check (handles direct clicks, loaded chats, or idle state)
             path_choice = _resolve_triage_choice(query, triage_state.get("options_shown", []))
-            if path_choice and (current_mode in ("idle", "strategy") or "path" in query.lower() or "option" in query.lower() or "notice" in query.lower() or "labour" in query.lower() or "court" in query.lower() or "suit" in query.lower()):
+            if path_choice and (current_mode in ("idle", "strategy")):
                 return await _handle_strategy_choice(path_choice, query, session_id, triage_state, user_id, conv_id, state, request)
 
             # ═══════════════════════════════════════════════
@@ -1428,7 +1868,7 @@ async def chat_endpoint(
                     triage_result["options"] = None
                     triage_result["role"] = None
 
-                extracted = triage_result.get("extracted_fields", {})
+                extracted = triage_result.get("extracted_fields") or {}
                 for k, v in extracted.items():
                     if v:
                         triage_state["intake_fields"][k] = v
@@ -1459,11 +1899,31 @@ async def chat_endpoint(
 
                     triage_state["discovery_profile"] = discovery_result.get("discovery_profile", {})
                     triage_state["discovery_turn_count"] = 1
+                    if session_id in SESSION_LEGAL_CONTEXT:
+                        SESSION_LEGAL_CONTEXT[session_id]["discovery_profile"] = triage_state["discovery_profile"]
 
-                    e_fields = discovery_result.get("extracted_fields", {})
+                    e_fields = discovery_result.get("extracted_fields") or {}
                     for k, v in e_fields.items():
                         if v:
                             triage_state["intake_fields"][k] = v
+
+                    if discovery_result.get("discovery_complete"):
+                        triage_state["current_mode"] = "strategy"
+                        strategy_agent = StrategyAgent()
+                        substantive_q = _resolve_substantive_session_query(session_id, triage_state, query, conv_id) or query
+                        strategy_result = await strategy_agent.run(
+                            substantive_q,
+                            triage_state["discovery_profile"]
+                        )
+                        triage_state["swot_analysis"] = strategy_result.get("swot_analysis")
+                        triage_state["options_shown"] = strategy_result.get("options", [])
+                        triage_state["allow_explain"] = strategy_result.get("allow_explanation_trigger", True)
+                        if session_id in SESSION_LEGAL_CONTEXT:
+                            SESSION_LEGAL_CONTEXT[session_id]["options_shown"] = triage_state["options_shown"]
+                            SESSION_LEGAL_CONTEXT[session_id]["swot_analysis"] = triage_state["swot_analysis"]
+
+                        resp = _build_triage_response(strategy_result, session_id)
+                        return _save_and_return(resp, user_id, conv_id)
 
                     resp = {
                         "response": discovery_result.get("response", "Tell me more about your situation."),
@@ -1497,25 +1957,31 @@ async def chat_endpoint(
 
                 triage_state["discovery_profile"] = discovery_result.get("discovery_profile", {})
                 triage_state["discovery_turn_count"] = discovery_turn + 1
+                if session_id in SESSION_LEGAL_CONTEXT:
+                    SESSION_LEGAL_CONTEXT[session_id]["discovery_profile"] = triage_state["discovery_profile"]
 
-                e_fields = discovery_result.get("extracted_fields", {})
+                e_fields = discovery_result.get("extracted_fields") or {}
                 for k, v in e_fields.items():
                     if v:
                         triage_state["intake_fields"][k] = v
 
-                if discovery_result.get("discovery_complete") or discovery_turn >= 2:
+                if discovery_result.get("discovery_complete") or discovery_turn >= 1:
                     # Force transition to Strategy (Phase 2)
                     triage_state["current_mode"] = "strategy"
 
                     strategy_agent = StrategyAgent()
+                    substantive_q = _resolve_substantive_session_query(session_id, triage_state, query, conv_id) or query
                     strategy_result = await strategy_agent.run(
-                        triage_state.get("original_query", query),
+                        substantive_q,
                         triage_state["discovery_profile"]
                     )
 
                     triage_state["swot_analysis"] = strategy_result.get("swot_analysis")
                     triage_state["options_shown"] = strategy_result.get("options", [])
                     triage_state["allow_explain"] = strategy_result.get("allow_explanation_trigger", True)
+                    if session_id in SESSION_LEGAL_CONTEXT:
+                        SESSION_LEGAL_CONTEXT[session_id]["options_shown"] = triage_state["options_shown"]
+                        SESSION_LEGAL_CONTEXT[session_id]["swot_analysis"] = triage_state["swot_analysis"]
 
                     resp = _build_triage_response(strategy_result, session_id)
                     return _save_and_return(resp, user_id, conv_id)
@@ -1546,124 +2012,15 @@ async def chat_endpoint(
             elif current_mode == "strategy":
                 choice = _resolve_triage_choice(query, triage_state.get("options_shown", []))
 
-                # "none of these work" — ADR fallback
-                if not choice and _is_rejection(query):
-                    rejection_prompt = (
-                        "The user has rejected the primary legal/formal routes previously shown. "
-                        "Provide alternative dispute resolution (ADR), community-based, or "
-                        "non-litigious strategic paths only."
-                    )
-                    triage_result = await _triage_agent.analyze(
-                        triage_state.get("original_query", query) + "\n\n" + rejection_prompt,
-                        triage_state
-                    )
-                    if triage_result.get("options"):
-                        triage_state["options_shown"] = triage_result.get("options", [])
-                        triage_state["swot_analysis"] = triage_result.get("swot_analysis")
-                        resp = _build_triage_response(triage_result, session_id)
-                        return _save_and_return(resp, user_id, conv_id)
-
-                # "advocate" / IRAC mode — intentional deep legal analysis
-                if not choice:
-                    user_lower = query.strip().lower()
-                    is_advocate_request = any(kw in user_lower for kw in
-                        ["advocate", "irac", "deep legal analysis", "advocate mode", "deep legal"])
-                    # Exact match for "advocate" (button click frontend sends this)
-                    if user_lower.strip() == "advocate":
-                        is_advocate_request = True
-                    if is_advocate_request and IRAC_AVAILABLE:
-                        irac_agent = IRACAgent()
-                        irac_result = await irac_agent.run(
-                            triage_state.get("original_query", query),
-                            triage_state.get("discovery_profile"),
-                            triage_state.get("options_shown", [])
-                        )
-                        triage_state["current_mode"] = "idle"
-                        _populate_frontend_widgets(irac_result, session_id)
-                        return _save_and_return(irac_result, user_id, conv_id)
-                    elif is_advocate_request:
-                        resp_show = {
-                            "response": "Deep legal analysis (IRAC Advocate Mode) is not available right now. Please try the standard options above.",
-                            "mode_used": "strategy",
-                            "triage": {
-                                "swot_analysis": triage_state.get("swot_analysis"),
-                                "options": triage_state.get("options_shown", []),
-                                "allow_explanation": triage_state.get("allow_explain", True),
-                                "is_explanation": False,
-                            },
-                            "interview_active": False,
-                        }
-                        _populate_frontend_widgets(resp_show, session_id)
-                        return _save_and_return(resp_show, user_id, conv_id)
+                # "advocate" / IRAC mode — intentional deep legal analysis (strict command check)
+                if not choice and _is_advocate_mode_request(query):
+                    return await _execute_advocate_mode(session_id, triage_state, query, user_id, conv_id)
 
                 if choice:
-                    triage_state["chosen_path"] = choice
-                    triage_state["is_triaged"] = True
-                    mode = _get_route_to(choice, triage_state.get("options_shown", []))
-                    request.mode = mode
+                    return await _handle_strategy_choice(choice, query, session_id, triage_state, user_id, conv_id, state, request)
 
-                    if mode == "document":
-                        # Route directly to document drafting interview
-                        orig_q = triage_state.get("original_query", query)
-                        doc_type = detect_document_type(orig_q) or triage_state.get("doc_type") or "legal_notice"
-                        doc_family = map_doc_type_to_family(doc_type) or triage_state.get("doc_family") or "letter"
-                        
-                        fields = generate_field_questions(
-                            doc_family, doc_type,
-                            orig_q
-                        )
-                        display_name = DOCUMENT_SCHEMAS.get(doc_type, {}).get("display_name",
-                                       doc_type.replace("_", " ").title() if doc_type else "Legal Notice")
-                        if not fields:
-                            fields = [
-                                {"key": "sender_name", "label": "Your Full Name & Address", "example": "Rahul Sharma, Flat 101..."},
-                                {"key": "recipient_name", "label": "Opponent/Landlord Full Name & Address", "example": "Ramesh Gupta, Landlord..."},
-                                {"key": "demand_details", "label": "Specific Demand & Amount", "example": "Immediate refund of Rs. 2,50,000 security deposit and possession of premises"},
-                                {"key": "compliance_days", "label": "Deadline to comply (e.g. 7 or 15 days)", "example": "7 days"}
-                            ]
-
-                        question = state.start_interview(
-                            doc_type,
-                            problem_description=orig_q,
-                            doc_family=doc_family,
-                            dynamic_fields=fields
-                        )
-                        total = len(fields)
-                        intro = (
-                            f"I'll draft a formal **{display_name}** for you.\n\n"
-                            f"I need **{total} pieces of information** to ground the legal notice. "
-                            f"Let's go through them one at a time.\n\n"
-                            f"{question}"
-                        )
-                        return _save_and_return(_interview_response(state, intro), user_id, conv_id)
-
-                    if mode == "pathfinder":
-                        original = triage_state.get("original_query", query)
-                        enriched = enrich_query_with_triage(original, triage_state)
-                        preamble = ""
-                        if triage_state.get("_fallback_note") == "document_to_pathfinder":
-                            preamble = "I couldn't map that to a specific document type, so here are the general legal steps:\n\n"
-                        query = preamble + enriched + "\n[Request: Show step-by-step legal procedure for this option.]"
-                else:
-                    # User didn't pick an option — could be asking for explanation
-                    triage_result = await _triage_agent.analyze(query, triage_state)
-                    if triage_result.get("_is_explanation"):
-                        return _save_and_return(_build_triage_response(triage_result, session_id), user_id, conv_id)
-
-                    # Re-show options
-                    resp_show = {
-                        "response": "Please let me know which option you'd like to pursue.",
-                        "mode_used": "strategy",
-                        "triage": {
-                            "swot_analysis": triage_state.get("swot_analysis"),
-                            "options": triage_state.get("options_shown", []),
-                            "allow_explanation": triage_state.get("allow_explain", True),
-                            "is_explanation": False,
-                        },
-                        "interview_active": False,
-                    }
-                    _populate_frontend_widgets(resp_show, session_id)
-                    return _save_and_return(resp_show, user_id, conv_id)
+                # Seamlessly handle natural language inquiries, comparisons, and alternative options
+                return await _handle_strategy_natural_query(query, session_id, triage_state, user_id, conv_id, state, request)
 
         # ── Use LLM-decided mode from triage (if available) ──
         # When triage returned pass_through=true, the LLM already inferred
@@ -1845,6 +2202,453 @@ async def upload_and_evaluate(file: UploadFile = File(...)):
 
 
 # ─────────────────────────────────────────────────────────────
+# MULTIMODAL EVIDENCE GROUNDING & SECTION 63 BSA CERTIFICATES
+# ─────────────────────────────────────────────────────────────
+
+@app.post("/api/evidence/upload")
+async def upload_evidence(
+    file: UploadFile = File(...),
+    evidence_type: str = Form("audio"),
+    client_hash: Optional[str] = Form(None),
+    session_id: Optional[str] = Form(None)
+):
+    """
+    Multimodal Evidence Grounding endpoint.
+    Processes voice & video recordings (audio/video) or documents, bills, invoices & cheques (image/PDF).
+    Computes cryptographic SHA-256, extracts statutory entities under Indian law,
+    and generates court-admissible Section 63 BSA PDF certificate.
+    """
+    if not EVIDENCE_PROCESSOR_AVAILABLE:
+        raise HTTPException(status_code=500, detail="EvidenceProcessor not available on server")
+
+    temp_dir = os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "data", "temp_evidence")
+    os.makedirs(temp_dir, exist_ok=True)
+    temp_path = os.path.join(temp_dir, f"{int(time.time())}_{os.path.basename(file.filename)}")
+
+    MAX_EVIDENCE_SIZE_MB = 25
+
+    try:
+        content = await file.read()
+        size_mb = len(content) / (1024 * 1024)
+        if size_mb > MAX_EVIDENCE_SIZE_MB:
+            raise HTTPException(
+                status_code=413,
+                detail=f"File exceeds maximum limit of {MAX_EVIDENCE_SIZE_MB}MB (Uploaded: {size_mb:.1f}MB). To prevent server and browser memory exhaustion, please upload a clip under 25MB."
+            )
+
+        with open(temp_path, "wb") as f:
+            f.write(content)
+
+        ext = os.path.splitext(file.filename.lower())[1]
+        is_multimedia = ("audio" in evidence_type.lower()) or ("video" in evidence_type.lower()) or (ext in [".mp3", ".wav", ".m4a", ".ogg", ".aac", ".webm", ".mp4", ".mov", ".avi", ".mkv"])
+
+        if is_multimedia:
+            result = EvidenceProcessor.process_audio_or_video_evidence(temp_path, client_hash=client_hash)
+        else:
+            result = EvidenceProcessor.process_document_evidence(temp_path, client_hash=client_hash)
+
+        # Ground evidence directly into the active session
+        if session_id:
+            if session_id not in SESSION_LEGAL_CONTEXT:
+                SESSION_LEGAL_CONTEXT[session_id] = {
+                    "original_query": "",
+                    "substantive_queries": [],
+                    "discovery_profile": {},
+                    "options_shown": [],
+                    "last_document_type": "",
+                }
+            SESSION_LEGAL_CONTEXT[session_id]["grounded_evidence"] = result
+            if TRIAGE_STATE_AVAILABLE:
+                from triage_state import get_triage_state
+                ts = get_triage_state(session_id)
+                ts["grounded_evidence"] = result
+
+        return result
+    except Exception as e:
+        traceback.print_exc()
+        raise HTTPException(status_code=500, detail=f"Evidence processing failed: {str(e)}")
+    finally:
+        if os.path.exists(temp_path):
+            try:
+                os.remove(temp_path)
+            except Exception:
+                pass
+
+
+@app.get("/api/certificates/{cert_filename}")
+async def get_certificate_pdf(cert_filename: str):
+    """Serve court-admissible Section 63 BSA PDF certificate."""
+    if not EVIDENCE_PROCESSOR_AVAILABLE:
+        raise HTTPException(status_code=500, detail="EvidenceProcessor not available on server")
+
+    clean_filename = os.path.basename(cert_filename)
+    cert_path = os.path.join(CERT_DIR, clean_filename)
+    if not os.path.exists(cert_path):
+        raise HTTPException(status_code=404, detail="Certificate PDF not found")
+
+    return FileResponse(
+        cert_path,
+        media_type="application/pdf",
+        filename=clean_filename
+    )
+
+
+@app.post("/api/bench/debate")
+async def simulate_courtroom_bench(req: BenchRequest):
+    """
+    Virtual Witness Stand & Trial Cross-Examination Simulation.
+    Simulates high-court / trial cross-examination interrogation chains,
+    witness credibility scoring, evidence grounding, and judicial assessment.
+    """
+    if not BENCH_AVAILABLE:
+        raise HTTPException(status_code=500, detail="VirtualBench engine not available on server")
+
+    try:
+        data = VirtualBenchEngine.simulate_cross_examination(
+            matter=req.matter,
+            evidence_data=req.evidence_data,
+            target_role=req.target_role or "adverse_witness",
+            statutory_context=req.statutory_context
+        )
+        return data
+    except Exception as e:
+        traceback.print_exc()
+        raise HTTPException(status_code=500, detail=f"Bench simulation failed: {str(e)}")
+
+
+# ─────────────────────────────────────────────────────────────
+# TRIAL STUDIO & ADVERSARIAL PRECEDENT INTELLIGENCE ENDPOINTS
+# ─────────────────────────────────────────────────────────────
+
+TRIAL_STUDIO_SESSIONS: Dict[str, Dict[str, Any]] = {}
+
+@app.post("/api/trial/start")
+async def start_trial_studio_session(req: TrialStudioStartRequest):
+    """
+    Initializes a Pre-Trial Adversarial Interrogation or Defense Fortification session.
+    Automatically inherits grounded evidence from the active session.
+    """
+    if not TRIAL_STUDIO_AVAILABLE:
+        raise HTTPException(status_code=500, detail="TrialStudio engine not available on server")
+
+    try:
+        session_id = req.session_id
+        # Inherit grounded evidence if passed in request or available in active session
+        grounded_evidence = req.grounded_evidence
+        if not grounded_evidence and session_id in SESSION_LEGAL_CONTEXT:
+            grounded_evidence = SESSION_LEGAL_CONTEXT[session_id].get("grounded_evidence")
+
+        witness_role = req.witness_role or "accused"
+
+        if req.mode == "cross_examiner":
+            agent = HostileCrossExaminerAgent()
+            resp = agent.generate_opening_attack(
+                scenario=req.scenario,
+                witness_role=witness_role,
+                grounded_evidence=grounded_evidence,
+                act_hint=req.act_hint
+            )
+        elif req.mode == "defense_fortifier":
+            agent = DefenseStrategistAgent()
+            resp = agent.generate_defense_fortification(
+                scenario=req.scenario,
+                witness_role=witness_role,
+                grounded_evidence=grounded_evidence,
+                act_hint=req.act_hint
+            )
+        else:
+            # "moot_court" — Dual-Agent Sparring Arena
+            cross_agent = HostileCrossExaminerAgent()
+            cross_resp = cross_agent.generate_opening_attack(
+                scenario=req.scenario,
+                witness_role=witness_role,
+                grounded_evidence=grounded_evidence,
+                act_hint=req.act_hint
+            )
+            def_agent = DefenseStrategistAgent()
+            def_resp = def_agent.generate_defense_fortification(
+                scenario=req.scenario,
+                witness_role=witness_role,
+                grounded_evidence=grounded_evidence,
+                act_hint=req.act_hint
+            )
+            resp = AdversarialTurnResponse(
+                mode="moot_court",
+                turn_index=1,
+                interrogation_content=cross_resp.interrogation_content,
+                vulnerability_score=cross_resp.vulnerability_score,
+                vulnerability_delta=0,
+                fatal_flaw_detected=def_resp.fatal_flaw_detected,
+                precedent_backing=cross_resp.precedent_backing or def_resp.precedent_backing,
+                suggested_statutory_motions=def_resp.suggested_statutory_motions,
+                coach_advice=def_resp.coach_advice
+            )
+
+        # Store session state
+        TRIAL_STUDIO_SESSIONS[session_id] = {
+            "mode": req.mode or "moot_court",
+            "witness_role": witness_role,
+            "scenario": req.scenario,
+            "act_hint": req.act_hint,
+            "last_question": resp.interrogation_content,
+            "current_score": resp.vulnerability_score,
+            "turn_index": 1,
+            "grounded_evidence": grounded_evidence,
+            "history": [resp.dict()]
+        }
+
+        return resp.dict()
+    except Exception as e:
+        traceback.print_exc()
+        raise HTTPException(status_code=500, detail=f"Failed to start Trial Studio session: {str(e)}")
+
+
+@app.post("/api/trial/turn")
+async def process_trial_studio_turn(req: TrialStudioTurnRequest):
+    """
+    Processes turn-by-turn witness testimony against empirical precedents,
+    updates vulnerability scoring, and drives home the next punchy follow-up (cross-examiner)
+    or tactical defense rejoinder and Section 146 BSA objection (defense coach).
+    """
+    if not TRIAL_STUDIO_AVAILABLE:
+        raise HTTPException(status_code=500, detail="TrialStudio engine not available on server")
+
+    session_id = req.session_id
+    session_data = TRIAL_STUDIO_SESSIONS.get(session_id)
+    if not session_data:
+        raise HTTPException(status_code=404, detail="Trial Studio session not found. Please start a new session.")
+
+    try:
+        mode = session_data.get("mode", "moot_court")
+        witness_role = req.witness_role or session_data.get("witness_role", "accused")
+        new_turn_index = session_data.get("turn_index", 1) + 1
+        grounded_evidence = req.grounded_evidence or session_data.get("grounded_evidence")
+        if grounded_evidence and not session_data.get("grounded_evidence"):
+            session_data["grounded_evidence"] = grounded_evidence
+
+        if mode == "defense_fortifier":
+            agent = DefenseStrategistAgent()
+            resp = agent.generate_defense_rejoinder_turn(
+                scenario=session_data["scenario"],
+                previous_brief_or_question=session_data["last_question"],
+                witness_answer=req.witness_answer,
+                current_score=session_data["current_score"],
+                turn_index=new_turn_index,
+                witness_role=witness_role,
+                grounded_evidence=grounded_evidence,
+                history=session_data.get("history")
+            )
+        elif mode == "cross_examiner":
+            agent = HostileCrossExaminerAgent()
+            resp = agent.generate_follow_up(
+                scenario=session_data["scenario"],
+                previous_question=session_data["last_question"],
+                witness_answer=req.witness_answer,
+                current_score=session_data["current_score"],
+                turn_index=new_turn_index,
+                witness_role=witness_role,
+                grounded_evidence=grounded_evidence,
+                history=session_data.get("history")
+            )
+        else:
+            # "moot_court" mode: Dual-Agent Sparring Loop
+            # 1. Corner Coach audits the witness's practice answer
+            def_agent = DefenseStrategistAgent()
+            def_resp = def_agent.generate_defense_rejoinder_turn(
+                scenario=session_data["scenario"],
+                previous_brief_or_question=session_data["last_question"],
+                witness_answer=req.witness_answer,
+                current_score=session_data["current_score"],
+                turn_index=new_turn_index,
+                witness_role=witness_role,
+                grounded_evidence=grounded_evidence,
+                history=session_data.get("history")
+            )
+
+            # 2. Hostile Cross-Examiner attacks newly exposed holes
+            cross_agent = HostileCrossExaminerAgent()
+            cross_resp = cross_agent.generate_follow_up(
+                scenario=session_data["scenario"],
+                previous_question=session_data["last_question"],
+                witness_answer=req.witness_answer,
+                current_score=def_resp.vulnerability_score,
+                turn_index=new_turn_index,
+                witness_role=witness_role,
+                grounded_evidence=grounded_evidence,
+                history=session_data.get("history")
+            )
+
+            resp = AdversarialTurnResponse(
+                mode="moot_court",
+                turn_index=new_turn_index,
+                interrogation_content=cross_resp.interrogation_content,
+                vulnerability_score=cross_resp.vulnerability_score,
+                vulnerability_delta=cross_resp.vulnerability_delta,
+                fatal_flaw_detected=def_resp.fatal_flaw_detected,
+                precedent_backing=cross_resp.precedent_backing,
+                suggested_statutory_motions=def_resp.suggested_statutory_motions,
+                coach_advice=def_resp.coach_advice
+            )
+
+        # Update session
+        session_data["last_question"] = resp.interrogation_content
+        session_data["current_score"] = resp.vulnerability_score
+        session_data["turn_index"] = new_turn_index
+        session_data["history"].append({"witness_answer": req.witness_answer, "turn_response": resp.dict()})
+
+        return resp.dict()
+    except Exception as e:
+        traceback.print_exc()
+        raise HTTPException(status_code=500, detail=f"Failed to process trial turn: {str(e)}")
+
+
+@app.post("/api/trial/conclude")
+async def conclude_trial_studio_session(req: TrialStudioConcludeRequest):
+    """
+    Formally closes the evidentiary record of cross-examination or defense sparring,
+    evaluates final exposure score against 50,000 precedent benchmarks,
+    and produces the definitive Courtroom Record of Proceedings & Bench Assessment.
+    """
+    if not TRIAL_STUDIO_AVAILABLE:
+        raise HTTPException(status_code=500, detail="TrialStudio engine not available on server")
+
+    session_id = req.session_id
+    session_data = TRIAL_STUDIO_SESSIONS.get(session_id)
+    if not session_data:
+        raise HTTPException(status_code=404, detail="Trial session not found.")
+
+    score = session_data.get("current_score", 50)
+    mode = session_data.get("mode", "cross_examiner")
+    scenario = session_data.get("scenario", "")
+    history = session_data.get("history", [])
+
+    if score >= 75:
+        status_label = "FATAL EXPOSURE / STATUTORY CHECKMATE"
+        color = "#ff4d4f"
+        judicial_outlook = (
+            "Cross-examination successfully unseated the core evidentiary foundation. "
+            "Under controlling Supreme Court precedents, the failure of primary documentary corroboration "
+            "and fatal admissions entered on the trial record warrant the dismissal of the claim / decree against the defaulting party."
+        )
+    elif score >= 40:
+        status_label = "CONTESTED TRIAL / BALANCED BURDEN"
+        color = "#faad14"
+        judicial_outlook = (
+            "Material contradictions have been extracted onto the record. While statutory presumptions were invoked, "
+            "the lack of contemporaneous financial records leaves the issue to be decided on a strict preponderance of probabilities."
+        )
+    else:
+        status_label = "POSITION FORTIFIED / PRESUMPTION REBUTTED"
+        color = "#52c41a"
+        judicial_outlook = (
+            "The witness successfully weathered adverse cross-examination, anchored their defense to statutory presumptions "
+            "and admissible documentary records. The adverse party has failed to discharge the reverse burden of proof."
+        )
+
+    # Collect key admissions or points
+    admissions = []
+    for item in history:
+        resp = item.get("turn_response") or item
+        flaw = resp.get("fatal_flaw_detected")
+        if flaw and flaw not in admissions and not flaw.startswith("Witness maintained"):
+            admissions.append(flaw)
+
+    conclude_summary = {
+        "session_id": session_id,
+        "turns_completed": len(history),
+        "final_score": score,
+        "status_label": status_label,
+        "status_color": color,
+        "judicial_outlook": judicial_outlook,
+        "admissions_on_record": admissions[:4],
+        "statutory_motions": [
+            "Order 18 Rule 4 / Rule 17 CPC: Formally close witness cross-examination on record",
+            "Order 11 Rule 14 CPC: Compel production of disputed bank statements / ITR filings",
+            "Section 146 / 158 BSA: Move application for formal impeachment of credit"
+        ]
+    }
+    return conclude_summary
+
+
+@app.get("/api/trial/precedents/{case_id}")
+async def get_precedent_dossier_endpoint(case_id: str):
+    """Retrieves full verified precedent dossier and ratio decidendi."""
+    if not TRIAL_STUDIO_AVAILABLE:
+        raise HTTPException(status_code=500, detail="TrialStudio engine not available on server")
+
+    try:
+        pe = get_precedent_engine()
+        dossier = pe.extract_ratio_decidendi(case_id)
+        return dossier
+    except Exception as e:
+        raise HTTPException(status_code=404, detail=f"Precedent dossier not found: {str(e)}")
+
+
+@app.get("/api/trial/search")
+async def search_precedents_endpoint(query: str, act: Optional[str] = None):
+    """Searches controlling precedents across the 50,000+ case matrix."""
+    if not TRIAL_STUDIO_AVAILABLE:
+        raise HTTPException(status_code=500, detail="TrialStudio engine not available on server")
+
+    try:
+        pe = get_precedent_engine()
+        results = pe.search(query=query, act=act, top_k=5)
+        return [r.dict() for r in results]
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Search failed: {str(e)}")
+
+
+# ─────────────────────────────────────────────────────────────
+# MASTER LEGAL DICTIONARY & GLOSSARY (10,000+ TERMS) ENDPOINTS
+# ─────────────────────────────────────────────────────────────
+
+try:
+    from legal_dictionary import get_legal_dictionary
+    LEGAL_DICT_AVAILABLE = True
+except Exception as e:
+    print(f"[WARNING] LegalDictionary not available: {e}")
+    LEGAL_DICT_AVAILABLE = False
+
+
+class GlossaryScanRequest(BaseModel):
+    text: str
+    max_terms: int = 6
+
+
+@app.get("/api/glossary/term/{term_name}")
+async def get_glossary_term_endpoint(term_name: str):
+    """Instant lookup for legal term definition, simple meaning, and analogy."""
+    if not LEGAL_DICT_AVAILABLE:
+        raise HTTPException(status_code=500, detail="LegalDictionary not available")
+    ld = get_legal_dictionary()
+    item = ld.get_term(term_name)
+    if not item:
+        raise HTTPException(status_code=404, detail="Term not found in dictionary")
+    return item
+
+
+@app.post("/api/glossary/scan")
+async def scan_glossary_terms_endpoint(req: GlossaryScanRequest):
+    """Scans legal response text and returns decoded terms with analogies and examples."""
+    if not LEGAL_DICT_AVAILABLE:
+        return {"terms": []}
+    ld = get_legal_dictionary()
+    found = ld.scan_text(req.text, max_terms=req.max_terms)
+    return {"terms": found, "count": len(found)}
+
+
+@app.get("/api/glossary/categories")
+async def get_glossary_categories_endpoint():
+    """Returns all available legal categories."""
+    if not LEGAL_DICT_AVAILABLE:
+        return {"categories": []}
+    ld = get_legal_dictionary()
+    return {"categories": list(ld.categories.keys())}
+
+
+
+
+# ─────────────────────────────────────────────────────────────
 # INTERVIEW STATE ENDPOINTS
 # ─────────────────────────────────────────────────────────────
 
@@ -1890,6 +2694,7 @@ async def clear_history_endpoint(session_id: str):
     if TRIAGE_STATE_AVAILABLE:
         reset_triage_state(session_id)
     SESSION_DOCUMENTS.pop(session_id, None)
+    SESSION_LEGAL_CONTEXT.pop(session_id, None)
     return {"status": "cleared", "session_id": session_id}
 
 

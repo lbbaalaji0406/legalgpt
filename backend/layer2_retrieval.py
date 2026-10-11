@@ -178,9 +178,12 @@ def retrieve_with_hybrid_logic(payload: dict, k: int = TOP_K) -> list:
             value = default
         return value if value > 0 else default
 
+    def _has_word(w, text):
+        return bool(re.search(rf"\b{re.escape(w)}\b", str(text), re.IGNORECASE))
+
     # Extract fields from Layer 1 payload
-    semantic_query = payload.get("hyde_paragraph") or payload.get("search_optimized_query", "")
-    keyword_query  = payload.get("keyword_synonyms") or payload.get("search_optimized_query", "")
+    semantic_query = payload.get("hyde_paragraph") or payload.get("semantic_query") or payload.get("search_optimized_query", "")
+    keyword_query  = payload.get("keyword_synonyms") or payload.get("keywords") or payload.get("search_optimized_query", "")
     citations = payload.get("explicit_citations", [])
     top_k     = _safe_top_k(payload.get("top_k", k))
     temporal_status = payload.get("temporal_context", {}).get("temporal_status") or payload.get("temporal_status", "UNDATED")
@@ -202,25 +205,35 @@ def retrieve_with_hybrid_logic(payload: dict, k: int = TOP_K) -> list:
         print("[Layer 2] WARNING: ChromaDB collection is empty.")
         return []
 
-    # Check if we have an explicit citation to prioritize
-    # If user mentioned "Section 138" fetch all matching chunks directly from ChromaDB
     semantic_results_raw = []
-    target_sec_num = None
-
+    target_sec_nums = set()
     if citations:
-        sec_match = re.search(r'\d+[A-Za-z]*', citations[0])
-        if sec_match:
-            target_sec_num = sec_match.group()
-            print(f"[Layer 2] Citation filter: section_number = {target_sec_num}")
+        for c in citations:
+            m = re.search(r'\d+[A-Za-z]*', str(c))
+            if m:
+                target_sec_nums.add(m.group())
+
+    # Detect implied statutory sections from core legal topics
+    q_all = (semantic_query + " " + keyword_query).lower()
+    if any(_has_word(w, q_all) for w in ["cheat", "cheated", "cheating", "fraud", "scam"]):
+        target_sec_nums.update(["318", "420"])
+    if any(_has_word(w, q_all) for w in ["fir", "zero fir", "e-fir"]):
+        target_sec_nums.update(["173", "154"])
+    if any(_has_word(w, q_all) for w in ["certificate", "electronic evidence"]):
+        target_sec_nums.update(["63", "65B"])
+    if any(_has_word(w, q_all) for w in ["community service"]):
+        target_sec_nums.update(["4", "23"])
+
+    if target_sec_nums:
+        print(f"[Layer 2] Citation/Topic filter: section_numbers = {list(target_sec_nums)}")
+        for s_num in target_sec_nums:
             try:
-                # Fetch all chunks with this exact section number across collection
-                citation_chunks = collection.get(where={"section_number": str(target_sec_num)})
-                if citation_chunks and citation_chunks.get("documents"):
-                    for doc, meta in zip(citation_chunks["documents"], citation_chunks["metadatas"]):
+                c_chunks = collection.get(where={"section_number": str(s_num)})
+                if c_chunks and c_chunks.get("documents"):
+                    for doc, meta in zip(c_chunks["documents"], c_chunks["metadatas"]):
                         semantic_results_raw.append((doc, meta))
-                    print(f"[Layer 2] Direct citation chunks retrieved: {len(citation_chunks['documents'])}")
             except Exception as e:
-                print(f"[Layer 2] Citation filter failed: {e}")
+                pass
 
     # Always run broad semantic search too
     # Combines with citation results for broad coverage
@@ -236,30 +249,30 @@ def retrieve_with_hybrid_logic(payload: dict, k: int = TOP_K) -> list:
         try:
             sanhita_broad = collection.query(
                 query_embeddings=[query_embedding],
-                where={"act_name": {"$in": ["BNS", "BNSS", "BSA", "Constitution"]}},
-                n_results=min(4, collection_count)
+                where={"is_active_2024": True},
+                n_results=min(max(top_k, 5), collection_count)
             )
             if sanhita_broad and sanhita_broad.get("documents") and sanhita_broad["documents"][0]:
                 for doc, meta in zip(sanhita_broad["documents"][0], sanhita_broad["metadatas"][0]):
                     semantic_results_raw.append((doc, meta))
-                print(f"[Layer 2] ⚖️ Partition A (2024 Sanhitas): {len(sanhita_broad['documents'][0])} chunks retrieved.")
+                print(f"[Layer 2] Partition A (2024 Sanhitas): {len(sanhita_broad['documents'][0])} chunks retrieved.")
         except Exception as e_sanhita:
-            pass
+            print(f"[Layer 2] Partition A query error: {e_sanhita}")
 
         # ── PARTITION B: LEGACY COLONIAL CODE RETRIEVAL (IPC / CrPC / IEA) FOR UNDATED DUAL-TRACK ──
         if temporal_status == "UNDATED":
             try:
                 legacy_broad = collection.query(
                     query_embeddings=[query_embedding],
-                    where={"act_name": {"$in": ["IPC_from_db", "CRPC_from_db", "IEA_from_db"]}},
-                    n_results=min(4, collection_count)
+                    where={"is_repealed": True},
+                    n_results=min(max(top_k, 5), collection_count)
                 )
                 if legacy_broad and legacy_broad.get("documents") and legacy_broad["documents"][0]:
                     for doc, meta in zip(legacy_broad["documents"][0], legacy_broad["metadatas"][0]):
                         semantic_results_raw.append((doc, meta))
-                    print(f"[Layer 2] 📜 Partition B (Legacy Colonial): {len(legacy_broad['documents'][0])} chunks retrieved.")
+                    print(f"[Layer 2] Partition B (Legacy Colonial): {len(legacy_broad['documents'][0])} chunks retrieved.")
             except Exception as e_legacy:
-                pass
+                print(f"[Layer 2] Partition B query error: {e_legacy}")
     except Exception as e:
         print(f"[Layer 2] ChromaDB query failed: {e}")
         return []
@@ -280,7 +293,7 @@ def retrieve_with_hybrid_logic(payload: dict, k: int = TOP_K) -> list:
             range(len(scores)),
             key=lambda i: scores[i],
             reverse=True
-        )[:max(top_k * 2, 8)]
+        )[:max(top_k * 4, 25)]
 
         for idx in top_indices:
             if scores[idx] > 0:
@@ -335,29 +348,30 @@ def retrieve_with_hybrid_logic(payload: dict, k: int = TOP_K) -> list:
 
     # Detect primary target act mentions in query to give strong affinity
     q_lower = (semantic_query + " " + keyword_query).lower()
-    
-    def _has_word(w, text):
-        return bool(re.search(rf"\b{re.escape(w)}\b", text, re.IGNORECASE))
 
-    matched_target_acts = []
+    matched_target_acts = set()
     if any(_has_word(w, q_lower) for w in ["negotiable", "cheque", "nia", "promissory"]):
-        matched_target_acts = ["nia"]
-    elif any(_has_word(w, q_lower) for w in ["fir", "crpc", "bnss", "bail", "anticipatory"]):
-        matched_target_acts = ["crpc", "bnss"]
-    elif any(_has_word(w, q_lower) for w in ["marriage", "divorce", "hindu marriage", "hma", "restitution"]):
-        matched_target_acts = ["hma"]
-    elif any(_has_word(w, q_lower) for w in ["cpc", "civil procedure", "written statement", "injunction"]):
-        matched_target_acts = ["cpc"]
-    elif any(_has_word(w, q_lower) for w in ["motor", "mva", "vehicle", "traffic"]):
-        matched_target_acts = ["mva"]
-    elif any(_has_word(w, q_lower) for w in ["evidence", "iea", "bsa", "witness", "certificate"]):
-        matched_target_acts = ["iea", "bsa"]
-    elif any(_has_word(w, q_lower) for w in ["industrial", "workman", "ida", "retrenchment", "layoff"]):
-        matched_target_acts = ["ida"]
-    elif any(_has_word(w, q_lower) for w in ["ipc", "penal code", "bns", "murder", "theft", "extortion", "community service"]):
-        matched_target_acts = ["ipc", "bns"]
-    elif any(_has_word(w, q_lower) for w in ["constitution", "article", "fundamental right"]):
-        matched_target_acts = ["constitution"]
+        matched_target_acts.add("nia")
+    if any(_has_word(w, q_lower) for w in ["fir", "crpc", "bnss", "bail", "anticipatory", "cognizable", "complaint", "police"]):
+        matched_target_acts.update(["crpc", "bnss"])
+    if any(_has_word(w, q_lower) for w in ["marriage", "divorce", "hindu marriage", "hma", "restitution"]):
+        matched_target_acts.add("hma")
+    if any(_has_word(w, q_lower) for w in ["cpc", "civil procedure", "written statement", "injunction"]):
+        matched_target_acts.add("cpc")
+    if any(_has_word(w, q_lower) for w in ["motor", "mva", "vehicle", "traffic"]):
+        matched_target_acts.add("mva")
+    if any(_has_word(w, q_lower) for w in ["evidence", "iea", "bsa", "witness", "certificate"]):
+        matched_target_acts.update(["iea", "bsa"])
+    if any(_has_word(w, q_lower) for w in ["industrial", "workman", "ida", "retrenchment", "layoff"]):
+        matched_target_acts.add("ida")
+    if any(_has_word(w, q_lower) for w in [
+        "ipc", "penal code", "bns", "cheated", "cheating", "fraud", "scam",
+        "deception", "theft", "murder", "extortion", "dishonest", "misappropriation",
+        "breach of trust", "community service", "420", "318"
+    ]):
+        matched_target_acts.update(["ipc", "bns"])
+    if any(_has_word(w, q_lower) for w in ["constitution", "article", "fundamental right"]):
+        matched_target_acts.add("constitution")
 
     is_modern_query = any(w in q_lower for w in ["today", "new law", "new", "2024", "bns", "bnss", "bsa"])
 
@@ -369,8 +383,8 @@ def retrieve_with_hybrid_logic(payload: dict, k: int = TOP_K) -> list:
         content = r.get("content", "")
 
         # 1. Exact section citation boost
-        if target_sec_num and sec == str(target_sec_num):
-            adjusted_score += 12.0
+        if target_sec_nums and (sec in target_sec_nums or any(s in sec for s in target_sec_nums)):
+            adjusted_score += 15.0
             # Prefer substantive chunks over short 1-line amendment notes
             if len(content) > 120:
                 adjusted_score += 8.0
@@ -396,23 +410,29 @@ def retrieve_with_hybrid_logic(payload: dict, k: int = TOP_K) -> list:
     effective_k = max(top_k, 5)
 
     if temporal_status == "UNDATED":
-        # Ensure representation: top 3 active 2024 Sanhita chunks (is_repealed == False)
-        # and top 2 legacy colonial chunks (is_repealed == True)
-        active_candidates = [r for score, r in ranked if not r.get("is_repealed")]
-        legacy_candidates = [r for score, r in ranked if r.get("is_repealed")]
+        def _is_legacy_chunk(item):
+            a = (item.get("act_name") or item.get("act") or "").lower()
+            return bool(item.get("is_repealed")) or "from_db" in a or a in ["ipc", "crpc", "iea"]
+
+        def _is_active_sanhita(item):
+            a = (item.get("act_name") or item.get("act") or "").lower()
+            return bool(item.get("is_active_2024")) or a in ["bns", "bnss", "bsa", "constitution"]
+
+        active_candidates = [r for score, r in ranked if _is_active_sanhita(r)]
+        legacy_candidates = [r for score, r in ranked if _is_legacy_chunk(r)]
 
         balanced = []
         # Add up to 3 active 2024 chunks
         for c in active_candidates[:3]:
             if c not in balanced:
                 balanced.append(c)
-        # Add up to 2 legacy colonial chunks
-        for c in legacy_candidates[:2]:
+        # Add up to 3 legacy colonial chunks
+        for c in legacy_candidates[:3]:
             if c not in balanced:
                 balanced.append(c)
         # Fill remaining slots up to effective_k from highest ranked
         for score, r in ranked:
-            if len(balanced) >= effective_k:
+            if len(balanced) >= max(effective_k, 6):
                 break
             if r not in balanced:
                 balanced.append(r)
@@ -431,7 +451,27 @@ def retrieve_with_hybrid_logic(payload: dict, k: int = TOP_K) -> list:
             "relevance_score": round(float(result.get("relevance_score", 0.9)), 4),
         })
 
-    print(f"[Layer 2] Final top {len(top_results)} sections ready for Layer 3 (Dual-Track balanced: {temporal_status == 'UNDATED'}).\n")
+    # ── TECHNIQUE 6: Shared Precedent Engine Integration (50,000+ Case Matrix) ──
+    try:
+        try:
+            from backend.trial_studio.precedent_engine import get_precedent_engine
+        except ImportError:
+            from trial_studio.precedent_engine import get_precedent_engine
+        pe = get_precedent_engine()
+        precedent_matches = pe.search(query=semantic_query, top_k=2)
+        for pm in precedent_matches:
+            top_results.append({
+                "content": f"[Ratio Decidendi]: {pm.ratio_decidendi} [Key Fact Anchor]: {pm.fact_anchor}",
+                "act_name": f"{pm.court} Precedent — {pm.citation} ({pm.title})",
+                "section_number": ", ".join(pm.sections_invoked),
+                "is_repealed": False,
+                "law_type": "CONTROLLING PRECEDENT RATIO",
+                "relevance_score": 0.95,
+            })
+    except Exception as e:
+        print(f"[Layer 2] Note: Precedent engine optional link skipped: {e}")
+
+    print(f"[Layer 2] Final top {len(top_results)} sections & precedents ready for Layer 3 (Dual-Track balanced: {temporal_status == 'UNDATED'}).\n")
     return top_results
 
 

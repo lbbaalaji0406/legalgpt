@@ -17,8 +17,10 @@
 │ 4. 🛡️ Constitutional Struck-Down Firewall (Landmark SC Rulings)       │
 │ 5. 🌾 Cross-Lingual Devanagari Hindi HyDE (Rural Legal Intelligence)   │
 │ 6. 📄 Court-Grade Document Factory (Order VII CPC Plaints & PDFs)      │
-│ 7. ⚖️ 120B Adversarial Courtroom Simulator (Petitioner vs Respondent)  │
-│ 8. 💾 Universal Multi-Session SQLite Persistence (WAL Mode)            │
+│ 7. 👑 Pre-Trial Studio & Moot Court Arena (Sec 146 BSA Interrogation)  │
+│ 8. 🛡️ Sec 63 BSA Multimodal Evidence Grounding (Audio & Cheques)       │
+│ 9. 🧠 Precedent Intelligence Engine (50,000+ Landmark Case Index)     │
+│ 10. 💾 Universal Multi-Session SQLite Persistence (WAL Mode)           │
 └────────────────────────────────────────────────────────────────────────┘
 ```
 
@@ -90,6 +92,18 @@ SaulGPT operates on a **Two-Tier Neuro-Symbolic Architecture**:
 ### 6. ⚖️ 120B Adversarial Courtroom Simulator (Advocate Mode)
 * **IRAC Briefing:** Synthesizes structured *FACTS / ISSUES / RULES / APPLICATION / CONCLUSION* analyses.
 * **Adversarial Rehearsal:** Generates fierce Petitioner Arguments vs. Anticipated Respondent Counter-Defenses with probability-of-success scores.
+
+### 7. 👑 Pre-Trial Studio & Moot Court Arena
+* **Adverse Cross-Examiner (Sec 146 BSA):** Aggressive, hostile interrogation targeting documentary lacunae, tax filing contradictions, and uncorroborated oral claims across civil and criminal domains.
+* **Corner Coach Intercept & Tactical Counsel:** Real-time confidential attorney-client auditing with live exposure tracking, formal procedural objections, safe verbatim witness rejoinders, and tangible evidentiary plugs.
+* **Precedent Intelligence Engine:** Grounded in a comprehensive index of **50,000+ Supreme Court & High Court judgments** across 8 core statutory frameworks (BNS, BNSS, BSA, NI Act, CPA 2019, Contract Act, Limitation Act, Arbitration Act) with universal fallback detection.
+* **Two-Column Split Chamber:** Seamless separation between the formal Courtroom Chamber (dialogue & witness stand) and the confidential Corner Coach Console.
+
+### 8. 🛡️ Section 63 BSA Multimodal Evidence Grounding
+* **Cryptographic BSA Certificates:** Generates tamper-proof Section 63 BSA Digital Evidence Certificates with SHA-256 hash chaining (client + server).
+* **Cheque OCR & 30-Day Statutory Clock:** Extracts bank return memos, dishonour codes, drawer/payee entities, and calculates statutory legal notice windows.
+* **Voice Admission & Limitation Extender:** Performs audio transcription and semantic analysis of debtor admissions to trigger limitation extensions under Section 18 of the Limitation Act, 1963.
+* **1-Click Pre-Trial Integration:** Instantly loads grounded evidence into the Moot Court Arena for live adversarial testing.
 
 ---
 

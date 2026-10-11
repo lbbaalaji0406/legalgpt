@@ -218,7 +218,7 @@ class AdversarialCriticEngine:
                 model=primary_model,
                 messages=[{"role": "user", "content": prompt}],
                 temperature=0.0,
-                max_tokens=2500,
+                max_tokens=1200,
                 response_format={"type": "json_object"}
             )
             raw_json = res.choices[0].message.content
@@ -230,7 +230,7 @@ class AdversarialCriticEngine:
                     model=fallback_model,
                     messages=[{"role": "user", "content": prompt}],
                     temperature=0.0,
-                    max_tokens=2500,
+                    max_tokens=1200,
                     response_format={"type": "json_object"}
                 )
                 raw_json = res.choices[0].message.content
@@ -276,6 +276,11 @@ class AdversarialCriticEngine:
                     valid_claims += 1
                     norm_claim = cls._normalize_span(claim_text)
                     mandates = [m for m in mandates if cls._normalize_span(m.get("flagged_span", "")) != norm_claim]
+                    # ANTI-TRAP FIX: Synchronize eval_block state on rescue so UI score and text match
+                    eval_block["claim_is_valid"] = True
+                    eval_block["extracted_ground_truth_evidence"] = "RESCUED_VIA_REFLEXIVE_CHROMA_LOOKUP"
+                    eval_block["adversarial_reasoning"] = "Verified through autonomous reflexive ChromaDB retrieval."
+                    eval_block["is_rescued"] = True
                 else:
                     ungrounded += 1
             elif eval_block.get("claim_is_valid"):
@@ -293,21 +298,56 @@ class AdversarialCriticEngine:
         # Synchronized Terminal Verdict
         pass_verdict = (len(mandates) == 0) and (process_reward_score >= 0.85)
 
+        # Build Sanitized Lightweight Deliberation Payload for React UI
+        def build_sanitized_payload(corr_count: int) -> dict:
+            clean_trail = []
+            for ev in evaluations:
+                claim = str(ev.get("substantive_claim_span", "")).strip()
+                if len(claim) > 220:
+                    claim = claim[:220] + "..."
+                rubric = str(ev.get("rubric_dimension", "CANONICAL_CONCORDANCE")).strip()
+                ev_str = str(ev.get("extracted_ground_truth_evidence", "")).strip()
+                if len(ev_str) > 250:
+                    ev_str = ev_str[:250] + "..."
+                reason = str(ev.get("adversarial_reasoning", "")).strip()
+                if len(reason) > 220:
+                    reason = reason[:220] + "..."
+                is_valid = bool(ev.get("claim_is_valid", False))
+                is_rescued = bool(ev.get("is_rescued", False))
+
+                clean_trail.append({
+                    "substantive_claim_span": claim,
+                    "rubric_dimension": rubric,
+                    "extracted_ground_truth": ev_str,
+                    "adversarial_reasoning": reason,
+                    "pass_verdict": is_valid,
+                    "is_rescued": is_rescued
+                })
+
+            return {
+                "process_reward_score": process_reward_score,
+                "concordance_percentage": int(process_reward_score * 100),
+                "pass_verdict": pass_verdict,
+                "corrections_made": corr_count,
+                "audit_trail": clean_trail
+            }
+
         if pass_verdict:
-            print(f"[Critic FG-PRM] ✅ PASS (Score: {process_reward_score:.4f}) — Zero corrections needed.")
+            print(f"[Critic FG-PRM] PASS (Score: {process_reward_score:.4f}) - Zero corrections needed.")
             return {
                 "final_text": draft_text,
                 "pass_verdict": True,
                 "process_reward_score": process_reward_score,
                 "corrections_made": 0,
-                "audit_log": evaluations
+                "audit_log": evaluations,
+                "sanitized_deliberation": build_sanitized_payload(0)
             }
 
         # Surgical Pruning & Repair Loop
         patched_text = draft_text
         corrections_count = 0
 
-        print(f"[Critic FG-PRM] ⚠️ Intercepted {len(mandates)} flawed legal span(s). Executing surgical patch...")
+        print(f"[Critic FG-PRM] Intercepted {len(mandates)} flawed legal span(s). Executing surgical patch...")
         for mandate in mandates:
             flagged = mandate.get("flagged_span", "").strip()
             replacement = mandate.get("corrected_replacement", "").strip()
@@ -320,12 +360,12 @@ class AdversarialCriticEngine:
                 pattern = re.escape(flagged) + r"\s*\.?\s*"
                 patched_text = re.sub(pattern, "", patched_text)
                 corrections_count += 1
-                print(f"      ✂️ Omitted unverified assertion ({err_type}): \"{flagged[:50]}...\"")
+                print(f"      Omitted unverified assertion ({err_type}): \"{flagged[:50]}...\"")
             elif replacement:
                 if flagged in patched_text:
                     patched_text = patched_text.replace(flagged, replacement)
                     corrections_count += 1
-                    print(f"      🔧 Patched ({err_type}): \"{flagged[:40]}...\" ➔ \"{replacement[:40]}...\"")
+                    print(f"      Patched ({err_type}): \"{flagged[:40]}...\" -> \"{replacement[:40]}...\"")
                 else:
                     cleaned_flagged = re.escape(flagged[:40])
                     match = re.search(cleaned_flagged, patched_text)
@@ -344,7 +384,8 @@ class AdversarialCriticEngine:
             "pass_verdict": pass_verdict,
             "process_reward_score": process_reward_score,
             "corrections_made": corrections_count,
-            "audit_log": evaluations
+            "audit_log": evaluations,
+            "sanitized_deliberation": build_sanitized_payload(corrections_count)
         }
 
 

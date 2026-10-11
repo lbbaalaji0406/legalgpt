@@ -1231,3 +1231,119 @@ body {
 @keyframes spin {
   to { transform: rotate(360deg); }
 }
+
+.evidence-header-btn {
+  background: rgba(201, 168, 76, 0.12);
+  color: var(--gold, #C9A84C);
+  border: 1px solid rgba(201, 168, 76, 0.35);
+  padding: 6px 12px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 13px;
+  font-weight: 500;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.evidence-header-btn:hover {
+  background: rgba(201, 168, 76, 0.22);
+  border-color: var(--gold, #C9A84C);
+  box-shadow: 0 0 10px rgba(201, 168, 76, 0.2);
+}
+
+.evidence-input-btn {
+  background: transparent;
+  border: none;
+  font-size: 18px;
+  cursor: pointer;
+  padding: 6px 8px;
+  border-radius: 6px;
+  color: var(--ink-faint, #8C9BAE);
+  transition: all 0.15s ease;
+}
+
+.evidence-input-btn:hover:not(:disabled) {
+  background: rgba(201, 168, 76, 0.15);
+  transform: scale(1.08);
+}
+
+.bench-header-btn {
+  background: rgba(126, 184, 196, 0.12);
+  color: #7EB8C4;
+  border: 1px solid rgba(126, 184, 196, 0.35);
+  padding: 6px 12px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 13px;
+  font-weight: 500;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.bench-header-btn:hover {
+  background: rgba(126, 184, 196, 0.22);
+  border-color: #7EB8C4;
+  box-shadow: 0 0 10px rgba(126, 184, 196, 0.25);
+}
+
+.export-btn.bench-btn {
+  background: rgba(126, 184, 196, 0.12);
+  color: #7EB8C4;
+  border: 1px solid rgba(126, 184, 196, 0.3);
+}
+
+.export-btn.bench-btn:hover {
+  background: rgba(126, 184, 196, 0.25);
+  color: #FFF;
+}
+
+/* ── CROWN JEWEL: TRIAL STUDIO BUTTON ── */
+.crown-jewel-header-btn {
+  background: linear-gradient(135deg, rgba(212, 175, 55, 0.2) 0%, rgba(56, 189, 248, 0.15) 100%);
+  color: #fef08a;
+  border: 1px solid rgba(212, 175, 55, 0.6);
+  padding: 6px 14px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 13px;
+  font-weight: 700;
+  transition: all 0.25s ease;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  box-shadow: 0 0 12px rgba(212, 175, 55, 0.25);
+  position: relative;
+  overflow: hidden;
+}
+
+.crown-jewel-header-btn:hover {
+  background: linear-gradient(135deg, rgba(212, 175, 55, 0.35) 0%, rgba(56, 189, 248, 0.25) 100%);
+  border-color: #d4af37;
+  color: #ffffff;
+  transform: translateY(-1px);
+  box-shadow: 0 0 20px rgba(212, 175, 55, 0.5), 0 0 10px rgba(56, 189, 248, 0.3);
+}
+
+.crown-jewel-header-btn .crown-icon {
+  font-size: 14px;
+  filter: drop-shadow(0 0 4px rgba(212, 175, 55, 0.8));
+}
+
+.crown-jewel-header-btn .crown-text {
+  letter-spacing: 0.03em;
+}
+
+.crown-jewel-header-btn .sparkle-gem {
+  color: #38bdf8;
+  font-size: 10px;
+  animation: sparkleGlow 1.8s ease-in-out infinite alternate;
+}
+
+@keyframes sparkleGlow {
+  0% { opacity: 0.4; transform: scale(0.9); }
+  100% { opacity: 1; transform: scale(1.3); filter: drop-shadow(0 0 6px #38bdf8); }
+}

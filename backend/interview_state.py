@@ -122,11 +122,15 @@ def _ensure_field_llm():
     try:
         from langchain_groq import ChatGroq
         import os
+        from dotenv import load_dotenv
+        load_dotenv(os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), ".env"))
+        load_dotenv(os.path.join(os.path.dirname(os.path.abspath(__file__)), ".env"))
+        api_key = os.environ.get("GROQ_API_KEY")
         llm = ChatGroq(
             model=os.environ.get("GROQ_MODEL", "qwen/qwen3.8-27b"),
-            api_key=os.environ.get("GROQ_API_KEY"),
+            groq_api_key=api_key,
             temperature=0.1,
-            max_tokens=1024,
+            max_tokens=1000,
         )
         _field_llm = llm
         return llm
@@ -234,12 +238,13 @@ Collected Fields:
 JSON SCHEMA:
 {{
   "family": "letter",
+  "dispatch_mode": "Registered Post with Acknowledgment Due (RPAD) / Speed Post",
   "sections": [
     {{"type": "heading", "text": "LEGAL NOTICE", "alignment": "center"}},
     {{"type": "body_p", "text": "Under instructions from my client {{sender_name}}, I hereby serve you with the following notice:"}},
     {{"type": "numbered_list", "items": ["Fact 1...", "Fact 2...", "Breach detail..."]}},
-    {{"type": "body_p", "text": "Statutory demand clause with strict deadline."}},
-    {{"type": "enclosure", "items": ["Copy of cheque", "Bank memo"]}}
+    {{"type": "body_p", "text": "I hereby call upon you to pay the sum of Rs. X within 15 days of receiving this notice, failing which my client shall be constrained to initiate civil/criminal proceedings without further notice."}},
+    {{"type": "enclosure", "items": ["Copy of contract", "Salary/Work records"]}}
   ]
 }}
 """,
@@ -397,7 +402,7 @@ def generate_document_spec(
             problem_description=problem_description or "",
             field_summary=field_summary,
         )
-        resp = llm.invoke(prompt, max_tokens=4096, response_format={"type": "json_object"})
+        resp = llm.invoke(prompt, max_tokens=1000, response_format={"type": "json_object"})
         raw = resp.content.strip()
         if raw.startswith("```"):
             raw = re.sub(r"^```(?:json)?\s*", "", raw)
@@ -511,6 +516,7 @@ class InterviewState:
         self.doc_schema         = None
         self.is_dynamic         = False
         self.problem_description = ""
+        self.last_problem_description = ""
         self._dynamic_fields    = []
         self._field_index       = 0
         self._supplementary     = []
@@ -715,6 +721,8 @@ class InterviewState:
 
     def reset(self):
         """Reset to idle state."""
+        if getattr(self, "problem_description", None):
+            self.last_problem_description = self.problem_description
         self._state_stack       = ["idle"]
         self._interrupt_ctx_stack = [{}]
         self.doc_type           = None

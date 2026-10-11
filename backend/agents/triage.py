@@ -135,7 +135,7 @@ class TriageAgent:
                 parsed["pass_through"] = False
             if "is_intake_needed" not in parsed:
                 parsed["is_intake_needed"] = False
-            if "extracted_fields" not in parsed:
+            if not parsed.get("extracted_fields") or not isinstance(parsed.get("extracted_fields"), dict):
                 parsed["extracted_fields"] = {}
 
             return parsed

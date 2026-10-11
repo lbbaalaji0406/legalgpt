@@ -48,8 +48,11 @@ backend/server_err*.txt
 .DS_Store
 Thumbs.db
 
-# Test payloads
+# Test payloads & runtime evidence
 test_draft*.json
 test_payload*.json
 test_scrutiny*.json
 scratch/
+data/certificates/
+data/temp_test/
+data/temp_evidence/

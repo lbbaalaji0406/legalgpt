@@ -7,9 +7,15 @@ import VetoCard from "./VetoCard";
 import JurisdictionBadge from "./JurisdictionBadge";
 import BNSCorrectionNotice from "./BNSCorrectionNotice";
 import TriageCards from "./TriageCards";
+import ToulminMatrix from "./ToulminMatrix";
+import EvidenceUploader from "./EvidenceUploader";
+import VirtualBench from "./VirtualBench";
 import { scanForTerms, getCategories, GLOSSARY } from "./LegalGlossary";
 import AuthPage from "./AuthPage";
 import ConversationsSidebar from "./ConversationsSidebar";
+import TrialStudio from "./TrialStudio";
+import DecodedTermsRibbon from "./DecodedTermsRibbon";
+
 
 function generateSessionId(convId = null) {
   if (convId) return `session_conv_${convId}`;
@@ -165,9 +171,35 @@ function PipelineMeta({ data }) {
   );
 }
 
-function Message({ msg, onTriageChoice }) {
+function formatMessageContent(rawText, citizenMode) {
+  if (!rawText) return "";
+  let text = rawText;
+  if (citizenMode) {
+    text = text
+      .replace(/### CONTROLLING PRECEDENT RATIO/gi, "### 🏛️ Controlling Supreme Court Rule (Simplified)")
+      .replace(/### PROCEDURAL DEFENSE FORTIFICATION/gi, "### 🛡️ Step-By-Step Defense (In Plain English)")
+      .replace(/### STATUTORY ANALYSIS/gi, "### 📜 The Exact Laws That Protect You")
+      .replace(/### DIRECT EVIDENCE ADMISSIBILITY/gi, "### 📄 Documents & Proof You Need Ready")
+      .replace(/### BURDEN OF PROOF/gi, "### ⚖️ Who Has To Prove What")
+      .replace(/### JURISDICTION & LIMITATION/gi, "### ⏳ Deadlines & Proper Court Locations")
+      .replace(/## CONTROLLING PRECEDENT RATIO/gi, "## 🏛️ Controlling Supreme Court Rule (Simplified)")
+      .replace(/## PROCEDURAL DEFENSE FORTIFICATION/gi, "## 🛡️ Step-By-Step Defense (In Plain English)")
+      .replace(/## STATUTORY ANALYSIS/gi, "## 📜 The Exact Laws That Protect You");
+  }
+  return text
+    .replace(/\*\*(.*?)\*\*/g, "<strong>$1</strong>")
+    .replace(/### (.*?)(\n|$)/g, "<h3>$1</h3>")
+    .replace(/## (.*?)(\n|$)/g,  "<h2>$1</h2>")
+    .replace(/^- (.*)/gm, "<li>$1</li>")
+    .replace(/(<li>.*<\/li>)/gs, "<ul>$1</ul>")
+    .replace(/\[(.*?)\]\((.*?)\)/g, '<a href="$2" target="_blank" rel="noopener noreferrer" style="color:var(--gold);text-decoration:underline;">$1</a>')
+    .replace(/\n/g, "<br/>");
+}
+
+function Message({ msg, onTriageChoice, onOpenBench, isCompactBNS = false }) {
   const isUser  = msg.role === "user";
   const [copied, setCopied] = useState(false);
+  const [isCitizenView, setIsCitizenView] = useState(false);
 
   const content = typeof msg.content === "string" ? msg.content : (msg.content != null ? String(msg.content) : "");
   const showExport = !isUser && content && content.length > 100;
@@ -184,6 +216,8 @@ function Message({ msg, onTriageChoice }) {
   const effectiveMeta = meta?.meta || meta;
   const triage = msg.triage || meta?.triage || effectiveMeta?.triage;
   const scrutiny = meta?.scrutiny || effectiveMeta?.scrutiny;
+  const deliberation = msg.critic_deliberation || meta?.critic_deliberation || effectiveMeta?.critic_deliberation;
+  const toulminMatrix = msg.toulmin_matrix || meta?.toulmin_matrix || effectiveMeta?.toulmin_matrix;
   const progressPct = msg.interviewProgress !== undefined ? msg.interviewProgress : (meta?.progress_pct !== undefined ? meta.progress_pct : effectiveMeta?.progress_pct);
   const docReady = meta?.document_ready || effectiveMeta?.document_ready;
   const docUrl = meta?.document_url || effectiveMeta?.document_url;
@@ -216,8 +250,8 @@ function Message({ msg, onTriageChoice }) {
 
         {effectiveMeta && (
           <>
-            <VetoCard scrutiny={scrutiny} />
-            <BNSCorrectionNotice meta={effectiveMeta} />
+            {toulminMatrix && <ToulminMatrix matrix={toulminMatrix} />}
+            <BNSCorrectionNotice meta={effectiveMeta} compact={isCompactBNS} />
             <UrgencyBanner meta={effectiveMeta} />
             <JurisdictionBadge meta={effectiveMeta} />
           </>
@@ -227,19 +261,30 @@ function Message({ msg, onTriageChoice }) {
           <TriageCards triage={triage} onChoose={onTriageChoice} />
         )}
 
+        {isCitizenView && !isUser && (
+          <div className="citizen-view-banner">
+            <span>🧑‍💼 <strong>Citizen Mode Active:</strong> Legal jargon translated into plain everyday terms. Relatable analogies and decoded definitions are listed below.</span>
+          </div>
+        )}
+
         <div
           className="message-text"
           dangerouslySetInnerHTML={{
-            __html: content
-              .replace(/\*\*(.*?)\*\*/g, "<strong>$1</strong>")
-              .replace(/### (.*?)(\n|$)/g, "<h3>$1</h3>")
-              .replace(/## (.*?)(\n|$)/g,  "<h2>$1</h2>")
-              .replace(/^- (.*)/gm, "<li>$1</li>")
-              .replace(/(<li>.*<\/li>)/gs, "<ul>$1</ul>")
-              .replace(/\[(.*?)\]\((.*?)\)/g, '<a href="$2" target="_blank" rel="noopener noreferrer" style="color:var(--gold);text-decoration:underline;">$1</a>')
-              .replace(/\n/g, "<br/>"),
+            __html: formatMessageContent(content, isCitizenView),
           }}
         />
+
+        {!isUser && content && (
+          <DecodedTermsRibbon
+            content={content}
+            isCitizenView={isCitizenView}
+            onToggleCitizenView={setIsCitizenView}
+          />
+        )}
+
+        {effectiveMeta && (
+          <VetoCard scrutiny={scrutiny} deliberation={deliberation} />
+        )}
         {effectiveMeta && <PipelineMeta data={effectiveMeta} />}
 
         {showExport && (
@@ -250,6 +295,13 @@ function Message({ msg, onTriageChoice }) {
               title="Copy plain text to clipboard"
             >
               {copied ? "✓ Copied" : "⎘ Copy"}
+            </button>
+            <button
+              className="export-btn bench-btn"
+              onClick={() => onOpenBench && onOpenBench(content)}
+              title="Simulate Moot Court & Adversarial Cross-Examination"
+            >
+              👑 Trial Studio
             </button>
             {showPDF && (
               <button
@@ -330,6 +382,10 @@ export default function App() {
     return saved ? false : true;
   });
   const [showDropZone, setShowDropZone] = useState(false);
+  const [showEvidenceModal, setShowEvidenceModal] = useState(false);
+  const [showBenchModal, setShowBenchModal] = useState(false);
+  const [benchMatter, setBenchMatter] = useState("");
+  const [activeEvidence, setActiveEvidence] = useState(null);
   const [showGlossary, setShowGlossary] = useState(false);
   const [glossaryCategory, setGlossaryCategory] = useState("All");
   const [convId, setConvId]     = useState(() => {
@@ -346,6 +402,8 @@ export default function App() {
   const [showSidebar, setShowSidebar] = useState(false);
   const [authLoading, setAuthLoading] = useState(false);
   const [refreshTrigger, setRefreshTrigger] = useState(0);
+  const [currentView, setCurrentView] = useState("chat"); // 'chat' | 'trial_studio'
+
 
   const bottomRef  = useRef(null);
   const inputRef   = useRef(null);
@@ -641,6 +699,38 @@ export default function App() {
     sendMessage(choice);
   }
 
+  function handleInjectEvidence(contextText) {
+    setInput(contextText);
+    if (inputRef.current) {
+      inputRef.current.focus();
+    }
+  }
+
+  function handleLaunchCrossExamFromEvidence(evidenceData) {
+    setActiveEvidence(evidenceData);
+    let matterText = input;
+    if (!matterText.trim()) {
+      if (evidenceData.evidence_type === "audio") {
+        const statement = evidenceData.forensic_admission?.debtor_statement || "Debt acknowledged";
+        matterText = `Debtor voice admission in audio recording: "${statement}". Extended limitation under Section 18 Limitation Act. Opposing party challenges voice authenticity, tampering, and Sec 63 BSA compliance.`;
+      } else {
+        const clock = evidenceData.statutory_clock || {};
+        matterText = `Dishonoured cheque of Rs. 15 Lakhs with bank return memo dated ${clock.bank_return_date || "recently"} for "${clock.dishonour_reason || "Funds Insufficient"}". Accused claims cheque was handed over as unfulfilled security.`;
+      }
+    }
+    setBenchMatter(matterText);
+    setShowEvidenceModal(false);
+    setShowBenchModal(false);
+    setCurrentView("trial_studio");
+  }
+
+  function handleOpenBench(matterText) {
+    setBenchMatter(matterText || input || "Cheque bounce under Sec 138 NI Act");
+    setShowEvidenceModal(false);
+    setShowBenchModal(false);
+    setCurrentView("trial_studio");
+  }
+
   function handleKey(e) {
     if (e.key === "Enter" && !e.shiftKey) {
       e.preventDefault();
@@ -685,8 +775,20 @@ export default function App() {
       )}
 
       <div className={`app-main ${showSidebar ? "sidebar-open" : ""}`}>
-        <header className="header">
-          <div className="header-inner">
+        {currentView === "trial_studio" ? (
+          <TrialStudio
+            sessionId={sessionId}
+            token={token}
+            groundedEvidence={activeEvidence}
+            initialMatter={benchMatter}
+            onBack={() => setCurrentView("chat")}
+            onAttachEvidence={() => setShowEvidenceModal(true)}
+          />
+        ) : (
+          <>
+            <header className="header">
+              <div className="header-inner">
+
             <button className="sidebar-toggle" onClick={() => setShowSidebar(s => !s)} title="Chat History">
               ☰
             </button>
@@ -737,7 +839,26 @@ export default function App() {
               📖 Glossary
             </button>
 
+            <button
+              className="evidence-header-btn"
+              onClick={() => setShowEvidenceModal(true)}
+              title="Multimodal Evidence Grounding (Documents, Invoices, Audio & Video under Sec 63 BSA)"
+            >
+              🛡️ Evidence
+            </button>
+
+            <button
+              className="crown-jewel-header-btn"
+              onClick={() => setCurrentView("trial_studio")}
+              title="Enter Pre-Trial Adversarial Studio & Precedent Intelligence (50,000+ Cases)"
+            >
+              <span className="crown-icon">👑</span>
+              <span className="crown-text">Trial Studio</span>
+              <span className="sparkle-gem">✦</span>
+            </button>
+
             <button className="clear-btn" onClick={clearChat}>⟳ New Matter</button>
+
 
             {/* User menu */}
             <div className="user-menu">
@@ -811,9 +932,23 @@ export default function App() {
             </div>
           )}
 
-          {messages.map((msg, i) => (
-            <Message key={i} msg={msg} onTriageChoice={handleTriageChoice} />
-          ))}
+          {messages.map((msg, i) => {
+            const hasPriorBNS = messages.slice(0, i).some(
+              (m) => {
+                const mMeta = m.meta?.meta || m.meta;
+                return m.role === "assistant" && mMeta?.remapped_laws && Object.keys(mMeta.remapped_laws).length > 0;
+              }
+            );
+            return (
+              <Message
+                key={i}
+                msg={msg}
+                isCompactBNS={hasPriorBNS}
+                onTriageChoice={handleTriageChoice}
+                onOpenBench={handleOpenBench}
+              />
+            );
+          })}
 
           {loading && <TypingIndicator label={loadingLabel} />}
 
@@ -905,14 +1040,24 @@ export default function App() {
               />
 
               {!interviewActive && (
-                <button
-                  className="upload-btn"
-                  onClick={() => fileRef.current?.click()}
-                  disabled={loading}
-                  title="Evaluate a Contract (PDF · DOCX · TXT)"
-                >
-                  📎
-                </button>
+                <>
+                  <button
+                    className="upload-btn"
+                    onClick={() => fileRef.current?.click()}
+                    disabled={loading}
+                    title="Evaluate a Contract (PDF · DOCX · TXT)"
+                  >
+                    📎
+                  </button>
+                  <button
+                    className="evidence-input-btn"
+                    onClick={() => setShowEvidenceModal(true)}
+                    disabled={loading}
+                    title="Ground Multimodal Evidence (Voice / Cheque under Sec 63 BSA)"
+                  >
+                    🎙️
+                  </button>
+                </>
               )}
 
               <textarea
@@ -947,6 +1092,27 @@ export default function App() {
             </p>
           </div>
         </footer>
+        </>
+        )}
+
+        <EvidenceUploader
+          isOpen={showEvidenceModal}
+          onClose={() => setShowEvidenceModal(false)}
+          onInjectContext={handleInjectEvidence}
+          onLaunchCrossExam={handleLaunchCrossExamFromEvidence}
+          sessionId={sessionId}
+        />
+
+        <VirtualBench
+          isOpen={showBenchModal}
+          onClose={() => setShowBenchModal(false)}
+          initialMatter={benchMatter}
+          connectedEvidence={activeEvidence}
+          onOpenEvidenceUploader={() => {
+            setShowBenchModal(false);
+            setShowEvidenceModal(true);
+          }}
+        />
       </div>
     </div>
   );

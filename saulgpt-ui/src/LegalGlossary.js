@@ -231,7 +231,101 @@ export const GLOSSARY = {
   "cause list": { def: "List of cases scheduled for hearing.", src: "General Legal", category: "General" },
   "vacation bench": { def: "Special bench hearing urgent matters during court vacation.", src: "General Legal", category: "General" },
   "mentioning": { def: "Requesting early hearing of a matter.", src: "General Legal", category: "General" },
+
+  // ── HIGH-STAKES TRIAL & PRECEDENT INTELLIGENCE (WITH ANALOGIES) ──
+  "statutory presumption": {
+    def: "Mandatory legal inference that the court must draw from established facts, shifting the burden of proof to the opponent.",
+    simple_def: "The law automatically assumes you are telling the truth from the start; the opponent must prove you wrong.",
+    analogy: "Like an umpire ruling a batsman safe — the judge assumes you are safe until the bowler produces clear camera evidence proving you wrong.",
+    src: "Section 139 NI Act / Section 114 BSA",
+    category: "Trial & Evidence"
+  },
+  "section 139": {
+    def: "Statutory presumption in favour of holder — court presumes the cheque was issued for discharge of a legally enforceable debt.",
+    simple_def: "The law assumes the cheque was for a real debt. You don't have to prove it first; the other side must prove they don't owe it.",
+    analogy: "Like an umpire calling not-out — the default assumption is in your favour.",
+    src: "Negotiable Instruments Act, 1881",
+    category: "Commercial Law"
+  },
+  "ratio decidendi": {
+    def: "The binding legal principle upon which a court decision is founded; becomes binding precedent for all future cases.",
+    simple_def: "The core legal rule laid down by the court that all lower courts in India must obey.",
+    analogy: "Think of a Supreme Court ruling as a permanent traffic signal installed at a dangerous crossing — every driver (lower court judge) arriving there in the future must stop and obey that exact signal.",
+    src: "Article 141, Constitution of India",
+    category: "Trial & Evidence"
+  },
+  "obiter dicta": {
+    def: "Incidental remarks or judicial opinions expressed in a judgment that are non-binding.",
+    simple_def: "Casual judicial remarks mentioned in passing; helpful to read, but not legally enforceable.",
+    analogy: "Like a sports commentator praising a player's shoes — interesting to hear, but doesn't affect the match score.",
+    src: "Appellate Jurisprudence",
+    category: "Trial & Evidence"
+  },
+  "rebuttal": {
+    def: "Evidence or arguments introduced to counteract, refute, or destroy a legal presumption.",
+    simple_def: "Producing enough solid proof to break down and cancel out the other side's claim.",
+    analogy: "Like showing a dated toll booth photo when someone claims your car was parked in their driveway all day.",
+    src: "Section 101-106 BSA 2023",
+    category: "Trial & Evidence"
+  },
+  "admission against interest": {
+    def: "A voluntary statement made by a party contrary to their position, admissible as direct evidence against them.",
+    simple_def: "Any message, email, or signed letter where the other person admitted owing you money or making a mistake.",
+    analogy: "Like a goalkeeper apologizing on live TV for letting in a goal — they can't later argue the ball never crossed the line.",
+    src: "Section 17 BSA 2023",
+    category: "Trial & Evidence"
+  },
+  "section 63 bsa": {
+    def: "Mandatory official certificate for admissibility of electronic records (WhatsApp, CCTV, emails, videos).",
+    simple_def: "The mandatory digital certificate needed to submit computer files, chats, or videos in court.",
+    analogy: "Like a security boarding pass at an airport — without that stamped pass, airport security won't let you board no matter how genuine your ticket looks.",
+    src: "Bharatiya Sakshya Adhiniyam, 2023",
+    category: "Trial & Evidence"
+  },
+  "preponderance of probabilities": {
+    def: "Civil standard of proof requiring that a fact is proved if more likely than not (51% threshold).",
+    simple_def: "Showing the judge that your version of events is more likely to be true than false.",
+    analogy: "Like a balanced scale where adding just one extra coin tips the balance in your favour — you don't need 100% certainty, just 51%.",
+    src: "Indian Trial Standard",
+    category: "Trial & Evidence"
+  },
+  "condition precedent": {
+    def: "A mandatory act or condition that must be fulfilled before legal rights or court jurisdiction take effect.",
+    simple_def: "A compulsory first step you must complete before you are legally permitted to file a case.",
+    analogy: "Like inserting a coin into a vending machine before pushing the button — without the coin first, pressing the button does nothing.",
+    src: "Contract & Procedural Law",
+    category: "Trial & Evidence"
+  },
+  "pendente lite": {
+    def: "Contingent on or during the pendency of the ongoing lawsuit.",
+    simple_def: "Temporary living expenses or emergency relief granted by the court while the main lawsuit is still going on.",
+    analogy: "Like an umbrella handed to you during a rainstorm — it protects you while you wait to reach final shelter.",
+    src: "Civil Procedure / Family Law",
+    category: "Civil Procedure"
+  },
+  "unilateral appointment": {
+    def: "Appointment of a sole arbitrator by one party having an interest in the dispute, held de jure invalid.",
+    simple_def: "One company picking their own referee to judge a match between themselves and their opponent — strictly illegal in India.",
+    analogy: "A cricket captain deciding that their own team coach will be the sole umpire for the final match.",
+    src: "Section 12(5) Arbitration Act 1996",
+    category: "Commercial Law"
+  },
+  "liquidated damages": {
+    def: "A pre-agreed reasonable estimate of loss payable in the event of contract breach under Section 74.",
+    simple_def: "A pre-agreed compensation amount written into a contract in case one side breaks their promise.",
+    analogy: "Like a flight cancellation fee printed on your ticket — both you and the airline know the exact cost in advance.",
+    src: "Section 74 Contract Act 1872",
+    category: "Commercial Law"
+  },
+  "acknowledgment of debt": {
+    def: "Written admission of liability signed by debtor within limitation period, resetting the statutory clock.",
+    simple_def: "A signed note, email, or balance sheet from the borrower acknowledging the debt, which restarts your 3-year deadline.",
+    analogy: "Like pressing the 'Reset' button on a 3-minute kitchen timer — it starts the full countdown from zero again.",
+    src: "Section 18 Limitation Act 1963",
+    category: "Commercial Law"
+  }
 };
+
 
 /**
  * Scan text and return all glossary terms found in it.
@@ -239,7 +333,7 @@ export const GLOSSARY = {
  */
 export function scanForTerms(text) {
   if (!text) return [];
-  const lower   = text.toLowerCase();
+  const lower   = text.toLowerCase().replace(/\s+/g, " ");
   const found   = [];
   const seen    = new Set();
 

@@ -52,9 +52,33 @@ def get_triage_state(session_id: str) -> dict:
 
 
 def reset_triage_state(session_id: str):
-    """Reset triage state for a session."""
+    """Reset triage state for a session, preserving substantive context for advocate mode."""
     if session_id in TRIAGE_STATES:
-        del TRIAGE_STATES[session_id]
+        old = TRIAGE_STATES[session_id]
+        orig_q = old.get("original_query")
+        disc_p = old.get("discovery_profile")
+        opts = old.get("options_shown")
+        swot = old.get("swot_analysis")
+        TRIAGE_STATES[session_id] = {
+            "role": None,
+            "goal": None,
+            "swot_analysis": swot,
+            "options_shown": opts or [],
+            "chosen_path": None,
+            "is_triaged": False,
+            "session_context": None,
+            "intake_fields": {},
+            "intake_complete": True,
+            "intake_question_asked": None,
+            "doc_family": None,
+            "doc_type": None,
+            "intake_question_count": 0,
+            "voluntary_intake_open": False,
+            "current_mode": "idle",
+            "discovery_profile": disc_p or {},
+            "discovery_turn_count": 0,
+            "original_query": orig_q,
+        }
 
 
 def enrich_query_with_triage(original_query: str, state: dict) -> str:

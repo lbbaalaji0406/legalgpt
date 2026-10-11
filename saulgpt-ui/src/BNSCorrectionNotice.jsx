@@ -57,7 +57,7 @@ const LAW_DISPLAY = {
   },
 };
 
-export default function BNSCorrectionNotice({ meta }) {
+export default function BNSCorrectionNotice({ meta, compact = false }) {
   const remappedLaws = meta?.remapped_laws;
   const scrutiny = meta?.scrutiny;
 
@@ -67,6 +67,18 @@ export default function BNSCorrectionNotice({ meta }) {
   }
 
   const entries = Object.entries(remappedLaws);
+
+  if (compact) {
+    return (
+      <div className="bns-notice bns-notice-compact">
+        <span className="bns-icon" style={{ fontSize: "14px" }}>📜</span>
+        <span className="bns-compact-text">
+          <strong style={{ color: "var(--accent-sage)" }}>2024 Legislation:</strong>{" "}
+          {entries.map(([oldLaw, newLaw]) => `${newLaw} (replaces ${oldLaw})`).join(" · ")}
+        </span>
+      </div>
+    );
+  }
 
   return (
     <div className="bns-notice">

@@ -33,6 +33,7 @@ from layer3_reasoning import generate_legal_response
 from layer4_validation import validate_legal_response, enforce_legal_terminology
 from layer5_external import fetch_case_law, fallback_web_search
 from layer6_knowledge_graph import legal_graph
+from infographic_generator import extract_oral_briefing, detect_and_build_infographic
 
 
 # ─────────────────────────────────────────────────────────────
@@ -237,8 +238,11 @@ def detect_mode(layer1_payload: dict, session_id: str = None) -> str:
     """
     Auto detects correct mode from original query keywords.
     Uses original_query NOT enriched_query for mode detection.
-    Falls back to previous turn's mode for follow-up questions.
+    Falls back to previous turn's mode for follow-up questions,
+    preventing sticky pathfinder inheritance across domain shifts.
     """
+    from layer1_understanding import detect_query_domain
+
     query = layer1_payload.get("original_query", "").lower()
 
     DOCUMENT_SIGNALS = [
@@ -250,36 +254,68 @@ def detect_mode(layer1_payload: dict, session_id: str = None) -> str:
         "fir / police complaint", "rental agreement",
         "response deadline"
     ]
+    # Precise procedural signals only — do NOT trigger on "process" in analytical queries
     PATHFINDER_SIGNALS = [
-        "step by step", "procedure", "process", "how to file",
-        "what steps", "kaise", "kya karna", "where to go",
-        "which office", "timeline", "how long", "next step",
-        "aage kya", "kya process", "when should", "when do",
+        "step by step", "procedure to file", "how to file", "how do i file",
+        "what steps to take", "kaise file kare", "kya karna hoga",
+        "where to go", "which office", "timeline to file", "how long do i have to file",
+        "next step", "aage kya kare", "filing procedure"
+    ]
+    ANALYSIS_SIGNALS = [
+        "injunction", "ex-parte", "infringement", "counterfeit", "criminal seizure",
+        "can we seek", "can i sue", "liability", "damages", "breach", "rights",
+        "what action can", "is it legal", "what are my options", "remedy", "grounds",
+        "punishment", "cognizable", "bailable"
     ]
     KNOWLEDGE_SIGNALS = [
         "what is", "define", "explain", "meaning", "kya hai",
         "matlab", "definition", "what does", "tell me about",
         "what are the conditions", "what does section",
-        "in which cases", "when to avoid", "when to file",
-        "shall one", "must one", "avoid it",
+        "in which cases", "when to avoid", "shall one", "must one"
     ]
 
     if any(s in query for s in DOCUMENT_SIGNALS):
         return "document"
+    if any(s in query for s in ANALYSIS_SIGNALS):
+        return "analysis"
     if any(s in query for s in PATHFINDER_SIGNALS):
         return "pathfinder"
     if any(s in query for s in KNOWLEDGE_SIGNALS):
         return "knowledge"
 
-    # Fallback: reuse previous turn's mode for follow-up questions
+    # Fallback: reuse previous turn's mode ONLY for true follow-ups within the same domain
     if session_id:
         history = get_session_history(session_id)
         if history:
             prev_mode = history[-1].get("mode", "")
-            # Inherit mode from last turn, but never inherit "document"
-            if prev_mode and prev_mode != "document":
+            prev_query = history[-1].get("query", "")
+            # Check domain shift
+            current_domain = detect_query_domain(query)
+            prev_domain = detect_query_domain(prev_query)
+            
+            # If domain shifted, DO NOT inherit old mode
+            if current_domain and prev_domain and current_domain != prev_domain:
+                print(f"      Domain shifted ({prev_domain} -> {current_domain}); resetting mode to analysis.")
+                return "analysis"
+
+            # Conversational follow-up & sparring signals for ongoing consultations
+            FOLLOWUP_SIGNALS = [
+                "why", "how", "what if", "can i just", "can i", "is there another",
+                "what happens if", "do i really", "i don't want", "i dont want",
+                "can we settle", "what are the chances", "how much time", "for what",
+                "is it compulsory", "is it mandatory", "other option", "tell me more",
+                "what else", "should i"
+            ]
+            if any(query.startswith(s) or f" {s} " in f" {query} " for s in FOLLOWUP_SIGNALS) or len(query.split()) < 12:
+                print("      Follow-up / sparring query detected with active history -> conversational mode.")
+                return "conversational"
+
+            # Never inherit document or sticky pathfinder unless current query is purely a continuation
+            if prev_mode and prev_mode not in ("document", "pathfinder"):
                 print(f"      Inheriting mode from previous turn: {prev_mode}")
                 return prev_mode
+            if prev_mode == "pathfinder" and any(w in query for w in ["next", "then", "step", "after", "where next"]):
+                return "pathfinder"
 
     return "analysis"
 
@@ -482,9 +518,36 @@ def run_saulgpt_pipeline(
         except Exception as err:
             print(f"[Precedents] Retrieval skipped: {err}")
 
+        # ─── STEP 2d: GROUNDED ELECTRONIC EVIDENCE RETRIEVAL ───
+        try:
+            from triage_state import get_triage_state
+            ts = get_triage_state(session_id)
+            if ts and ts.get("grounded_evidence"):
+                layer1_payload["grounded_evidence"] = ts["grounded_evidence"]
+                print("[Pipeline] 🛡️ Grounded electronic evidence retrieved from session.")
+        except Exception:
+            pass
+
         # ─── AUTO MODE DETECTION ───
         selected_mode = mode if mode else detect_mode(layer1_payload, session_id)
-        print(f"      Mode auto-detected: {selected_mode}")
+        # ─── DOMAIN SHIFT ISOLATION: Drop statutory context, preserve entities ───
+        from layer1_understanding import detect_query_domain, extract_persistent_entities
+        current_domain = detect_query_domain(user_query)
+        prev_queries = " ".join(t.get("query", "") for t in history[-3:]) if history else ""
+        prev_domain = detect_query_domain(prev_queries)
+
+        filtered_history = history
+        if current_domain and prev_domain and current_domain != prev_domain:
+            persistent_entities = extract_persistent_entities(history)
+            print(f"[Orchestrator] [Context Guard] Isolating context across domain shift ({prev_domain} -> {current_domain}). Retaining entities: {persistent_entities}")
+            if persistent_entities:
+                filtered_history = [{
+                    "turn": 0,
+                    "role": "user",
+                    "content": f"User Background Parameters: {', '.join(persistent_entities)}"
+                }]
+            else:
+                filtered_history = []
 
         # ─── STEP 3: LAYER 3 — REASONING ───
         # Streams response word by word
@@ -494,7 +557,7 @@ def run_saulgpt_pipeline(
             layer1_payload,
             layer2_results,
             selected_mode,
-            conversation_history=history
+            conversation_history=filtered_history
         )
 
         # ── STAGE 3: JSON CoT VERDICT GATE ──
@@ -600,6 +663,9 @@ def run_saulgpt_pipeline(
             laws_cited = citations
         )
 
+        oral_briefing = extract_oral_briefing(final_answer)
+        infographic_data = detect_and_build_infographic(user_query, final_answer)
+
         return {
             "status":               "success",
             "original_query":       user_query,
@@ -608,10 +674,14 @@ def run_saulgpt_pipeline(
             "laws_retrieved":       len(layer2_results),
             "citations":            citations,
             "response":             final_answer,
+            "oral_briefing":        oral_briefing,
+            "infographic_data":     infographic_data,
             "graph_insights":       graph_insights,
             "case_law_found":       case_law_found,
             "is_hallucinating":     validation["is_hallucinating"],
             "confidence_score":     validation["confidence_score"],
+            "critic_reward_score":  validation.get("critic_reward_score", 0.95),
+            "critic_deliberation":  validation.get("critic_deliberation"),
             "flagged_citations":    validation["flagged_citations"],
             "repealed_warnings":    validation["repealed_warnings"],
             "struck_down_warnings": validation["struck_down_warnings"],

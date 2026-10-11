@@ -158,3 +158,22 @@
     padding: 10px 12px;
   }
 }
+
+/* Compact inline pill for subsequent turns */
+.bns-notice-compact {
+  flex-direction: row;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 12px;
+  margin: 6px 0;
+  border-radius: var(--radius-sm);
+  background: rgba(168, 196, 154, 0.05);
+  border: 1px solid rgba(168, 196, 154, 0.2);
+  border-left: 3px solid var(--accent-sage);
+}
+
+.bns-compact-text {
+  font-family: var(--font-body);
+  font-size: 11.5px;
+  color: var(--ink-dim);
+}
