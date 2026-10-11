@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from "react";
 import axios from "axios";
 import "./TrialStudio.css";
 
-const API_BASE = "http://localhost:8000";
+import { API_BASE } from "./apiConfig";
 
 const CORE_ACTS = [
   { id: "all", label: "All 8 Acts Matrix", icon: "🏛️" },

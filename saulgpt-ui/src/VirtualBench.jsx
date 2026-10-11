@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import axios from "axios";
 import "./VirtualBench.css";
 
-const API_BASE = "http://localhost:8000";
+import { API_BASE } from "./apiConfig";
 
 export default function VirtualBench({
   isOpen,

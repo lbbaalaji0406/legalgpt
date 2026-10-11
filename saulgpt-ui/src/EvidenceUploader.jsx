@@ -2,7 +2,7 @@ import { useState, useRef } from "react";
 import axios from "axios";
 import "./EvidenceUploader.css";
 
-const API_BASE = "http://localhost:8000";
+import { API_BASE } from "./apiConfig";
 const MAX_FILE_SIZE_MB = 25;
 
 export default function EvidenceUploader({ isOpen, onClose, onInjectContext, onLaunchCrossExam, sessionId }) {
