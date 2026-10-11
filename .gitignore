@@ -35,6 +35,7 @@ data/vector_db/
 # AI assistant
 .claude/
 .mcp.json
+.firebase/
 
 # Logs
 *.log
