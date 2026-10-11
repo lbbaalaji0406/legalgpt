@@ -28,6 +28,7 @@ tqdm==4.66.1
 # Document processing
 PyMuPDF==1.23.8
 python-docx==1.1.0
+reportlab>=3.6.0
 
 # Scheduling
 apscheduler==3.10.4
