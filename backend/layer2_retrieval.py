@@ -63,64 +63,81 @@ embedder = None
 chroma_client = None
 collection = None
 reranker = None
+_cached_bm25 = None
+_cached_docs = None
+_cached_metas = None
 
 
 def _ensure_models():
-    """Load SentenceTransformer + ChromaDB on first call only."""
+    """Load SentenceTransformer + ChromaDB on first call only, with graceful fallbacks."""
     global _models_loaded, embedder, chroma_client, collection, reranker
     if _models_loaded:
         return
 
     print("Loading retrieval models (first query)...")
-    from sentence_transformers import SentenceTransformer, CrossEncoder
-    import chromadb
-    from chromadb.config import Settings
+    try:
+        import chromadb
+        from chromadb.config import Settings
+        chroma_client = chromadb.PersistentClient(
+            path=VECTOR_DB_PATH,
+            settings=Settings(anonymized_telemetry=False)
+        )
+        collection = chroma_client.get_or_create_collection(COLLECTION_NAME)
+        print(f"ChromaDB loaded. Collection: {COLLECTION_NAME}")
+        print(f"Total chunks in DB: {collection.count()}\n")
+    except Exception as e:
+        print(f"[Layer 2 Warning] ChromaDB load failed or unavailable: {e}")
+        collection = None
 
-    embedder = SentenceTransformer(EMBEDDING_MODEL)
+    try:
+        from sentence_transformers import SentenceTransformer
+        embedder = SentenceTransformer(EMBEDDING_MODEL)
+    except Exception as e:
+        print(f"[Layer 2 Warning] SentenceTransformer load skipped/failed: {e}")
+        embedder = None
 
-    chroma_client = chromadb.PersistentClient(
-        path=VECTOR_DB_PATH,
-        settings=Settings(anonymized_telemetry=False)
-    )
-    collection = chroma_client.get_or_create_collection(COLLECTION_NAME)
+    # Load CrossEncoder only if not disabled (avoids OOM on cloud free tiers)
+    disable_ce = os.environ.get("DISABLE_CROSS_ENCODER", "").lower() in ("1", "true")
+    if disable_ce:
+        print("[Layer 2] CrossEncoder disabled (low-memory cloud mode).")
+        reranker = None
+    else:
+        try:
+            from sentence_transformers import CrossEncoder
+            reranker = CrossEncoder(RERANKER_MODEL)
+        except Exception as e:
+            print(f"[Layer 2 Warning] CrossEncoder load skipped: {e}")
+            reranker = None
 
-    reranker = CrossEncoder(RERANKER_MODEL)
-
-    print(f"ChromaDB loaded. Collection: {COLLECTION_NAME}")
-    print(f"Total chunks in DB: {collection.count()}\n")
     _models_loaded = True
 
 
 # ─────────────────────────────────────────────────────────────
 # BM25 INDEX BUILDER
-# Loads all documents from ChromaDB and builds BM25 index
+# Loads all documents from ChromaDB and builds BM25 index (cached)
 # ─────────────────────────────────────────────────────────────
 
 def build_bm25_index(act_name_filter: str = None):
     """
     Builds BM25 keyword index from ChromaDB documents.
-    Optionally filters by act_name for focused search.
-
-    Args:
-        act_name_filter: if provided filters docs to this act only
-                         e.g. "Payment of Wages Act"
-
-    Returns:
-        bm25 index object,
-        list of document texts,
-        list of metadata dicts
-
-    Example:
-        bm25, docs, metas = build_bm25_index()
+    Caches global index to avoid expensive re-indexing and RAM churn.
     """
-    # Fetch all documents from collection
-    # ChromaDB get() returns all stored chunks
-    if act_name_filter:
-        result = collection.get(
-            where={"act_name": act_name_filter}
-        )
-    else:
-        result = collection.get()
+    global _cached_bm25, _cached_docs, _cached_metas
+
+    if not act_name_filter and _cached_bm25 is not None:
+        return _cached_bm25, _cached_docs, _cached_metas
+
+    if collection is None:
+        return None, [], []
+
+    try:
+        if act_name_filter:
+            result = collection.get(where={"act_name": act_name_filter})
+        else:
+            result = collection.get()
+    except Exception as e:
+        print(f"[BM25 Warning] collection.get failed: {e}")
+        return None, [], []
 
     documents = result.get("documents", [])
     metadatas = result.get("metadatas", [])
@@ -128,9 +145,13 @@ def build_bm25_index(act_name_filter: str = None):
     if not documents:
         return None, [], []
 
-    # Tokenize documents for BM25
     tokenized_corpus = [doc.lower().split() for doc in documents]
     bm25 = BM25Okapi(tokenized_corpus)
+
+    if not act_name_filter:
+        _cached_bm25 = bm25
+        _cached_docs = documents
+        _cached_metas = metadatas
 
     return bm25, documents, metadatas
 
@@ -196,16 +217,20 @@ def retrieve_with_hybrid_logic(payload: dict, k: int = TOP_K) -> list:
 
     # ── TECHNIQUE 1: Semantic Search via ChromaDB ──
     # Embeds query (uses HyDE paragraph) and finds nearest chunks by cosine similarity
-    print("\n[1/3] Running semantic search (ChromaDB)...")
-
-    query_embedding = embedder.encode(semantic_query).tolist()
-    collection_count = collection.count()
-
-    if collection_count <= 0:
-        print("[Layer 2] WARNING: ChromaDB collection is empty.")
-        return []
-
     semantic_results_raw = []
+    if embedder is not None and collection is not None:
+        print("\n[1/3] Running semantic search (ChromaDB)...")
+        try:
+            query_embedding = embedder.encode(semantic_query).tolist()
+            collection_count = collection.count()
+        except Exception as e:
+            print(f"[Layer 2 Warning] Embedding generation failed: {e}")
+            query_embedding = None
+            collection_count = 0
+    else:
+        print("\n[1/3] Semantic search skipped (fast keyword / low-memory mode).")
+        query_embedding = None
+        collection_count = 0
     target_sec_nums = set()
     if citations:
         for c in citations:
@@ -224,7 +249,7 @@ def retrieve_with_hybrid_logic(payload: dict, k: int = TOP_K) -> list:
     if any(_has_word(w, q_all) for w in ["community service"]):
         target_sec_nums.update(["4", "23"])
 
-    if target_sec_nums:
+    if collection and target_sec_nums:
         print(f"[Layer 2] Citation/Topic filter: section_numbers = {list(target_sec_nums)}")
         for s_num in target_sec_nums:
             try:
@@ -237,45 +262,45 @@ def retrieve_with_hybrid_logic(payload: dict, k: int = TOP_K) -> list:
 
     # Always run broad semantic search too
     # Combines with citation results for broad coverage
-    try:
-        broad = collection.query(
-            query_embeddings=[query_embedding],
-            n_results=min(max(top_k * 2, 8), collection_count)
-        )
-        for doc, meta in zip(broad["documents"][0], broad["metadatas"][0]):
-            semantic_results_raw.append((doc, meta))
-
-        # ── PARTITION A: ACTIVE 2024 SANHITA RETRIEVAL (BNS / BNSS / BSA / Constitution) ──
+    if collection and query_embedding and collection_count > 0:
         try:
-            sanhita_broad = collection.query(
+            broad = collection.query(
                 query_embeddings=[query_embedding],
-                where={"is_active_2024": True},
-                n_results=min(max(top_k, 5), collection_count)
+                n_results=min(max(top_k * 2, 8), collection_count)
             )
-            if sanhita_broad and sanhita_broad.get("documents") and sanhita_broad["documents"][0]:
-                for doc, meta in zip(sanhita_broad["documents"][0], sanhita_broad["metadatas"][0]):
-                    semantic_results_raw.append((doc, meta))
-                print(f"[Layer 2] Partition A (2024 Sanhitas): {len(sanhita_broad['documents'][0])} chunks retrieved.")
-        except Exception as e_sanhita:
-            print(f"[Layer 2] Partition A query error: {e_sanhita}")
+            for doc, meta in zip(broad["documents"][0], broad["metadatas"][0]):
+                semantic_results_raw.append((doc, meta))
 
-        # ── PARTITION B: LEGACY COLONIAL CODE RETRIEVAL (IPC / CrPC / IEA) FOR UNDATED DUAL-TRACK ──
-        if temporal_status == "UNDATED":
+            # ── PARTITION A: ACTIVE 2024 SANHITA RETRIEVAL (BNS / BNSS / BSA / Constitution) ──
             try:
-                legacy_broad = collection.query(
+                sanhita_broad = collection.query(
                     query_embeddings=[query_embedding],
-                    where={"is_repealed": True},
+                    where={"is_active_2024": True},
                     n_results=min(max(top_k, 5), collection_count)
                 )
-                if legacy_broad and legacy_broad.get("documents") and legacy_broad["documents"][0]:
-                    for doc, meta in zip(legacy_broad["documents"][0], legacy_broad["metadatas"][0]):
+                if sanhita_broad and sanhita_broad.get("documents") and sanhita_broad["documents"][0]:
+                    for doc, meta in zip(sanhita_broad["documents"][0], sanhita_broad["metadatas"][0]):
                         semantic_results_raw.append((doc, meta))
-                    print(f"[Layer 2] Partition B (Legacy Colonial): {len(legacy_broad['documents'][0])} chunks retrieved.")
-            except Exception as e_legacy:
-                print(f"[Layer 2] Partition B query error: {e_legacy}")
-    except Exception as e:
-        print(f"[Layer 2] ChromaDB query failed: {e}")
-        return []
+                    print(f"[Layer 2] Partition A (2024 Sanhitas): {len(sanhita_broad['documents'][0])} chunks retrieved.")
+            except Exception as e_sanhita:
+                print(f"[Layer 2] Partition A query error: {e_sanhita}")
+
+            # ── PARTITION B: LEGACY COLONIAL CODE RETRIEVAL (IPC / CrPC / IEA) FOR UNDATED DUAL-TRACK ──
+            if temporal_status == "UNDATED":
+                try:
+                    legacy_broad = collection.query(
+                        query_embeddings=[query_embedding],
+                        where={"is_repealed": True},
+                        n_results=min(max(top_k, 5), collection_count)
+                    )
+                    if legacy_broad and legacy_broad.get("documents") and legacy_broad["documents"][0]:
+                        for doc, meta in zip(legacy_broad["documents"][0], legacy_broad["metadatas"][0]):
+                            semantic_results_raw.append((doc, meta))
+                        print(f"[Layer 2] Partition B (Legacy Colonial): {len(legacy_broad['documents'][0])} chunks retrieved.")
+                except Exception as e_legacy:
+                    print(f"[Layer 2] Partition B query error: {e_legacy}")
+        except Exception as e:
+            print(f"[Layer 2] ChromaDB query failed: {e}")
 
     print(f"[Layer 2] Semantic raw results: {len(semantic_results_raw)}")
 
@@ -341,10 +366,17 @@ def retrieve_with_hybrid_logic(payload: dict, k: int = TOP_K) -> list:
         return []
 
     # ── TECHNIQUE 3: CrossEncoder Reranker with Exact Citation Boosting ──
-    print("[3/3] Reranking with CrossEncoder...")
-
-    pairs  = [(semantic_query, r["content"]) for r in all_results]
-    scores = reranker.predict(pairs)
+    if reranker is not None:
+        print("[3/3] Reranking with CrossEncoder...")
+        pairs  = [(semantic_query, r["content"]) for r in all_results]
+        try:
+            scores = reranker.predict(pairs)
+        except Exception as e:
+            print(f"[Layer 2 Warning] CrossEncoder inference failed ({e}), using default scores.")
+            scores = [0.8] * len(all_results)
+    else:
+        print("[3/3] CrossEncoder skipped (low-memory / fast mode). Using relevance scoring.")
+        scores = [0.8] * len(all_results)
 
     # Detect primary target act mentions in query to give strong affinity
     q_lower = (semantic_query + " " + keyword_query).lower()

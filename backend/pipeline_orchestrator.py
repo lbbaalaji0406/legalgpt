@@ -25,6 +25,10 @@ Run to chat with SaulGPT:
 
 import time
 import sys
+if hasattr(sys.stdout, 'reconfigure'):
+    sys.stdout.reconfigure(encoding='utf-8', errors='replace')
+if hasattr(sys.stderr, 'reconfigure'):
+    sys.stderr.reconfigure(encoding='utf-8', errors='replace')
 
 # Import all layers
 from layer1_understanding import analyze_query

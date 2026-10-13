@@ -19,6 +19,9 @@ COPY data/ data/
 WORKDIR /app/backend
 
 ENV PORT=8000
+ENV PYTHONIOENCODING=utf-8
+ENV DISABLE_CROSS_ENCODER=1
+ENV DISABLE_NLI=1
 EXPOSE 8000
 
 CMD ["sh", "-c", "uvicorn api_server:app --host 0.0.0.0 --port ${PORT:-8000}"]

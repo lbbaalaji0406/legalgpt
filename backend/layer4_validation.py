@@ -22,6 +22,7 @@ When used by pipeline_orchestrator.py:
 """
 
 import re
+import os
 from typing import Dict, List, Tuple
 
 # ─────────────────────────────────────────────────────────────
@@ -129,6 +130,11 @@ def _ensure_nli():
     """Load NLI model on first call only (~20s)."""
     global nli_pipeline, nli_model_available
     if nli_pipeline is not None or nli_model_available:
+        return
+    if os.environ.get("DISABLE_NLI", "").lower() in ("1", "true"):
+        nli_pipeline = None
+        nli_model_available = False
+        print("[Layer 4] NLI model disabled (low-memory cloud mode).")
         return
     try:
         from transformers import pipeline as hf_pipeline
