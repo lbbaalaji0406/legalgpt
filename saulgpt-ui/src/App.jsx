@@ -636,6 +636,10 @@ export default function App() {
         const d = err.response.data.detail;
         detail = Array.isArray(d) ? d.map(x => x.msg).join("; ") : (typeof d === "string" ? d : "");
       }
+      if (err.response?.status === 404 || (detail && (detail.includes("FOREIGN KEY") || detail.includes("locked") || detail.includes("not found")))) {
+        localStorage.removeItem("saulgpt_conv_id");
+        setConvId(null);
+      }
       const msg = err.response
         ? `Server error ${err.response.status}${detail ? `: ${detail}` : ""}`
         : "Cannot connect to SaulGPT API. Is api_server.py running?";

@@ -49,10 +49,13 @@ from interview_state import (
 )
 from scrutiny_agent import scrutinize
 from document_generator import generate_docx, validate_document_spec
-from database import init_db, create_user, get_user_by_email, get_user_by_id
-from database import create_conversation, get_conversations, get_conversation
-from database import delete_conversation, update_conversation_title
-from database import add_message, get_messages, get_last_turn, touch_conversation, bulk_import_messages
+from database import (
+    init_db, create_user, get_user_by_email, get_user_by_id,
+    ensure_user_exists, ensure_conversation_exists,
+    create_conversation, get_conversations, get_conversation,
+    delete_conversation, update_conversation_title,
+    add_message, get_messages, get_last_turn, touch_conversation, bulk_import_messages
+)
 from auth import hash_password, verify_password, create_token, decode_token
 
 # In-memory storage for generated .docx files (session_id → bytes)
@@ -1257,11 +1260,14 @@ def _save_to_db(user_id: int, conv_id: int, query: str, result: dict):
 
 def _save_assistant_response(conv_id: int, result: dict):
     """Save only the assistant response to DB (user message already saved)."""
-    import json
-    turn = get_last_turn(conv_id) + 1
-    meta_json = json.dumps({k: v for k, v in result.items() if k != "response"}, default=str)
-    add_message(conv_id, "assistant", result.get("response", ""), meta=meta_json, turn=turn)
-    touch_conversation(conv_id)
+    try:
+        import json
+        turn = get_last_turn(conv_id) + 1
+        meta_json = json.dumps({k: v for k, v in result.items() if k != "response"}, default=str)
+        add_message(conv_id, "assistant", result.get("response", ""), meta=meta_json, turn=turn)
+        touch_conversation(conv_id)
+    except Exception as e:
+        print(f"[Chat] Warning: failed to save assistant response: {e}")
 
 
 def _append_mode_guidance(response_text: str, chosen_mode: Optional[str], query: str) -> str:
@@ -1310,7 +1316,10 @@ def _save_and_return(result: dict, user_id, conv_id, chosen_mode: Optional[str] 
     if isinstance(result, dict) and "response" in result and chosen_mode:
         result["response"] = _append_mode_guidance(result["response"], chosen_mode, query)
     if user_id and conv_id and isinstance(result, dict):
-        _save_assistant_response(conv_id, result)
+        try:
+            _save_assistant_response(conv_id, result)
+        except Exception as e:
+            print(f"[Chat] Warning: _save_and_return failed to save assistant response: {e}")
         result["conv_id"] = conv_id  # inject conv_id so frontend persists it to localStorage
     return result
 
@@ -1662,7 +1671,9 @@ async def chat_endpoint(
             if conv_id:
                 conv = get_conversation(conv_id, user_id)
                 if not conv:
-                    raise HTTPException(404, "Conversation not found")
+                    # Gracefully create a new conversation instead of throwing 404 or FK violation
+                    conv_id = create_conversation(user_id)
+                    ACTIVE_CONVERSATIONS[session_id] = conv_id
             else:
                 if session_id in ACTIVE_CONVERSATIONS:
                     conv_id = ACTIVE_CONVERSATIONS[session_id]
@@ -1674,15 +1685,18 @@ async def chat_endpoint(
                     conv_id = create_conversation(user_id)
                     ACTIVE_CONVERSATIONS[session_id] = conv_id
 
-        # ── Persist user query to DB immediately ──
+        # ── Persist user query to DB safely ──
         if user_id and conv_id:
-            _turn = get_last_turn(conv_id) + 1
-            add_message(conv_id, "user", query, turn=_turn)
-            if _turn == 1:
-                _title = query.strip()[:60]
-                if len(query) > 60:
-                    _title += "..."
-                update_conversation_title(conv_id, _title)
+            try:
+                _turn = get_last_turn(conv_id) + 1
+                add_message(conv_id, "user", query, turn=_turn)
+                if _turn == 1:
+                    _title = query.strip()[:60]
+                    if len(query) > 60:
+                        _title += "..."
+                    update_conversation_title(conv_id, _title)
+            except Exception as e:
+                print(f"[Chat] Warning: failed to save user query: {e}")
 
         # ── Active interview: accept answer ──
         state = get_interview_state(session_id)
@@ -2826,9 +2840,9 @@ def _get_user_id(authorization: str = "") -> int:
         if scheme.lower() == "bearer" and token:
             uid = decode_token(token)
             if uid:
-                return uid
+                return ensure_user_exists(uid)
     # Default fallback to guest user (id=1) so conversations always persist & load seamlessly
-    return 1
+    return ensure_user_exists(1)
 
 
 @app.post("/api/auth/signup")
