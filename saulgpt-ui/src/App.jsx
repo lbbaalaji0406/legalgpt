@@ -819,20 +819,6 @@ export default function App() {
               </div>
             </div>
 
-            {!interviewActive && (
-              <nav className="mode-selector">
-                <span className="mode-label">MODE</span>
-                {[null, "knowledge", "analysis", "document", "pathfinder"].map(m => (
-                  <button
-                    key={m || "auto"}
-                    className={`mode-btn ${forceMode === m ? "active" : ""}`}
-                    onClick={() => setForceMode(m)}
-                  >
-                    {m ? `${MODES[m].icon} ${MODES[m].label}` : "⚡ Auto"}
-                  </button>
-                ))}
-              </nav>
-            )}
 
             {interviewActive && (
               <div className="interview-badge">
@@ -1052,6 +1038,26 @@ export default function App() {
           )}
 
           <div className="input-inner">
+            {!interviewActive && (
+              <div className="chat-mode-bar">
+                <div className="chat-mode-pill">
+                  <span className="chat-mode-icon">{forceMode ? MODES[forceMode]?.icon : "⚡"}</span>
+                  <select
+                    className="chat-mode-select"
+                    value={forceMode || ""}
+                    onChange={e => setForceMode(e.target.value || null)}
+                    disabled={loading}
+                    title="Select SaulGPT Intelligence Mode"
+                  >
+                    <option value="">⚡ Auto Mode (Smart Intent Detection)</option>
+                    <option value="knowledge">📚 Legal Knowledge (Statutes & Definitions)</option>
+                    <option value="analysis">⚖️ Case Analysis (Dispute Strategy & Precedents)</option>
+                    <option value="document">✍️ Document Draft (Legal Notices & Petitions)</option>
+                    <option value="pathfinder">🧭 Step-by-Step Procedure (Court Procedures & Filings)</option>
+                  </select>
+                </div>
+              </div>
+            )}
             <div className="input-wrapper">
               <input
                 type="file"
