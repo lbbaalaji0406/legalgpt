@@ -2237,6 +2237,8 @@ async def chat_endpoint(
 
         return _save_and_return(result, user_id, conv_id, chosen_mode=request.mode, query=query)
 
+    except HTTPException:
+        raise
     except Exception as e:
         traceback.print_exc()
         print(f"[API] Chat error: {e}")

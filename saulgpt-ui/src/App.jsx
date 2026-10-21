@@ -436,16 +436,32 @@ export default function App() {
     if (!loading && !interviewActive) inputRef.current?.focus();
   }, [loading, interviewActive]);
 
+  useEffect(() => {
+    if (token) {
+      const key = localStorage.getItem("saulgpt_user_groq_key");
+      if (!key || !key.trim() || !key.trim().startsWith("gsk_")) {
+        setShowApiKeyModal(true);
+      }
+    }
+  }, [token]);
+
   function api() {
     const headers = {};
     const currentToken = token || localStorage.getItem("saulgpt_token");
     if (currentToken) headers.Authorization = `Bearer ${currentToken}`;
+    const key = localStorage.getItem("saulgpt_user_groq_key");
+    if (key && key.trim()) headers["X-Groq-Api-Key"] = key.trim();
     const instance = axios.create({ headers });
     instance.interceptors.response.use(
       res => res,
       err => {
         if (err.response?.status === 401 && (token || localStorage.getItem("saulgpt_token"))) {
           logout();
+        }
+        const status = err.response?.status;
+        const detail = err.response?.data?.detail || err.response?.data?.error || "";
+        if (status === 429 || (typeof detail === "string" && detail.toLowerCase().includes("rate limit"))) {
+          window.dispatchEvent(new CustomEvent("saulgpt-rate-limit-hit", { detail: { error: detail } }));
         }
         return Promise.reject(err);
       }
@@ -631,6 +647,9 @@ export default function App() {
         localStorage.removeItem("saulgpt_conv_id");
         setConvId(null);
       }
+      if (err.response?.status === 400 && (detail.toLowerCase().includes("groq") || detail.toLowerCase().includes("api key") || detail.includes("gsk_"))) {
+        setShowApiKeyModal(true);
+      }
       const msg = err.response
         ? `Server error ${err.response.status}${detail ? `: ${detail}` : ""}`
         : "Cannot connect to SaulGPT API. Is api_server.py running?";
@@ -645,6 +664,19 @@ export default function App() {
 
   async function handleFile(file) {
     if (!file || loading) return;
+
+    const activeGroqKey = localStorage.getItem("saulgpt_user_groq_key");
+    if (!activeGroqKey || !activeGroqKey.trim() || !activeGroqKey.trim().startsWith("gsk_")) {
+      setShowApiKeyModal(true);
+      setMessages(prev => [
+        ...prev,
+        {
+          role: "assistant",
+          content: "🔑 **Groq API Key Required**: Please provide your free Groq API key (starts with `gsk_`) to evaluate contracts.",
+        }
+      ]);
+      return;
+    }
 
     setShowSuggestions(false);
     setShowDropZone(false);
