@@ -214,15 +214,14 @@ async def validate_api_key(req: ValidateKeyRequest):
 async def get_key_status(request: Request):
     header_key = request.headers.get("x-groq-api-key") or request.headers.get("X-Groq-Api-Key")
     has_custom = bool(header_key and header_key.strip().startswith("gsk_"))
-    server_has_key = bool(os.getenv("GROQ_API_KEY", "").strip())
     masked = ""
     if has_custom:
         masked = header_key[:7] + "••••••••" + header_key[-4:]
     return {
         "using_custom_key": has_custom,
         "masked_custom_key": masked,
-        "server_fallback_available": server_has_key,
-        "ready": has_custom or server_has_key
+        "server_fallback_available": False,
+        "ready": has_custom
     }
 
 
@@ -1644,6 +1643,14 @@ async def chat_endpoint(
     try:
         session_id = request.session_id
         query      = request.get_query_text()
+
+        # Compulsory BYOK check — personal Groq key is required
+        header_key = fastapi_request.headers.get("x-groq-api-key") or fastapi_request.headers.get("X-Groq-Api-Key")
+        if not header_key or not header_key.strip() or not header_key.strip().startswith("gsk_"):
+            raise HTTPException(
+                status_code=400,
+                detail="Groq API Key is compulsory. Please provide your free Groq API Key (starts with 'gsk_') from console.groq.com/keys via the API Key button in the top bar."
+            )
 
         # Maintain persistent substantive legal context across turns
         if session_id not in SESSION_LEGAL_CONTEXT:

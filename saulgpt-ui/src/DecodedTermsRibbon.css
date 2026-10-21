@@ -1,4 +1,4 @@
-/* SAULGPT — DECODED TERMS RIBBON & DUAL VIEW STYLING */
+/* SAULGPT — DECODED TERMS RIBBON & ENHANCED GLOSSARY STYLING */
 
 .decoded-terms-container {
   margin-top: 14px;
@@ -7,73 +7,13 @@
   gap: 10px;
 }
 
-/* ── VIEW MODE BAR ── */
-.view-mode-bar {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  background: rgba(15, 23, 42, 0.85);
-  border: 1px solid rgba(212, 175, 55, 0.25);
-  border-radius: 8px;
-  padding: 6px 12px;
-}
-
-.bar-label {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  font-size: 11px;
-  font-weight: 700;
-  color: #cbd5e1;
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
-}
-
-.sparkle-icon {
-  color: #d4af37;
-  font-size: 12px;
-}
-
-.toggle-pill-group {
-  display: flex;
-  gap: 6px;
-  background: rgba(30, 41, 59, 0.8);
-  padding: 3px;
-  border-radius: 6px;
-}
-
-.view-toggle-pill {
-  background: transparent;
-  border: none;
-  color: #94a3b8;
-  padding: 4px 12px;
-  border-radius: 4px;
-  font-size: 11px;
-  font-weight: 600;
-  cursor: pointer;
-  transition: all 0.2s ease;
-}
-
-.view-toggle-pill.active-advocate {
-  background: rgba(212, 175, 55, 0.25);
-  color: #fef08a;
-  border: 1px solid rgba(212, 175, 55, 0.5);
-  box-shadow: 0 0 8px rgba(212, 175, 55, 0.25);
-}
-
-.view-toggle-pill.active-citizen {
-  background: rgba(16, 185, 129, 0.25);
-  color: #6ee7b7;
-  border: 1px solid rgba(16, 185, 129, 0.5);
-  box-shadow: 0 0 8px rgba(16, 185, 129, 0.25);
-}
-
 /* ── TERMS RIBBON CARD ── */
 .terms-ribbon-card {
-  background: rgba(17, 24, 39, 0.8);
-  border: 1px solid rgba(255, 255, 255, 0.08);
+  background: rgba(17, 24, 39, 0.85);
+  border: 1px solid rgba(212, 175, 55, 0.25);
   border-radius: 8px;
   padding: 10px 14px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
 }
 
 .ribbon-header {
@@ -81,17 +21,30 @@
   justify-content: space-between;
   align-items: center;
   margin-bottom: 8px;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.ribbon-title-box {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.ribbon-sparkle {
+  font-size: 13px;
 }
 
 .ribbon-title {
-  font-size: 11px;
+  font-size: 11.5px;
   font-weight: 700;
-  color: #cbd5e1;
+  color: #f1f5f9;
+  letter-spacing: 0.02em;
 }
 
 .ribbon-hint {
-  font-size: 10px;
-  color: #64748b;
+  font-size: 10.5px;
+  color: #94a3b8;
   font-style: italic;
 }
 
@@ -103,17 +56,17 @@
 
 .term-chip {
   background: rgba(30, 41, 59, 0.7);
-  border: 1px solid rgba(212, 175, 55, 0.3);
+  border: 1px solid rgba(212, 175, 55, 0.35);
   color: #fce7a1;
-  padding: 4px 10px;
+  padding: 4px 11px;
   border-radius: 6px;
-  font-size: 11px;
+  font-size: 11.5px;
   font-weight: 600;
   cursor: pointer;
   display: flex;
   align-items: center;
   gap: 6px;
-  transition: all 0.2s;
+  transition: all 0.2s ease;
 }
 
 .term-chip:hover {
@@ -121,18 +74,19 @@
   border-color: #d4af37;
   transform: translateY(-1px);
   box-shadow: 0 2px 8px rgba(212, 175, 55, 0.25);
+  color: #ffffff;
 }
 
 .chip-info-icon {
-  font-size: 10px;
-  opacity: 0.8;
+  font-size: 11px;
+  opacity: 0.9;
 }
 
 /* ── MODAL BACKDROP & CARD ── */
 .term-modal-backdrop {
   position: fixed;
   inset: 0;
-  background: rgba(0, 0, 0, 0.75);
+  background: rgba(0, 0, 0, 0.78);
   backdrop-filter: blur(6px);
   display: flex;
   align-items: center;
@@ -143,11 +97,11 @@
 
 .term-modal-card {
   background: #0f172a;
-  border: 1px solid rgba(212, 175, 55, 0.4);
+  border: 1px solid rgba(212, 175, 55, 0.45);
   border-radius: 12px;
   width: 90%;
-  max-width: 520px;
-  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.8), 0 0 20px rgba(212, 175, 55, 0.2);
+  max-width: 540px;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.8), 0 0 24px rgba(212, 175, 55, 0.25);
   overflow: hidden;
   animation: scaleUp 0.2s ease;
 }
@@ -160,13 +114,13 @@
   justify-content: space-between;
   align-items: flex-start;
   padding: 16px 20px;
-  background: rgba(17, 24, 39, 0.9);
+  background: rgba(17, 24, 39, 0.95);
   border-bottom: 1px solid rgba(255, 255, 255, 0.08);
 }
 
 .modal-title-box h3 {
   margin: 4px 0 0 0;
-  font-size: 16px;
+  font-size: 17px;
   font-weight: 800;
   color: #ffffff;
   letter-spacing: 0.03em;
@@ -200,6 +154,8 @@
   display: flex;
   flex-direction: column;
   gap: 14px;
+  max-height: 80vh;
+  overflow-y: auto;
 }
 
 .modal-section {
@@ -208,7 +164,7 @@
 }
 
 .section-label {
-  font-size: 10px;
+  font-size: 10.5px;
   font-weight: 800;
   letter-spacing: 0.08em;
   display: block;
@@ -216,55 +172,39 @@
 }
 
 .simple-meaning-box {
-  background: rgba(16, 185, 129, 0.1);
+  background: rgba(16, 185, 129, 0.12);
   border-left: 3px solid #10b981;
 }
 
 .simple-meaning-box .section-label { color: #34d399; }
-.simple-meaning-box p { margin: 0; font-size: 13px; line-height: 1.5; color: #f1f5f9; font-weight: 500; }
+.simple-meaning-box p { margin: 0; font-size: 13.5px; line-height: 1.55; color: #f8fafc; font-weight: 500; }
 
 .analogy-box {
-  background: rgba(212, 175, 55, 0.1);
+  background: rgba(212, 175, 55, 0.12);
   border-left: 3px solid #d4af37;
 }
 
 .analogy-box .section-label { color: #fce7a1; }
-.analogy-text { margin: 0; font-size: 13px; line-height: 1.5; color: #fef08a; font-style: italic; }
+.analogy-text { margin: 0; font-size: 13.5px; line-height: 1.55; color: #fef08a; font-style: italic; font-weight: 500; }
 
 .formal-def-box {
-  background: rgba(30, 41, 59, 0.6);
+  background: rgba(30, 41, 59, 0.65);
   border-left: 3px solid #38bdf8;
 }
 
 .formal-def-box .section-label { color: #38bdf8; }
-.formal-def-box p { margin: 0; font-size: 12px; line-height: 1.5; color: #cbd5e1; }
+.formal-def-box p { margin: 0; font-size: 12.5px; line-height: 1.5; color: #cbd5e1; }
 
 .modal-footer-source {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  font-size: 11px;
+  font-size: 11.5px;
   color: #94a3b8;
   padding-top: 10px;
-  border-top: 1px solid rgba(255, 255, 255, 0.06);
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
 }
 
 .modal-footer-source strong {
   color: #e2e8f0;
-}
-
-/* ── CITIZEN VIEW BANNER ── */
-.citizen-view-banner {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  background: rgba(16, 185, 129, 0.12);
-  border: 1px solid rgba(16, 185, 129, 0.35);
-  border-radius: 8px;
-  padding: 8px 12px;
-  margin-bottom: 12px;
-  font-size: 12px;
-  color: #a7f3d0;
-  line-height: 1.4;
-  animation: fadeIn 0.2s ease;
 }

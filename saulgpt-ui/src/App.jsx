@@ -172,22 +172,9 @@ function PipelineMeta({ data }) {
   );
 }
 
-function formatMessageContent(rawText, citizenMode) {
+function formatMessageContent(rawText) {
   if (!rawText) return "";
-  let text = rawText;
-  if (citizenMode) {
-    text = text
-      .replace(/### CONTROLLING PRECEDENT RATIO/gi, "### 🏛️ Controlling Supreme Court Rule (Simplified)")
-      .replace(/### PROCEDURAL DEFENSE FORTIFICATION/gi, "### 🛡️ Step-By-Step Defense (In Plain English)")
-      .replace(/### STATUTORY ANALYSIS/gi, "### 📜 The Exact Laws That Protect You")
-      .replace(/### DIRECT EVIDENCE ADMISSIBILITY/gi, "### 📄 Documents & Proof You Need Ready")
-      .replace(/### BURDEN OF PROOF/gi, "### ⚖️ Who Has To Prove What")
-      .replace(/### JURISDICTION & LIMITATION/gi, "### ⏳ Deadlines & Proper Court Locations")
-      .replace(/## CONTROLLING PRECEDENT RATIO/gi, "## 🏛️ Controlling Supreme Court Rule (Simplified)")
-      .replace(/## PROCEDURAL DEFENSE FORTIFICATION/gi, "## 🛡️ Step-By-Step Defense (In Plain English)")
-      .replace(/## STATUTORY ANALYSIS/gi, "## 📜 The Exact Laws That Protect You");
-  }
-  return text
+  return rawText
     .replace(/\*\*(.*?)\*\*/g, "<strong>$1</strong>")
     .replace(/### (.*?)(\n|$)/g, "<h3>$1</h3>")
     .replace(/## (.*?)(\n|$)/g,  "<h2>$1</h2>")
@@ -200,7 +187,6 @@ function formatMessageContent(rawText, citizenMode) {
 function Message({ msg, onTriageChoice, onOpenBench, isCompactBNS = false }) {
   const isUser  = msg.role === "user";
   const [copied, setCopied] = useState(false);
-  const [isCitizenView, setIsCitizenView] = useState(false);
 
   const content = typeof msg.content === "string" ? msg.content : (msg.content != null ? String(msg.content) : "");
   const showExport = !isUser && content && content.length > 100;
@@ -262,24 +248,16 @@ function Message({ msg, onTriageChoice, onOpenBench, isCompactBNS = false }) {
           <TriageCards triage={triage} onChoose={onTriageChoice} />
         )}
 
-        {isCitizenView && !isUser && (
-          <div className="citizen-view-banner">
-            <span>🧑‍💼 <strong>Citizen Mode Active:</strong> Legal jargon translated into plain everyday terms. Relatable analogies and decoded definitions are listed below.</span>
-          </div>
-        )}
-
         <div
           className="message-text"
           dangerouslySetInnerHTML={{
-            __html: formatMessageContent(content, isCitizenView),
+            __html: formatMessageContent(content),
           }}
         />
 
         {!isUser && content && (
           <DecodedTermsRibbon
             content={content}
-            isCitizenView={isCitizenView}
-            onToggleCitizenView={setIsCitizenView}
           />
         )}
 
@@ -592,6 +570,19 @@ export default function App() {
   async function sendMessage(query) {
     const text = (query || input).trim();
     if (!text || loading) return;
+
+    const activeGroqKey = localStorage.getItem("saulgpt_user_groq_key");
+    if (!activeGroqKey || !activeGroqKey.trim() || !activeGroqKey.trim().startsWith("gsk_")) {
+      setShowApiKeyModal(true);
+      setMessages(prev => [
+        ...prev,
+        {
+          role: "assistant",
+          content: "🔑 **Groq API Key Required**: SaulGPT requires every user to provide their own free Groq API Key (starts with `gsk_`). Please enter your key in the settings modal or generate one for free in 30 seconds at [console.groq.com/keys](https://console.groq.com/keys).",
+        }
+      ]);
+      return;
+    }
 
     setInput("");
     setShowSuggestions(false);
@@ -992,10 +983,17 @@ export default function App() {
                   <div className="glossary-terms-list">
                     {getTermsForCategory(glossaryCategory).map((term, i) => (
                       <div key={i} className="glossary-term-card">
-                        <strong>{term.term}</strong>
-                        <span className="glossary-term-category">{term.category}</span>
-                        <p>{term.def}</p>
-                        <small>Source: {term.src}</small>
+                        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 6 }}>
+                          <strong style={{ color: "var(--gold-light)", textTransform: "capitalize" }}>{term.term}</strong>
+                          <span className="glossary-term-category">{term.category}</span>
+                        </div>
+                        <p style={{ margin: "0 0 6px 0", fontSize: 13, color: "var(--parchment)" }}>💡 {term.simple_def || term.def}</p>
+                        {term.analogy && (
+                          <div style={{ background: "rgba(201,168,76,0.1)", borderLeft: "3px solid var(--gold)", padding: "6px 8px", borderRadius: 4, margin: "6px 0", fontSize: 12, color: "var(--gold-light)" }}>
+                            <strong>🎯 Everyday Analogy:</strong> <em>"{term.analogy}"</em>
+                          </div>
+                        )}
+                        <small style={{ color: "var(--ink-dim)", fontSize: 11 }}>Source: {term.src}</small>
                       </div>
                     ))}
                   </div>
@@ -1015,13 +1013,21 @@ export default function App() {
                 ))}
               </select>
               <div className="glossary-terms-list">
-                {(glossaryCategory === "All" ? Object.values(GLOSSARY).slice(0, 20) : Object.values(GLOSSARY).filter(t => t.category === glossaryCategory).slice(0, 20)).map((term, i) => {
-                  const termKey = Object.keys(GLOSSARY).find(k => GLOSSARY[k] === term);
+                {(glossaryCategory === "All" ? Object.keys(GLOSSARY).slice(0, 30) : Object.keys(GLOSSARY).filter(k => GLOSSARY[k].category === glossaryCategory).slice(0, 30)).map((termKey, i) => {
+                  const term = GLOSSARY[termKey];
                   return (
                     <div key={i} className="glossary-term-card">
-                      <strong>{termKey}</strong>
-                      <span className="glossary-term-category">{term.category}</span>
-                      <p>{term.def}</p>
+                      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 6 }}>
+                        <strong style={{ color: "var(--gold-light)", textTransform: "capitalize" }}>{termKey}</strong>
+                        <span className="glossary-term-category">{term.category}</span>
+                      </div>
+                      <p style={{ margin: "0 0 6px 0", fontSize: 13, color: "var(--parchment)" }}>💡 {term.simple_def || term.def}</p>
+                      {term.analogy && (
+                        <div style={{ background: "rgba(201,168,76,0.1)", borderLeft: "3px solid var(--gold)", padding: "6px 8px", borderRadius: 4, margin: "6px 0", fontSize: 12, color: "var(--gold-light)" }}>
+                          <strong>🎯 Everyday Analogy:</strong> <em>"{term.analogy}"</em>
+                        </div>
+                      )}
+                      <small style={{ color: "var(--ink-dim)", fontSize: 11 }}>Source: {term.src}</small>
                     </div>
                   );
                 })}

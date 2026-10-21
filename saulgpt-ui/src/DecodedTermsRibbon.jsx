@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { scanForTerms } from "./LegalGlossary";
 import "./DecodedTermsRibbon.css";
 
-export default function DecodedTermsRibbon({ content, onToggleCitizenView, isCitizenView }) {
+export default function DecodedTermsRibbon({ content }) {
   const [activeModalTerm, setActiveModalTerm] = useState(null);
 
   if (!content) return null;
@@ -13,48 +13,28 @@ export default function DecodedTermsRibbon({ content, onToggleCitizenView, isCit
 
   return (
     <div className="decoded-terms-container">
-      {/* ── TOP VIEW TOGGLE (ADVOCATE VS CITIZEN) ── */}
-      <div className="view-mode-bar">
-        <div className="bar-label">
-          <span className="sparkle-icon">✦</span>
-          <span>Legal Intelligence Dual-View:</span>
-        </div>
-        <div className="toggle-pill-group">
-          <button
-            className={`view-toggle-pill ${!isCitizenView ? "active-advocate" : ""}`}
-            onClick={() => onToggleCitizenView(false)}
-            title="Full Supreme Court citations, exact statutory clauses, and procedural trial mechanics"
-          >
-            ⚖️ Advocate View
-          </button>
-          <button
-            className={`view-toggle-pill ${isCitizenView ? "active-citizen" : ""}`}
-            onClick={() => onToggleCitizenView(true)}
-            title="Plain everyday English with real-world analogies and simple action items"
-          >
-            🧑‍💼 Citizen View
-          </button>
-        </div>
-      </div>
-
       {/* ── KEY TERMS DECODED RIBBON ── */}
       <div className="terms-ribbon-card">
         <div className="ribbon-header">
-          <span className="ribbon-title">
-            📖 Decoded in this response ({termsFound.length} legal terms):
-          </span>
-          <span className="ribbon-hint">Click any term for simple meaning & analogy</span>
+          <div className="ribbon-title-box">
+            <span className="ribbon-sparkle">📖</span>
+            <span className="ribbon-title">
+              Legal Glossary & Concept Decoder ({termsFound.length} terms found):
+            </span>
+          </div>
+          <span className="ribbon-hint">Click any term for everyday meaning & simple analogy</span>
         </div>
 
         <div className="terms-chips-flex">
-          {termsFound.slice(0, 6).map((item, idx) => (
+          {termsFound.slice(0, 8).map((item, idx) => (
             <button
               key={idx}
               className="term-chip"
               onClick={() => setActiveModalTerm(item)}
+              title={`Click to decode "${item.term}"`}
             >
               <span className="chip-term-text">{item.term}</span>
-              <span className="chip-info-icon">ℹ️</span>
+              <span className="chip-info-icon">💡</span>
             </button>
           ))}
         </div>
@@ -69,7 +49,7 @@ export default function DecodedTermsRibbon({ content, onToggleCitizenView, isCit
                 <span className="modal-category-badge">{activeModalTerm.category}</span>
                 <h3>{activeModalTerm.term.toUpperCase()}</h3>
               </div>
-              <button className="close-modal-btn" onClick={() => setActiveModalTerm(null)}>
+              <button className="close-modal-btn" onClick={() => setActiveModalTerm(null)} title="Close">
                 ✕
               </button>
             </div>
@@ -84,22 +64,27 @@ export default function DecodedTermsRibbon({ content, onToggleCitizenView, isCit
               {/* Real World Analogy */}
               {activeModalTerm.analogy && (
                 <div className="modal-section analogy-box">
-                  <span className="section-label">🎯 REAL-WORLD ANALOGY:</span>
+                  <span className="section-label">🎯 REAL-WORLD EVERYDAY ANALOGY:</span>
                   <p className="analogy-text">"{activeModalTerm.analogy}"</p>
                 </div>
               )}
 
-              {/* Formal Courtroom Definition */}
-              <div className="modal-section formal-def-box">
-                <span className="section-label">📜 FORMAL COURTROOM DEFINITION:</span>
-                <p>{activeModalTerm.def}</p>
-              </div>
+              {/* Formal Courtroom Definition — rendered only when distinct to prevent duplicates */}
+              {activeModalTerm.def &&
+                activeModalTerm.def.trim() !== (activeModalTerm.simple_def || "").trim() && (
+                  <div className="modal-section formal-def-box">
+                    <span className="section-label">📜 FORMAL COURTROOM DEFINITION:</span>
+                    <p>{activeModalTerm.def}</p>
+                  </div>
+                )}
 
               {/* Statutory Source */}
-              <div className="modal-footer-source">
-                <span>Governing Law / Doctrine:</span>
-                <strong>{activeModalTerm.src}</strong>
-              </div>
+              {activeModalTerm.src && (
+                <div className="modal-footer-source">
+                  <span>Governing Law / Doctrine:</span>
+                  <strong>{activeModalTerm.src}</strong>
+                </div>
+              )}
             </div>
           </div>
         </div>

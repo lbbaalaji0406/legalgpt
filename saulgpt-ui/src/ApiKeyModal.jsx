@@ -54,22 +54,17 @@ export default function ApiKeyModal({ isOpen, onClose, rateLimitAlert = false, o
   const handleSave = () => {
     const trimmed = apiKey.trim();
     if (!trimmed) {
-      handleRemoveKey();
+      setTestResult({ success: false, message: "Groq API key is required. Please paste your key (starts with gsk_)." });
+      return;
+    }
+    if (!trimmed.startsWith("gsk_")) {
+      setTestResult({ success: false, message: "Invalid key format. Groq API keys must begin with 'gsk_'." });
       return;
     }
     localStorage.setItem("saulgpt_user_groq_key", trimmed);
     setActiveStoredKey(trimmed);
     if (onKeyUpdated) onKeyUpdated(trimmed);
     onClose();
-  };
-
-  const handleRemoveKey = () => {
-    localStorage.removeItem("saulgpt_user_groq_key");
-    setActiveStoredKey("");
-    setApiKey("");
-    setTestResult({ success: true, message: "Reverted to shared server default key." });
-    if (onKeyUpdated) onKeyUpdated("");
-    setTimeout(() => onClose(), 600);
   };
 
   const getMasked = (key) => {
@@ -109,8 +104,8 @@ export default function ApiKeyModal({ isOpen, onClose, rateLimitAlert = false, o
                 🟢 Personal Key Active ({getMasked(activeStoredKey)})
               </span>
             ) : (
-              <span className="status-pill shared">
-                🟡 Shared Server Key (Free Tier Fallback)
+              <span className="status-pill error" style={{ background: "rgba(196,74,74,0.15)", color: "var(--accent-red)", borderColor: "var(--accent-red)" }}>
+                🔴 Groq Key Required (Compulsory to Chat)
               </span>
             )}
           </div>
@@ -166,12 +161,7 @@ export default function ApiKeyModal({ isOpen, onClose, rateLimitAlert = false, o
         </div>
 
         <div className="api-key-modal-footer">
-          {activeStoredKey && (
-            <button className="remove-key-btn" onClick={handleRemoveKey}>
-              🗑️ Revert to Server Key
-            </button>
-          )}
-          <div className="footer-right-actions">
+          <div className="footer-right-actions" style={{ marginLeft: "auto" }}>
             <button
               className="test-key-btn"
               onClick={handleTestKey}
