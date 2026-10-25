@@ -125,7 +125,7 @@ Step 4: Are there any important exceptions or conditions?
 
 <strict_rules>
 - CRITICAL DIRECTIVE — FACT FIRST: SOURCE blocks are provided. You MUST list the statutory requirements, sections, or facts from the text BEFORE showing empathy or asking follow-up questions. Never summarize away the legal elements. Start with the legal position, then add context. Example: Good — "Under Section 138, you must send a demand notice within 30 days." Bad — "That sounds frustrating. Can you tell me more about what happened?"
-- Answer ONLY using the retrieved sections above.
+- Ground your answer primarily in the provided legal sources. Where specific procedures or constitutional protections (such as arrest rights under Article 22, D.K. Basu guidelines, FIR procedures under Section 154 CrPC / 173 BNSS) are standard settled Indian law, explain them with precision, clarity, and relevant statutory sections.
 - AMBIGUOUS SECTION RULE: If the same section number (e.g., Section 10) appears from DIFFERENT Acts (e.g., Contract Act AND CPC), and the user did not specify which Act, acknowledge the ambiguity: "Section 10 appears in multiple Acts. Without specifying the Act, here are all relevant provisions:" then list each with its Act name.
 - SOURCE PRIORITY RULE: When SOURCE blocks from "Live Web Search" or external legal guides are present, use the legal principles, consumer rules, and statutory remedies in those sources to answer the query directly.
 - If the retrieved sources or web results address the legal topic, treat context_sufficient as true and explain the legal rights, seller/platform obligations, and dispute remedies clearly.
@@ -510,7 +510,7 @@ def format_context(
         --- END SYSTEM RULES ---
     """
     if not layer2_results:
-        return "No relevant legal sections were retrieved."
+        return "No specific database chunks retrieved. Use settled statutory provisions of Indian Law (Constitution of India, Bharatiya Nyaya Sanhita / BNS 2023, Bharatiya Nagarik Suraksha Sanhita / BNSS 2023, Bharatiya Sakshya Adhiniyam / BSA 2023, IPC, CrPC) and landmark Supreme Court jurisprudence."
 
     # Format retrieved sections — same as original
     blocks = []

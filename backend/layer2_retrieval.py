@@ -89,30 +89,19 @@ def _ensure_models():
         print(f"[Layer 2 Warning] ChromaDB load failed or unavailable: {e}")
         collection = None
 
-    disable_st = os.environ.get("DISABLE_SENTENCE_TRANSFORMERS", "").lower() in ("1", "true")
-    if disable_st:
-        print("[Layer 2] SentenceTransformer disabled (ultra-low memory cloud mode).")
+    try:
+        from sentence_transformers import SentenceTransformer
+        embedder = SentenceTransformer(EMBEDDING_MODEL)
+    except Exception as e:
+        print(f"[Layer 2 Warning] SentenceTransformer load failed: {e}")
         embedder = None
-    else:
-        try:
-            from sentence_transformers import SentenceTransformer
-            embedder = SentenceTransformer(EMBEDDING_MODEL)
-        except Exception as e:
-            print(f"[Layer 2 Warning] SentenceTransformer load skipped/failed: {e}")
-            embedder = None
 
-    # Load CrossEncoder only if not disabled (avoids OOM on cloud free tiers)
-    disable_ce = os.environ.get("DISABLE_CROSS_ENCODER", "").lower() in ("1", "true")
-    if disable_ce or disable_st:
-        print("[Layer 2] CrossEncoder disabled (low-memory cloud mode).")
+    try:
+        from sentence_transformers import CrossEncoder
+        reranker = CrossEncoder(RERANKER_MODEL)
+    except Exception as e:
+        print(f"[Layer 2 Warning] CrossEncoder load skipped: {e}")
         reranker = None
-    else:
-        try:
-            from sentence_transformers import CrossEncoder
-            reranker = CrossEncoder(RERANKER_MODEL)
-        except Exception as e:
-            print(f"[Layer 2 Warning] CrossEncoder load skipped: {e}")
-            reranker = None
 
     _models_loaded = True
 

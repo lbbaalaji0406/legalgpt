@@ -26,11 +26,14 @@ saulgpt-ui/node_modules/
 backend/.env
 
 # Database
-*.sqlite3
+saulgpt.db
+backend/saulgpt.db
+backend/chroma_db/
 *.db
 
-# Vector DB (chroma)
-data/vector_db/
+# Vector DB (chroma) - tracked for cloud deployment
+!data/vector_db/
+!data/vector_db/**
 
 # AI assistant
 .claude/

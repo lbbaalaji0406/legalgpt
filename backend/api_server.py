@@ -1269,51 +1269,8 @@ def _save_assistant_response(conv_id: int, result: dict):
         print(f"[Chat] Warning: failed to save assistant response: {e}")
 
 
-def _append_mode_guidance(response_text: str, chosen_mode: Optional[str], query: str) -> str:
-    """
-    If the user explicitly selected a mode that mismatches their query intent,
-    append a helpful, friendly prompting guidance note at the end of the answer.
-    """
-    if not chosen_mode or not response_text or not isinstance(response_text, str):
-        return response_text
-
-    chosen_mode = str(chosen_mode).lower().strip()
-    is_direct_legal = _is_direct_legal_query(query)
-
-    # 1. User chose 'analysis' mode, but asked a generic legal question (e.g. what is article 21, what is 302 IPC)
-    if chosen_mode == "analysis" and is_direct_legal:
-        guidance = (
-            "\n\n---\n"
-            "💡 *Since you chose **Case Analysis** mode, please type any specific scenario or dispute in which you need guidance. "
-            "For generic questions about law, you can use **Legal Knowledge** mode. Have a great day!*"
-        )
-        if "Since you chose **Case Analysis** mode" not in response_text:
-            return response_text.rstrip() + guidance
-
-    # 2. User chose 'knowledge' mode, but asked about a specific personal dispute / case scenario
-    elif chosen_mode == "knowledge" and not is_direct_legal:
-        q_lower = query.lower()
-        has_scenario = any(w in q_lower for w in [
-            "my ", "i was", "me ", "mine", "threaten", "salary", "landlord", "cheated",
-            "evict", "fraud", "scam", "arrest", "police", "loan", "tenant", "property",
-            "fir", "fired", "stole", "harass"
-        ])
-        if has_scenario:
-            guidance = (
-                "\n\n---\n"
-                "💡 *Since you described a specific case/dispute scenario, you can switch to **Case Analysis** mode for in-depth strategic options and legal defenses, "
-                "or **Document Draft** mode to prepare legal notices. For generic questions about law, Knowledge mode is always available. Have a great day!*"
-            )
-            if "Since you described a specific case" not in response_text:
-                return response_text.rstrip() + guidance
-
-    return response_text
-
-
 def _save_and_return(result: dict, user_id, conv_id, chosen_mode: Optional[str] = None, query: str = ""):
-    """Save assistant response to DB if authenticated, then return result with optional mode guidance."""
-    if isinstance(result, dict) and "response" in result and chosen_mode:
-        result["response"] = _append_mode_guidance(result["response"], chosen_mode, query)
+    """Save assistant response to DB if authenticated, then return result."""
     if user_id and conv_id and isinstance(result, dict):
         try:
             _save_assistant_response(conv_id, result)
@@ -1644,12 +1601,13 @@ async def chat_endpoint(
         session_id = request.session_id
         query      = request.get_query_text()
 
-        # Compulsory BYOK check — personal Groq key is required
+        # BYOK support — personal Groq key if provided, or server .env key
         header_key = fastapi_request.headers.get("x-groq-api-key") or fastapi_request.headers.get("X-Groq-Api-Key")
-        if not header_key or not header_key.strip() or not header_key.strip().startswith("gsk_"):
+        effective_key = (header_key or "").strip() or os.getenv("GROQ_API_KEY", "").strip()
+        if not effective_key or not effective_key.startswith("gsk_"):
             raise HTTPException(
                 status_code=400,
-                detail="Groq API Key is compulsory. Please provide your free Groq API Key (starts with 'gsk_') from console.groq.com/keys via the API Key button in the top bar."
+                detail="Groq API Key is required. Please provide your free Groq API Key (starts with 'gsk_') from console.groq.com/keys via the API Key button in the top bar."
             )
 
         # Maintain persistent substantive legal context across turns

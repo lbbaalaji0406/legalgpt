@@ -354,7 +354,6 @@ export default function App() {
   const [input, setInput]       = useState("");
   const [loading, setLoading]   = useState(false);
   const [loadingLabel, setLoadingLabel] = useState("");
-  const [forceMode, setForceMode] = useState(null);
   const [interviewActive, setInterviewActive] = useState(false);
   const [showSuggestions, setShowSuggestions] = useState(() => {
     const saved = localStorage.getItem("saulgpt_guest_messages");
@@ -497,7 +496,6 @@ export default function App() {
       setMessages([]);
       setShowSuggestions(false);
       setInterviewActive(false);
-      setForceMode(null);
       setLoading(true);
       setConvId(id);
       convRef.current = id;
@@ -548,7 +546,6 @@ export default function App() {
       setMessages([]);
       setConvId(null);
       setInterviewActive(false);
-      setForceMode(null);
       setShowSuggestions(true);
       setLoading(true);
 
@@ -611,7 +608,6 @@ export default function App() {
         query: text,
         session_id: sessionId,
       };
-      if (forceMode) payload.mode = forceMode;
       if (convId) payload.conv_id = convId;
 
       const { data } = await api().post("/api/chat", payload);
@@ -1080,26 +1076,6 @@ export default function App() {
           )}
 
           <div className="input-inner">
-            {!interviewActive && (
-              <div className="chat-mode-bar">
-                <div className="chat-mode-pill">
-                  <span className="chat-mode-icon">{forceMode ? MODES[forceMode]?.icon : "⚡"}</span>
-                  <select
-                    className="chat-mode-select"
-                    value={forceMode || ""}
-                    onChange={e => setForceMode(e.target.value || null)}
-                    disabled={loading}
-                    title="Select SaulGPT Intelligence Mode"
-                  >
-                    <option value="">⚡ Auto Mode (Smart Intent Detection)</option>
-                    <option value="knowledge">📚 Legal Knowledge (Statutes & Definitions)</option>
-                    <option value="analysis">⚖️ Case Analysis (Dispute Strategy & Precedents)</option>
-                    <option value="document">✍️ Document Draft (Legal Notices & Petitions)</option>
-                    <option value="pathfinder">🧭 Step-by-Step Procedure (Court Procedures & Filings)</option>
-                  </select>
-                </div>
-              </div>
-            )}
             <div className="input-wrapper">
               <input
                 type="file"
