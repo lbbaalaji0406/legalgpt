@@ -1,3 +1,15 @@
+---
+title: SaulGPT Legal Intelligence API
+emoji: ⚖️
+colorFrom: yellow
+colorTo: indigo
+sdk: gradio
+sdk_version: 5.20.0
+app_file: app.py
+pinned: false
+license: mit
+---
+
 # ⚖️ SaulGPT — Autonomous Indian Legal Intelligence & GraphRAG Platform
 
 > **A Neuro-Symbolic Legal Intelligence Platform for Indian Jurisprudence.**  
@@ -29,7 +41,11 @@
 ## 🏛️ System Architecture
 
 SaulGPT operates on a **Two-Tier Neuro-Symbolic Architecture**:
-1. **The Multi-Agent Workflow Layer (UX & Client Lifecycle):** TriageAgent $ightarrow$ DiscoveryAgent $ightarrow$ StrategyAgent $ightarrow$ InteractiveDrafter $ightarrow$ AdvocateCourtroomSimulator.
+1. **The Multi-Agent Workflow Layer (UX & Client Lifecycle):** TriageAgent $
+ightarrow$ DiscoveryAgent $
+ightarrow$ StrategyAgent $
+ightarrow$ InteractiveDrafter $
+ightarrow$ AdvocateCourtroomSimulator.
 2. **The 6-Layer Deterministic Substantive Legal Engine:**
 
 ```
@@ -71,7 +87,9 @@ SaulGPT operates on a **Two-Tier Neuro-Symbolic Architecture**:
 
 ### 1. 🕸️ Relational GNN & Multi-Hop Pathway Discovery (Layer 6)
 * **Energy-Scoring Knowledge Embeddings:** Trained with MarginRankingLoss in PyTorch ($\mathbb{R}^{64}$ vector space).
-* **Multi-Court Parallel Traversal:** Unlike flat vector search with single-statute tunnel vision, the GNN maps complex grievances across multiple courts simultaneously (*SDM Revenue Restitution $ightarrow$ Criminal Magistrate FIR Escalation $ightarrow$ Civil Court Stay Injunction Triad*).
+* **Multi-Court Parallel Traversal:** Unlike flat vector search with single-statute tunnel vision, the GNN maps complex grievances across multiple courts simultaneously (*SDM Revenue Restitution $
+ightarrow$ Criminal Magistrate FIR Escalation $
+ightarrow$ Civil Court Stay Injunction Triad*).
 
 ### 2. 🔄 Dynamic Self-Learning ChromaDB & Auto-Triplification
 * **Continuous Ingestion:** Novel statutory rules and circulars fetched from the web are dynamically embedded and permanently saved into ChromaDB (`saulgpt_indian_laws`).
@@ -130,27 +148,33 @@ Open **`http://localhost:5173`** in your browser.
 
 | Layer | Technologies |
 | :--- | :--- |
-| **Frontend** | React 18, Vite, jsPDF (Legal PDF Styling), Lucide Icons, CSS3 Glassmorphism |
-| **Backend API** | Python 3.11, FastAPI, Uvicorn, APScheduler, Python-Docx |
+| **Frontend** | React 18, Vite 5, jsPDF (A4 Court Vector Engine), Lucide Icons, Glassmorphism CSS |
+| **Cloud Hosting** | **Hugging Face Spaces ZeroGPU** (`zero-a10g`) + **Firebase Hosting** (Google Global CDN) |
+| **Backend API** | Python 3.10/3.11, FastAPI, Gradio 5.20 ASGI Server, Uvicorn, python-docx |
+| **Reasoning & Reward** | Groq (`qwen/qwen3.8-27b`, `openai/gpt-oss-120b`), Actor-Critic FG-PRM (`max_tokens=800`) |
 | **GNN & ML** | PyTorch (TransE & RotatE embeddings, MarginRankingLoss, AdamW), NetworkX |
-| **Vector DB** | ChromaDB (Dense Cosine Similarity + HNSW Index, 2,449+ Chunks) |
+| **Vector DB** | ChromaDB (Dense Cosine Similarity + HNSW Index, 2,449+ Chunks, CPU-pinned) |
 | **Retrieval & Rerank** | `sentence-transformers/all-MiniLM-L6-v2`, BM25 Okapi, `cross-encoder/ms-marco-MiniLM-L-6-v2` |
-| **Validation & NLI** | DeBERTa-v3 NLI Cross-Encoder, Deterministic Regex Guardrails |
-| **Database & Cache** | SQLite (WAL Mode, Foreign Keys, Durable Multi-Session Scoping) |
+| **Validation & NLI** | DeBERTa-v3 NLI Cross-Encoder, SC Struck-Down Firewall, 2024 Transition Concordance |
+| **Database & Persistence** | **Supabase Managed PostgreSQL** (IPv4 Session Pooler :5432) + Local SQLite Fallback |
 
 ---
 
 ## 📚 Architectural Decisions & Research Documentation
 
-Detailed documentation of all **21 Architectural Decision Records (ADRs)** is available in:
-👉 **[`docs/CHANGELOG_DECISIONS.md`](docs/CHANGELOG_DECISIONS.md)**
+SaulGPT maintains exhaustive, production-grade technical and functional documentation:
 
 | Document | Description |
 | :--- | :--- |
-| [CHANGELOG_DECISIONS.md](docs/CHANGELOG_DECISIONS.md) | All 21 ADRs detailing every architectural innovation & fix |
-| [ARCHITECTURE.md](docs/ARCHITECTURE.md) | Full system design, data flows, and layer interactions |
-| [API_REFERENCE.md](docs/API_REFERENCE.md) | REST API endpoints, schemas, and request/response payloads |
-| [SETUP_GUIDE.md](docs/SETUP_GUIDE.md) | Environment setup, dependencies, and deployment instructions |
+| [ARCH.md](ARCH.md) | **Quick-Reference Cloud Topology & Architecture Map** |
+| [docs/FDD.md](docs/FDD.md) | **Functional Design Document (FDD)**: User personas, workflows, 4 document families, guardrails |
+| [docs/TDD.md](docs/TDD.md) | **Technical Design Document (TDD)**: Cloud topology, 6-layer RAG, DDL schemas, BYOK security |
+| [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md) | Comprehensive system architecture, data flows, and layer specifications |
+| [docs/CHANGELOG_DECISIONS.md](docs/CHANGELOG_DECISIONS.md) | **All 30 Architectural Decision Records (ADRs: ADR-001 through ADR-030)** |
+| [docs/API_REFERENCE.md](docs/API_REFERENCE.md) | Complete REST API reference, endpoints, schemas, and payloads |
+| [docs/FEATURES.md](docs/FEATURES.md) | Complete feature breakdown across all 10 core system modules |
+| [docs/SETUP_GUIDE.md](docs/SETUP_GUIDE.md) | Local and cloud environment setup, configuration, and testing |
+| [DEPLOYMENT_GUIDE.md](DEPLOYMENT_GUIDE.md) | Production cloud deployment guide (Hugging Face Spaces + Supabase + Firebase) |
 
 ---
 

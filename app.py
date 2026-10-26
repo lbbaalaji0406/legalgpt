@@ -1,12 +1,11 @@
-"""
-SaulGPT — Hugging Face Spaces Deployment Entrypoint
-===================================================
-Runs the complete SaulGPT FastAPI backend with Supabase PostgreSQL
-and mounts a Gradio status & monitoring interface on port 7860.
-"""
-
-import sys
 import os
+import sys
+
+# 1. ZeroGPU hook must be imported first before any other modules
+import spaces
+
+# 2. Disable Gradio SSR mode to avoid port collisions in Spaces
+os.environ["GRADIO_SSR_MODE"] = "false"
 
 # Set up paths so all backend imports resolve cleanly
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
@@ -21,38 +20,67 @@ if BACKEND_DIR not in sys.path:
 from dotenv import load_dotenv
 load_dotenv(os.path.join(BASE_DIR, ".env"))
 
-# Import the production FastAPI application
-from api_server import app as fastapi_app
+# Ensure spacy model is available
+import subprocess
+try:
+    import spacy
+    if not spacy.util.is_package("en_core_web_sm"):
+        print("Downloading en_core_web_sm...")
+        subprocess.run([sys.executable, "-m", "spacy", "download", "en_core_web_sm"], check=False)
+except Exception as _e:
+    print(f"spaCy init check: {_e}")
+
+# Import backend dependencies
 import gradio as gr
-import uvicorn
+from api_server import app as fastapi_app
+from database import init_db
 
-# Build a clean Gradio status block
-with gr.Blocks(title="SaulGPT Legal Intelligence API Server") as demo:
-    gr.Markdown("# ⚖️ SaulGPT Legal Intelligence API Server")
-    gr.Markdown(
-        """
-        ### 🟢 Engine Status: ONLINE & ACTIVE
-        Welcome to the **SaulGPT Legal Intelligence Cloud Backend**.
-        
-        - **Hardware**: ZeroGPU / 16 GB High-Performance Environment
-        - **Database**: Supabase PostgreSQL (Permanent History Persistence)
-        - **Vector Engine**: ChromaDB Hybrid Retrieval (BNS 2023, BNSS 2023, BSA 2023, Constitution)
-        - **Verification**: Actor-Critic PRM & Scrutiny Hallucination Guardrails
-        - **Trial Studio**: Moot Court Arena & Section 63 BSA Evidence Grounding
-        
-        #### Available API Endpoints:
-        - `POST /api/chat` — Complete legal intelligence pipeline (BNS/BNSS/BSA + IPC/CrPC)
-        - `GET /api/conversations` — Synced multi-device conversation history
-        - `POST /api/auth/login` & `register` — Cloud authentication
-        - `POST /api/upload` — Contract Red Pen Evaluator
-        - `POST /api/trial/start` — Trial Studio & Moot Court simulation
-        """
-    )
+# ZeroGPU decorated function bound directly to gr.Interface
+@spaces.GPU
+def predict(query: str):
+    if not query or not query.strip():
+        return "Please enter a legal query to analyze."
+    try:
+        from pipeline_orchestrator import run_saulgpt_pipeline
+        res = run_saulgpt_pipeline(query.strip(), session_id="hf-space-live")
+        return res.get("response", "No response generated.")
+    except Exception as e:
+        return f"Error executing pipeline: {e}"
 
-# Mount FastAPI app onto Gradio (FastAPI handles all /api routes; Gradio handles /)
-app = gr.mount_gradio_app(fastapi_app, demo, path="/")
+# Build the Gradio interface
+demo = gr.Interface(
+    fn=predict,
+    inputs=gr.Textbox(
+        lines=3,
+        placeholder="Enter your legal question under Indian Law (BNS, BNSS, BSA 2023)...",
+        label="Indian Legal Query"
+    ),
+    outputs=gr.Markdown(label="SaulGPT Legal Intelligence Analysis"),
+    title="⚖️ SaulGPT Legal Intelligence API Server",
+    description="Backend engine for SaulGPT. Integrated with Supabase PostgreSQL, ChromaDB, and ZeroGPU acceleration. Multi-device web client available at https://legalgpt-india.web.app"
+)
+
+# Initialize Supabase database
+try:
+    init_db()
+except Exception as _e:
+    print(f"init_db check: {_e}")
+
+# Pre-warm retrieval models on CPU
+try:
+    from layer2_retrieval import _ensure_models
+    _ensure_models()
+except Exception as _e:
+    print(f"model pre-warm check: {_e}")
 
 if __name__ == "__main__":
-    port = int(os.environ.get("PORT", 7860))
-    print(f"Starting SaulGPT API server on port {port}...")
-    uvicorn.run(app, host="0.0.0.0", port=port)
+    # Launch Gradio server in non-blocking mode to attach FastAPI routes
+    server_app, local_url, share_url = demo.launch(prevent_thread_lock=True)
+    
+    # Mount all FastAPI routes onto the live Gradio server
+    server_app.include_router(fastapi_app.router)
+    
+    print(f"SaulGPT API & Gradio UI live on {local_url} with full routes attached.")
+    
+    # Block main thread to keep server alive
+    demo.block_thread()

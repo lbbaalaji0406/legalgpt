@@ -216,7 +216,7 @@ class AdversarialCriticEngine:
                 model=primary_model,
                 messages=[{"role": "user", "content": prompt}],
                 temperature=0.0,
-                max_tokens=1200,
+                max_tokens=800,
                 response_format={"type": "json_object"}
             )
             raw_json = res.choices[0].message.content
@@ -228,7 +228,7 @@ class AdversarialCriticEngine:
                     model=fallback_model,
                     messages=[{"role": "user", "content": prompt}],
                     temperature=0.0,
-                    max_tokens=1200,
+                    max_tokens=800,
                     response_format={"type": "json_object"}
                 )
                 raw_json = res.choices[0].message.content

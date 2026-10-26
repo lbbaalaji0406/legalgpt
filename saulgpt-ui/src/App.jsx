@@ -2,6 +2,7 @@ import { useState, useRef, useEffect, useCallback } from "react";
 import axios from "axios";
 import "./App.css";
 import { downloadAsPDF, copyToClipboard } from "./usePDF";
+import { API_BASE } from "./apiConfig";
 import UrgencyBanner from "./UrgencyBanner";
 import VetoCard from "./VetoCard";
 import JurisdictionBadge from "./JurisdictionBadge";
@@ -180,7 +181,15 @@ function formatMessageContent(rawText) {
     .replace(/## (.*?)(\n|$)/g,  "<h2>$1</h2>")
     .replace(/^- (.*)/gm, "<li>$1</li>")
     .replace(/(<li>.*<\/li>)/gs, "<ul>$1</ul>")
-    .replace(/\[(.*?)\]\((.*?)\)/g, '<a href="$2" target="_blank" rel="noopener noreferrer" style="color:var(--gold);text-decoration:underline;">$1</a>')
+    .replace(/\[(.*?)\]\((.*?)\)/g, (match, text, url) => {
+      let targetUrl = url;
+      if (targetUrl.includes("localhost:8000") || targetUrl.includes("127.0.0.1:8000")) {
+        targetUrl = targetUrl.replace(/https?:\/\/(localhost|127\.0\.0\.1):8000/, API_BASE);
+      } else if (targetUrl.startsWith("/api/")) {
+        targetUrl = `${API_BASE}${targetUrl}`;
+      }
+      return `<a href="${targetUrl}" target="_blank" rel="noopener noreferrer" download style="color:var(--gold);text-decoration:underline;cursor:pointer;">${text}</a>`;
+    })
     .replace(/\n/g, "<br/>");
 }
 
@@ -226,6 +235,30 @@ function Message({ msg, onTriageChoice, onOpenBench, isCompactBNS = false }) {
   function handlePDF() {
     downloadAsPDF(content, effectiveMeta || meta || {});
   }
+
+  const handleDocxDownload = async (e) => {
+    e.preventDefault();
+    const targetUrl = docUrl.startsWith("http") && !docUrl.includes("localhost:8000")
+      ? docUrl
+      : `${API_BASE}${docUrl.replace(/https?:\/\/(localhost|127\.0\.0\.1):8000/, "")}`;
+    try {
+      const res = await axios.get(targetUrl, { responseType: "blob" });
+      const blob = new Blob([res.data], {
+        type: "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+      });
+      const blobUrl = window.URL.createObjectURL(blob);
+      const link = document.createElement("a");
+      link.href = blobUrl;
+      link.setAttribute("download", `legal_document_${msg.session_id || "draft"}.docx`);
+      document.body.appendChild(link);
+      link.click();
+      link.parentNode.removeChild(link);
+      window.URL.revokeObjectURL(blobUrl);
+    } catch (err) {
+      console.warn("Direct blob download failed, opening URL in new window:", err);
+      window.open(targetUrl, "_blank");
+    }
+  };
 
   return (
     <div className={`message ${isUser ? "user-message" : "bot-message"}`}>
@@ -294,9 +327,16 @@ function Message({ msg, onTriageChoice, onOpenBench, isCompactBNS = false }) {
             )}
             {docReady && docUrl && (
               <a
-                href={docUrl}
+                href={
+                  docUrl.startsWith("http") && !docUrl.includes("localhost:8000")
+                    ? docUrl
+                    : `${API_BASE}${docUrl.replace(/https?:\/\/(localhost|127\.0\.0\.1):8000/, "")}`
+                }
+                onClick={handleDocxDownload}
                 className="export-btn docx-btn"
                 download
+                target="_blank"
+                rel="noopener noreferrer"
                 title="Download as .docx (editable)"
               >
                 <span className="docx-icon">📄</span>
@@ -450,7 +490,7 @@ export default function App() {
     if (currentToken) headers.Authorization = `Bearer ${currentToken}`;
     const key = localStorage.getItem("saulgpt_user_groq_key");
     if (key && key.trim()) headers["X-Groq-Api-Key"] = key.trim();
-    const instance = axios.create({ headers });
+    const instance = axios.create({ headers, baseURL: API_BASE || undefined });
     instance.interceptors.response.use(
       res => res,
       err => {

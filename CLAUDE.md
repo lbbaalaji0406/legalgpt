@@ -6,12 +6,14 @@
 
 ## Tech Stack
 
-- **Frontend**: React 18 + Vite
-- **Backend**: Python FastAPI
-- **Vector Database**: ChromaDB
-- **LLM Provider**: Groq (Llama 3.1 8B)
-- **Embeddings**: sentence-transformers (all-MiniLM-L6-v2)
-- **NLP**: spaCy (en_core_web_sm)
+- **Frontend**: React 18 + Vite 5 SPA (Hosted on Firebase CDN: `https://legalgpt-india.web.app`)
+- **Backend**: Python 3.10/3.11 FastAPI inside Gradio 5.20 ASGI (Hosted on Hugging Face Spaces ZeroGPU: `https://lvvbaaal-legalgpt-api.hf.space`)
+- **Cloud Database**: Supabase Managed PostgreSQL via IPv4 Session Pooler (`aws-0-ap-southeast-1.pooler.supabase.com:5432`) + Local SQLite WAL fallback
+- **Vector Database**: ChromaDB (`saulgpt_indian_laws` & `landmark_precedents`, 2,449+ chunks, CPU-pinned)
+- **LLM Provider**: Groq Cloud (`llama-3.1-8b-instant`, `qwen/qwen3.8-27b`, `openai/gpt-oss-120b`)
+- **Reward Model**: Actor-Critic Fine-Grained Process Reward Model (`backend/actor_critic.py`, `max_tokens=800`)
+- **Embeddings**: sentence-transformers (`all-MiniLM-L6-v2`, CPU-pinned)
+- **NLP**: spaCy (`en_core_web_sm`, with blank English fallback)
 
 ## Architecture
 
@@ -344,3 +346,25 @@ npm run setup
   - ✅ **document** — Cheque bounce notice with Section 138 NIA reference and field placeholders
   - ✅ **scrutiny** — Case limitation check returned ScrutinyResult
 - Port 8000 zombie process issue noted: old server without env/encoding fixes may still be running
+### Session 7 — Cloud Migration, ZeroGPU Deployment, Supabase Persistence & Drafter Sanitization
+- **Hugging Face Spaces ZeroGPU Deployment**:
+  - Unified Gradio 5.20 and FastAPI in `app.py`: `demo.launch(server_port=7860, prevent_thread_lock=True)` + `server_app.include_router(fastapi_app.router)` + `demo.block_thread()`.
+  - Pinned all embeddings (`SentenceTransformer`, `CrossEncoder`, DeBERTa NLI) to `device="cpu"` to prevent ZeroGPU CUDA supervisor aborts.
+  - Deployed to Space `Lvvbaaal/legalgpt-api` (`zero-a10g`, 16GB VRAM) and automated via `deploy_hf.py`.
+- **Supabase Cloud Persistence**:
+  - Replaced single-device SQLite lock bottleneck with Supabase PostgreSQL via IPv4 Session Pooler (`aws-0-ap-southeast-1.pooler.supabase.com:5432`).
+  - Added indexes on `user_id`, `conv_id`, and `conversation_id`.
+  - Verified cross-device sync between web, mobile, and desktop.
+- **Actor-Critic Fine-Grained PRM**:
+  - Built `backend/actor_critic.py` evaluating reasoning chains across factuality, statutory soundness, and tone.
+  - Enforced strict token budget `max_tokens=800` to prevent Groq free-tier 1000 OTPM rate limit exceptions.
+- **Document Drafter Sanitization & Download Fix**:
+  - Root cause 1: Missing `import os` in `interview_state.py` broke `_ensure_field_llm()`, causing fallback to legacy debug dumper. Added `import os, re, json`.
+  - Root cause 2: `document_generator.py` dumped raw prompt text and `[User Goal: document]`. Built `sanitize_narrative_text()` and `build_fallback_spec()` supporting all 4 document families (`letter`, `pleading`, `affidavit`, `agreement`).
+  - Root cause 3: Hardcoded `localhost:8000` URLs broke downloads on Firebase Hosting. Dynamic rewriting to `PUBLIC_API_URL` / `API_BASE` implemented in backend and frontend Axios blob downloader.
+- **Documentation Overhaul**:
+  - Created `ARCH.md` (Quick-Reference Cloud Topology & Architecture Map).
+  - Created `docs/FDD.md` (Functional Design Document).
+  - Created `docs/TDD.md` (Technical Design Document).
+  - Updated `docs/CHANGELOG_DECISIONS.md` (ADR-001 through ADR-030).
+  - Rewrote `docs/ARCHITECTURE.md`, `docs/API_REFERENCE.md`, `docs/FEATURES.md`, `DEPLOYMENT_GUIDE.md`, `docs/SETUP_GUIDE.md`, `README.md`, and `saulgpt-ui/README.md`.

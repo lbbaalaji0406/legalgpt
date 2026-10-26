@@ -60,6 +60,8 @@ from auth import hash_password, verify_password, create_token, decode_token
 
 # In-memory storage for generated .docx files (session_id → bytes)
 SESSION_DOCUMENTS: dict[str, bytes] = {}
+DOC_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), "generated_docs")
+os.makedirs(DOC_DIR, exist_ok=True)
 
 # Track active conversation per user session (user_id → conv_id or session_id → conv_id)
 ACTIVE_CONVERSATIONS: dict[str, int] = {}
@@ -278,6 +280,8 @@ def startup_event():
 # ─────────────────────────────────────────────────────────────
 
 @app.get("/")
+@app.get("/api/health")
+@app.get("/health")
 async def health_check():
     return {
         "status":   "SaulGPT API is Online ⚖️",
@@ -1198,10 +1202,27 @@ def _generate_document_docx(session_id: str, state) -> dict:
         )
 
     SESSION_DOCUMENTS[session_id] = docx_bytes
+    try:
+        doc_file_path = os.path.join(DOC_DIR, f"{session_id}.docx")
+        with open(doc_file_path, "wb") as f:
+            f.write(docx_bytes)
+    except Exception as e:
+        print(f"[Document] Warning: Failed to cache docx to disk: {e}")
+
+    public_base = os.getenv("PUBLIC_API_URL")
+    if not public_base:
+        if os.getenv("SPACE_HOST"):
+            public_base = f"https://{os.getenv('SPACE_HOST')}"
+        elif os.getenv("SPACE_ID"):
+            public_base = f"https://{os.environ['SPACE_ID'].replace('/', '-').lower()}.hf.space"
+        else:
+            public_base = "https://lvvbaaal-legalgpt-api.hf.space"
+
+    doc_download_url = f"{public_base}/api/document/{session_id}"
 
     response_text = (
         f"**{display_name}** has been drafted successfully.\n\n"
-        f"[Download your document](http://localhost:8000/api/document/{session_id})\n\n"
+        f"[Download your document]({doc_download_url})\n\n"
         "Please review it carefully and consult a qualified advocate before use."
     )
 
@@ -1222,7 +1243,7 @@ def _generate_document_docx(session_id: str, state) -> dict:
         "limitation_expiry": getattr(scrutiny_res, "limitation_expiry", None) if scrutiny_res else None,
         "urgency_reason": getattr(scrutiny_res, "urgency_reason", None) if scrutiny_res else None,
         "document_ready": True,
-        "document_url": f"/api/document/{session_id}",
+        "document_url": doc_download_url,
     }
 
     if hasattr(state, "problem_description") and state.problem_description:
@@ -2786,12 +2807,25 @@ async def download_document(session_id: str):
     """Download a previously generated .docx document."""
     docx_bytes = SESSION_DOCUMENTS.get(session_id)
     if docx_bytes is None:
+        doc_file_path = os.path.join(DOC_DIR, f"{session_id}.docx")
+        if os.path.exists(doc_file_path):
+            try:
+                with open(doc_file_path, "rb") as f:
+                    docx_bytes = f.read()
+                SESSION_DOCUMENTS[session_id] = docx_bytes
+            except Exception as e:
+                print(f"[Document] Failed to read disk cached docx: {e}")
+
+    if docx_bytes is None:
         raise HTTPException(status_code=404, detail="No document found for this session. Generate one first via /api/chat.")
+
     return Response(
         content=docx_bytes,
         media_type="application/vnd.openxmlformats-officedocument.wordprocessingml.document",
         headers={
-            "Content-Disposition": f'attachment; filename="legal_document_{session_id}.docx"'
+            "Content-Disposition": f'attachment; filename="legal_document_{session_id}.docx"',
+            "Access-Control-Allow-Origin": "*",
+            "Access-Control-Expose-Headers": "Content-Disposition"
         }
     )
 

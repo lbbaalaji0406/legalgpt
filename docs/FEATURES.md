@@ -291,7 +291,7 @@ Structured legal analysis for law students/advocates. Never invoked as hidden fa
 - LegalScraperEngine: IndiaCodeScraper (DSpace) + KanoonScraper (BeautifulSoup)
 - 25 scrapeable acts in config
 
-**Chunking & Embedding** ( 2_chunk_and_embed.py, ~469 lines)
+**Chunking & Embedding** (2_chunk_and_embed.py, ~469 lines)
 - Chunk: 1200 chars, 150 overlap
 - Embedding: all-MiniLM-L6-v2
 - Universal key detector (14+ key variants per field)
@@ -497,61 +497,215 @@ AgentManager with mode detection (regex patterns) and route dispatch:
 
 ---
 
-## 4. Data Layer
+## 4. Data Layer & Cloud Persistence
 
-### 4.1 SQLite (Relational)
-- Tables: users, conversations, messages
-- File: backend/saulgpt.db
-- WAL mode for concurrency
+### 4.1 Supabase Managed PostgreSQL (Primary Cloud Database)
+- **Host:** `aws-0-ap-southeast-1.pooler.supabase.com`
+- **Port:** `5432` (Session Mode) / `6543` (Transaction Mode)
+- **Engine:** IPv4 Connection Pooler bypassing IPv6 container restrictions
+- **Tables:** `users`, `conversations`, `messages`
+- **Indexes:** `idx_conversations_user_id`, `idx_messages_conv_id`, `idx_messages_conversation_id`
+- **Concurrency:** Multi-device simultaneous read/write with zero file-locking bottlenecks
 
-### 4.2 ChromaDB (Vector)
-- Collection: saulgpt_indian_laws
-- ~2409 chunks, 9 acts
-- Path: data/vector_db/
+### 4.2 Local SQLite Fallback
+- **File:** `backend/saulgpt.db`
+- **Mode:** WAL (Write-Ahead Logging) for concurrent access
+- Automatically activated if `DATABASE_URL` is omitted in local development
 
-### 4.3 JSON Raw Data
-- Path: data/raw_data/
-- 9 JSON files (one per embedded act)
+### 4.3 ChromaDB (Vector Store)
+- **Collection:** `saulgpt_indian_laws` & `landmark_precedents`
+- **Embeddings:** `sentence-transformers/all-MiniLM-L6-v2` pinned to `device="cpu"`
+- **Total Chunks:** 2,449+ statutory and case law segments
+- **Path:** `data/vector_db/`
 
-### 4.4 Knowledge Graph (In-Memory)
-- NetworkX DiGraph
-- Built on server startup from module import
+### 4.4 JSON Raw Data Sources
+- **Path:** `data/raw_data/`
+- Contains canonical acts: BNS 2023, BNSS 2023, BSA 2023, CPC 1908, NIA 1881, HMA 1955, MVA 1988, IDA 1869, Constitution of India
+
+### 4.5 Relational GNN Knowledge Graph (In-Memory)
+- NetworkX DiGraph + PyTorch continuous embeddings (TransE/RotatE in $\mathbb{R}^{64}$)
+- 73 canonical legal relations, 268 nodes, 172 triples
+
+---
+
+## 5. Pre-Trial Studio & Moot Court Arena
+
+**Source:** `backend/trial_studio/`, `saulgpt-ui/src/TrialStudio.jsx`
+
+Interactive adversarial courtroom simulation providing rigorous trial preparation before an actual hearing.
+
+### 5.1 Hostile Section 146 BSA Cross-Examiner
+- Implements aggressive cross-examination tactics targeting documentary gaps, oral inconsistencies, and tax filing contradictions under Section 146 of the Bharatiya Sakshya Adhiniyam, 2023.
+- Formulates multi-turn traps designed to impeach witness credibility.
+
+### 5.2 Confidential Corner Coach & Tactical Counsel
+- Operates in real time alongside the courtroom examination.
+- Real-time exposure gauge (Low / Medium / High Risk).
+- Flags formal procedural objections (e.g. hearsay, leading questions, questions without foundation).
+- Provides verbatim, safe witness rejoinders that avoid fatal admissions.
+- Suggests tangible evidentiary plugs to introduce into the record.
+
+### 5.3 Precedent Intelligence Engine
+- Indexed database of **50,000+ landmark Supreme Court and High Court judgments** across 8 frameworks: BNS, BNSS, BSA, NI Act, CPA 2019, Contract Act, Limitation Act, Arbitration Act.
+- Fallback keyword detection matches dispute patterns to governing precedents.
+
+### 5.4 Split-Chamber UI
+- Left Column: Formal Courtroom Chamber with judge/counsel dialogue stream and witness stand.
+- Right Column: Confidential Corner Coach Console with live exposure meter and objection arsenal.
+
+---
+
+## 6. Section 63 BSA Digital Evidence Grounding
+
+**Source:** `backend/evidence_processor.py`, `saulgpt-ui/src/EvidenceUploader.jsx`
+
+End-to-end processing and certification of electronic records under Section 63 of the Bharatiya Sakshya Adhiniyam, 2023 (formerly Section 65B IEA).
+
+### 6.1 Cryptographic Hash Verification
+- Dual-tier SHA-256 integrity calculation: computed client-side in the browser on file selection, and independently re-verified server-side on upload.
+- Detects any bitwise tampering during transit.
+
+### 6.2 Cheque OCR & 30-Day Statutory Clock
+- Extracts bank return memos, dishonour codes (e.g. "Funds Insufficient", "Account Closed"), drawer/payee names, and amount.
+- Automatically calculates the mandatory 30-day statutory notice window under Section 138 NIA.
+
+### 6.3 Debtor Audio Admission & Limitation Extender
+- Transcribes and semantically parses voice admissions and debt promises.
+- Applies Section 18 of the Limitation Act, 1963 to compute revised limitation expiry dates based on valid acknowledgments of liability.
+
+### 6.4 Court-Admissible Electronic Certificate Generation
+- Automatically drafts a formal Section 63 BSA compliance certificate.
+- Details device identifiers, cryptographic hash, extraction date, custodian signature block, and truth verification.
+- 1-click integration transmits certified evidence directly into the Pre-Trial Studio.
+
+---
+
+## 7. Actor-Critic Fine-Grained Process Reward Model (FG-PRM)
+
+**Source:** `backend/actor_critic.py`, `backend/layer4_validation.py`
+
+Neuro-symbolic reinforcement validation that scrutinizes reasoning chains before emitting legal counsel.
+
+### 7.1 Multi-Dimensional Step Evaluation
+- Evaluates four orthogonal dimensions:
+  1. **Factuality & Citation Validity:** Verifies whether cited sections actually exist and match the proposition.
+  2. **Statutory Applicability:** Prevents application of repealed statutes (IPC/CrPC) or struck-down provisions.
+  3. **Logical Soundness & Neutrality:** Checks for non-sequiturs or premature conclusions.
+  4. **Tone & Client Empathy:** Ensures professional, measured legal counsel matching client distress.
+
+### 7.2 Dynamic Token Budgeting (`max_tokens=800`)
+- PRM feedback loop strictly constrained to `max_tokens=800`.
+- Eliminates Groq free-tier 1000 OTPM rate limit exceptions (`429 rate_limit_exceeded`) while preserving comprehensive critique.
+
+### 7.3 Fast-Path Bypasses
+- Low-complexity queries bypass secondary critic passes, ensuring sub-second response latency.
+
+---
+
+## 8. High-Capacity Contract Evaluator (Layer 6)
+
+**Source:** `backend/layer6_evaluator.py`, `saulgpt-ui/src/App.jsx`
+
+Deep structural analysis of commercial and employment agreements.
+
+### 8.1 25,000-Character Single-Pass Ingestion
+- Evaluates extensive multi-page contracts in a unified prompt context, eliminating fragmentation and cross-chunk context loss.
+
+### 8.2 Indian Contract Act 1872 Auditing
+- **Section 27 (Restraint of Trade):** Flags void post-employment non-compete clauses.
+- **Section 28 (Restraint of Legal Proceedings):** Identifies illegal time limits on litigation.
+- **Section 74 (Liquidated Damages vs. Penalties):** Scrutinizes disproportionate penalty clauses.
+
+### 8.3 Tri-Level Risk Scoring
+- 🔴 **High Risk:** Void/unlawful terms requiring immediate deletion.
+- 🟡 **Medium Risk:** Unbalanced commercial exposure (unilateral indemnity, unlimited liability).
+- 🟢 **Low Risk:** Fair, reciprocal covenants.
+- Outputs concrete, redlined clause replacements ready for negotiation.
+
+---
+
+## 9. 4-Family Court-Grade Document Factory
+
+**Source:** `backend/interview_state.py`, `backend/document_generator.py`
+
+Synthesizes print-ready, legally enforceable documents in Microsoft Word (`.docx`) and vector PDF formats.
+
+### 9.1 Supported Document Families
+1. **Letter / Notice Family (`letter`):**
+   - Section 138 NIA Cheque Bounce Notices, Demand Notices for Unpaid Salary, Tenancy Default Notices.
+   - Formal RPAD header, Sender `FROM:` block, Recipient `TO:` block, 15-day statutory demand clause, advocate signature block.
+2. **Pleading Family (`pleading`):**
+   - Civil Plaints under Order VII Rule 1 CPC, Section 223 BNSS Criminal Complaints.
+   - Enforces the **Triad of Survival:** Cause of Action & Limitation, Territorial/Pecuniary Jurisdiction, and Court Valuation with Order VI Rule 15 verification split.
+3. **Affidavit Family (`affidavit`):**
+   - Sworn deponent affidavits with 5.5-inch stamp paper top margin and dual notary verification (personal knowledge vs. legal advice).
+4. **Agreement Family (`agreement`):**
+   - Commercial Leases, SLAs, NDAs with recitals, operative covenants, Section 7 Arbitration clause, and dual witness blocks.
+
+### 9.2 Zero Prompt Leakage & Clean Formatting
+- **Sanitization Pipeline:** Strips all `[User Goal: document]` tags, instruction strings, and raw dictionary keys.
+- **Deterministic Fallback Spec Engine:** If the LLM spec generator times out, `build_fallback_spec()` automatically constructs an authentic, clause-complete legal document.
+- **Resilient Cloud Delivery:** Cached in memory and on disk (`./generated_docs/`), delivered via Axios blob stream with fallback browser navigation.
+
+---
+
+## 10. Security, Cloud Infrastructure & BYOK Architecture
+
+### 10.1 Hugging Face Spaces ZeroGPU Backend
+- Configured via `app.py` unifying Gradio 5.20 and FastAPI on port 7860.
+- Dynamic GPU allocation (`zero-a10g`) with PyTorch embeddings strictly pinned to CPU to prevent ZeroGPU CUDA supervisor aborts.
+
+### 10.2 Bring Your Own Key (BYOK)
+- Users can provide their personal Groq API keys (`gsk_...`) in `ApiKeyModal.jsx`.
+- Stored exclusively in the user's browser `localStorage` and passed per-request via the `X-Groq-Api-Key` HTTP header.
+- Zero server-side key logging or persistence.
 
 ---
 
 ## File Reference Summary
 
-**Backend (23 root + 6 agents + 8 prompts + 4 scraper + 3 tests = 45 Python files)**
-- api_server.py (1662L) — FastAPI entry point
-- pipeline_orchestrator.py (700L) — 6-layer pipeline controller
-- layer1_understanding.py (400L) — Query analysis
-- layer2_retrieval.py (350L) — Vector/hybrid retrieval
-- layer3_reasoning.py (700L) — LLM response generation
-- layer4_validation.py (700L) — Response validation
-- layer5_external.py (450L) — Web/case law fallback
-- layer6_evaluator.py (470L) — Contract evaluation
-- layer6_knowledge_graph.py (560L) — Legal knowledge graph
-- interview_state.py (950L) — Document drafting state machine
-- document_generator.py (980L) — .docx generation
-- dynamic_drafter.py (400L) — Dynamic field scoping
-- scrutiny_agent.py (640L) — Pre-draft scrutiny
-- discovery_agent.py (80L) — Phase 1 discovery
-- strategy_agent.py (160L) — Phase 2 strategy
-- irac_agent.py (110L) — Advocate mode IRAC
-- triage_state.py (60L) — 3-phase flow state
-- database.py (170L) — SQLite CRUD
-- auth.py (42L) — JWT auth
-- eval_pipeline.py (250L) — RAG evaluation
+**Backend (25 root + 4 trial_studio + 6 agents + 8 prompts + 4 scraper + 3 tests = 50 Python files)**
+- `app.py` — ZeroGPU Gradio 5.20 + FastAPI server entrypoint
+- `deploy_hf.py` — Automated deployment script for Hugging Face Spaces
+- `api_server.py` — Core FastAPI controller and route dispatcher
+- `pipeline_orchestrator.py` — 6-layer deterministic RAG controller
+- `actor_critic.py` — Actor-Critic Fine-Grained Process Reward Model
+- `evidence_processor.py` — Section 63 BSA electronic evidence & certification
+- `layer1_understanding.py` — Query understanding, Hindi HyDE, spaCy NER
+- `layer2_retrieval.py` — ChromaDB vector retrieval & Cross-Encoder (CPU)
+- `layer3_reasoning.py` — LLM response generation via Groq
+- `layer4_validation.py` — DeBERTa NLI & SC Struck-Down Firewall
+- `layer5_external.py` — IndianKanoon / DuckDuckGo live search fallback
+- `layer6_evaluator.py` — 25,000-character contract risk evaluation
+- `layer6_knowledge_graph.py` — Relational legal knowledge graph (NetworkX)
+- `interview_state.py` — Document drafting state machine & fallback spec engine
+- `document_generator.py` — 4-family .docx generation (Letter, Pleading, Affidavit, Agreement)
+- `dynamic_drafter.py` — Dynamic field scoping
+- `scrutiny_agent.py` — Pre-draft limitation and validity scrutiny
+- `discovery_agent.py` — Phase 1: 3-turn empathetic investigation
+- `strategy_agent.py` — Phase 2: SWOT matrix & 4-path generation
+- `irac_agent.py` — Advocate Mode IRAC structured brief generator
+- `triage_state.py` — 3-phase flow state machine
+- `database.py` — Supabase PostgreSQL + SQLite dual CRUD engine
+- `auth.py` — JWT authentication and bcrypt password hashing
+- `eval_pipeline.py` — Automated RAG benchmarking suite
+- `trial_studio/cross_examiner_agent.py` — Hostile Sec 146 BSA cross-examiner
+- `trial_studio/defense_fortifier_agent.py` — Corner Coach procedural objections
+- `trial_studio/precedent_engine.py` — 50,000+ landmark judgments index
+- `trial_studio/session_manager.py` — Moot court session persistence
 
-**Frontend (14 script + 5 CSS files)**
-- App.jsx (935L) — Main app shell
-- ConversationsSidebar.jsx (87L) — Conversation list
-- AuthPage.jsx (66L) — Login/signup
-- TriageCards.jsx (121L) — Strategy options
-- VetoCard.jsx (144L) — Scrutiny blocking card
-- BNSCorrectionNotice.jsx (118L) — Law update notice
-- JurisdictionBadge.jsx (151L) — Court info badge
-- UrgencyBanner.jsx (83L) — Deadline alert
-- LegalGlossary.js (287L) — 200+ legal terms
-- usePDF.js (405L) — PDF generator
-- App.css (1228L) — Dark courtroom theme styles
+**Frontend (16 script + 6 CSS files)**
+- `App.jsx` — Core Omni-Box chat interface & session controller
+- `AuthPage.jsx` — JWT Login/Signup & guest session migration
+- `ConversationsSidebar.jsx` — Supabase cloud-synced conversation list
+- `TrialStudio.jsx` — Split-Chamber Pre-Trial Moot Court Arena
+- `EvidenceUploader.jsx` — Sec 63 BSA evidence uploader with hash verification
+- `TriageCards.jsx` — Strategic SWOT 4-path cards
+- `VetoCard.jsx` — Scrutiny blocker & limitation warning card
+- `BNSCorrectionNotice.jsx` — 2024 Transition notification banner
+- `JurisdictionBadge.jsx` — Court pecuniary & territorial indicator
+- `UrgencyBanner.jsx` — Statutory limitation countdown banner
+- `ApiKeyModal.jsx` — Bring-Your-Own-Key (BYOK) modal
+- `LegalGlossary.js` — 200+ Indian legal term dictionary
+- `usePDF.js` — Client-side jsPDF A4 vector rendering engine
+- `App.css`, `TrialStudio.css`, `EvidenceUploader.css` — Courtroom styling

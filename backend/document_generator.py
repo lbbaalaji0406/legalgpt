@@ -458,7 +458,20 @@ def _build_letter(doc: Document, spec: dict, filled_fields: dict):
                           bold=True, size=Pt(10), align=WD_ALIGN_PARAGRAPH.CENTER,
                           space_after=Pt(12))
 
-    # ── Hardcoded TO: block ──
+    # ── SENDER (FROM) block ──
+    sender_name = filled_fields.get("sender_name", filled_fields.get("sender_full_name", ""))
+    sender_addr = filled_fields.get("sender_address", filled_fields.get("sender_full_address", ""))
+    if sender_name:
+        _add_styled_paragraph(doc, "FROM:", bold=True, space_after=Pt(2))
+        from_text = sender_name
+        if sender_addr:
+            from_text += f"\n{sender_addr}"
+        _add_body_paragraph(doc, from_text, indent_first=False)
+        doc.add_paragraph()
+
+    _add_styled_paragraph(doc, f"DATE: {date.today().strftime('%d %B %Y')}", bold=True, space_after=Pt(8))
+
+    # ── RECIPIENT (TO) block ──
     recipient_name = filled_fields.get("recipient_name", filled_fields.get("recipient_full_name", ""))
     recipient_addr = filled_fields.get("recipient_address", filled_fields.get("recipient_full_address", ""))
     if recipient_name:
@@ -763,27 +776,20 @@ def generate_docx(
     """
     doc = Document()
 
-    if doc_spec:
-        # ── NEW PATH: spec-based generation ──
-        builder = FAMILY_BUILDERS.get(doc_spec.get("family", "generic_instrument"), _build_generic)
-        builder(doc, doc_spec, filled_fields)
-    else:
-        # ── LEGACY PATH: for backward compat during transition ──
-        # Will be removed once triage spec flow is fully wired
-        from docx import Document as _D
-        from docx.shared import Pt, Cm
-        _set_margins(doc)
-        _add_styled_paragraph(doc, (display_name or "LEGAL DOCUMENT").upper(),
-                              bold=True, size=TITLE_SIZE,
-                              align=WD_ALIGN_PARAGRAPH.CENTER, space_after=Pt(12))
-        for key, val in filled_fields.items():
-            if val:
-                _add_field_row(doc, key.replace("_", " ").title(), val)
-        if problem_description:
-            doc.add_paragraph()
-            _add_body_paragraph(doc, problem_description)
-        _add_signature_block(doc)
-        _add_disclaimer(doc)
+    if not doc_spec or not isinstance(doc_spec, dict) or not doc_spec.get("sections"):
+        # If spec is missing or empty, dynamically construct a formal legal spec
+        from interview_state import build_fallback_spec, map_doc_type_to_family
+        family = map_doc_type_to_family(doc_type or "legal_notice") if doc_type else "letter"
+        doc_spec = build_fallback_spec(
+            doc_family=family,
+            doc_type=doc_type or "legal_notice",
+            display_name=display_name,
+            filled_fields=filled_fields,
+            problem_description=problem_description,
+        )
+
+    builder = FAMILY_BUILDERS.get(doc_spec.get("family", "generic_instrument"), _build_generic)
+    builder(doc, doc_spec, filled_fields)
 
     buf = io.BytesIO()
     doc.save(buf)

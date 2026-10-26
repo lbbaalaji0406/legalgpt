@@ -42,9 +42,19 @@ def _ensure_nlp():
     if _nlp is not None:
         return _nlp
     print("Loading spaCy model...")
-    import spacy
-    _nlp = spacy.load("en_core_web_sm")
-    return _nlp
+    try:
+        import spacy
+        _nlp = spacy.load("en_core_web_sm")
+        return _nlp
+    except Exception as e:
+        print(f"[Layer 1 Warning] spaCy model load failed: {e}. Falling back to blank English tokenizer.")
+        try:
+            import spacy
+            _nlp = spacy.blank("en")
+            return _nlp
+        except Exception:
+            _nlp = None
+            return None
 
 
 _reformulate_llm = None
@@ -495,17 +505,22 @@ def analyze_query(user_query: str, conversation_history: list = None) -> dict:
 
     # ── Step 3: Named Entity Recognition ──
     print("[3/5] Extracting named entities...")
-    import spacy
-    nlp = _ensure_nlp()
-    doc = nlp(user_query)
-    named_entities = [
-        {
-            "text": ent.text,
-            "label": ent.label_,
-            "description": spacy.explain(ent.label_)
-        }
-        for ent in doc.ents
-    ]
+    named_entities = []
+    try:
+        import spacy
+        nlp = _ensure_nlp()
+        if nlp is not None:
+            doc = nlp(user_query)
+            named_entities = [
+                {
+                    "text": ent.text,
+                    "label": ent.label_,
+                    "description": spacy.explain(ent.label_) if hasattr(spacy, "explain") else ent.label_
+                }
+                for ent in getattr(doc, "ents", [])
+            ]
+    except Exception as _e:
+        print(f"[Layer 1 Warning] NER extract skipped: {_e}")
 
     # ── Step 4: Legal Citation Extraction ──
     print("[4/5] Extracting legal citations...")

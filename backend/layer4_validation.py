@@ -144,7 +144,8 @@ def _ensure_nli():
             "text-classification",
             model=NLI_MODEL_NAME,
             tokenizer=NLI_MODEL_NAME,
-            top_k=None
+            top_k=None,
+            device="cpu"
         )
         nli_model_available = True
         print("[Layer 4] NLI model loaded.\n")

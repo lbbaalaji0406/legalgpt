@@ -12,7 +12,7 @@ States:
 Now uses LLM-generated field questions instead of hardcoded schemas.
 """
 
-import re, json
+import os, re, json
 from typing import Optional, List
 
 # ─────────────────────────────────────────────────────────────
@@ -362,6 +362,166 @@ JSON SCHEMA:
 }
 
 
+
+def sanitize_narrative_text(text: str) -> str:
+    """Strip prompt artifacts, [User Goal: ...], and command phrases."""
+    if not text:
+        return ""
+    cleaned = re.sub(r"\[User Goal:\s*[^\\\]]+\]", "", text, flags=re.IGNORECASE)
+    cleaned = re.sub(r"(?i)\b(please\s+)?(assist|help)\s+me\s+(to\s+)?(do|draft|write|create|make)\b.*", "", cleaned)
+    cleaned = re.sub(r"(?i)\b(draft|generate|prepare)\s+(a|an|the)?\s+[a-z\s]+notice.*", "", cleaned)
+    return cleaned.strip()
+
+
+def build_fallback_spec(
+    doc_family: str,
+    doc_type: str,
+    display_name: str,
+    filled_fields: dict,
+    problem_description: str = "",
+) -> dict:
+    """
+    Deterministic fallback document spec that generates clean, formal,
+    professional Indian legal drafts without ever leaking user prompts or raw key-value dumps.
+    """
+    family = doc_family or "letter"
+    display = (display_name or doc_type or "LEGAL NOTICE").replace("_", " ").title()
+
+    sender_name = filled_fields.get("sender_name") or filled_fields.get("sender_full_name") or "Sender"
+    sender_addr = filled_fields.get("sender_address") or filled_fields.get("sender_full_address") or ""
+    recipient_name = filled_fields.get("recipient_name") or filled_fields.get("recipient_full_name") or "Recipient"
+    recipient_addr = filled_fields.get("recipient_address") or filled_fields.get("recipient_full_address") or ""
+    amount = filled_fields.get("amount_involved") or filled_fields.get("amount") or filled_fields.get("cheque_amount") or ""
+    date_val = filled_fields.get("date_of_default") or filled_fields.get("incident_date") or filled_fields.get("cheque_date") or ""
+    raw_details = filled_fields.get("details") or filled_fields.get("reason") or ""
+    clean_details = sanitize_narrative_text(raw_details)
+
+    if family == "letter":
+        is_cheque = "cheque" in (doc_type or "").lower() or "cheque" in display.lower() or "138" in display.lower()
+        title_text = "LEGAL NOTICE UNDER SECTION 138 OF THE NEGOTIABLE INSTRUMENTS ACT, 1881" if is_cheque else f"LEGAL NOTICE: {display.upper()}"
+
+        items = [
+            f"That my client, {sender_name}, entered into lawful business / contractual dealings with you, {recipient_name}.",
+        ]
+        if is_cheque:
+            items.extend([
+                f"That in discharge of your legally enforceable debt and liability towards my client, you issued a cheque for an amount of Rs. {amount or '__________'}/-.",
+                f"That my client presented the said cheque for encashment through their bank, but the same was dishonoured and returned unpaid by the drawee bank on or around {date_val or 'the due date'} with the remark 'Insufficient Funds' / 'Exceeds Arrangement'.",
+                f"Particulars of transaction & default: {clean_details}." if clean_details else "That the cheque was dishonoured willfully despite prior assurance of sufficient balance.",
+                "That the dishonour of the aforesaid cheque constitutes a criminal offence punishable under Section 138 of the Negotiable Instruments Act, 1881, as well as an offence under the Bharatiya Nyaya Sanhita (BNS), 2023."
+            ])
+            demand_para = f"NOW THEREFORE, I hereby call upon you to pay the aforesaid cheque amount of Rs. {amount or '__________'}/- to my client within a period of 15 (fifteen) days from the date of receipt of this notice, failing which my client shall be constrained to initiate criminal proceedings under Section 138 of the Negotiable Instruments Act, 1881, and file civil recovery proceedings, holding you fully liable for all costs and consequences thereof."
+        else:
+            items.extend([
+                f"That on or around {date_val or 'the material date'}, you incurred a clear and undisputed legal and monetary obligation towards my client amounting to Rs. {amount or '__________'}/-.",
+                f"Factual particulars of default: {clean_details}." if clean_details else "That you committed a material breach of the agreed terms and statutory obligations.",
+                "That despite repeated demands and reminders, you have failed and neglected to clear the outstanding sum or remedy the default."
+            ])
+            demand_para = f"NOW THEREFORE, I hereby call upon you to clear the outstanding sum of Rs. {amount or '__________'}/- and remedy the said default within 15 (fifteen) days from the receipt of this legal notice, failing which my client shall initiate appropriate legal proceedings before the competent court of law, entirely at your risk, costs, and consequences."
+
+        return {
+            "family": "letter",
+            "dispatch_mode": "Registered Post with Acknowledgment Due (RPAD) / Speed Post",
+            "sections": [
+                {"type": "heading", "text": title_text, "alignment": "center"},
+                {"type": "body_p", "text": f"Under instructions from and on behalf of my client, {sender_name}, having address at {sender_addr or '__________'}, I hereby serve you with this formal Legal Notice:"},
+                {"type": "numbered_list", "items": items},
+                {"type": "body_p", "text": demand_para},
+                {"type": "enclosure", "items": ["Copy of relevant documents / default records / dishonoured instruments", "Bank return memo / evidence of default"]}
+            ]
+        }
+
+    elif family == "pleading":
+        plaintiff = filled_fields.get("plaintiff_name") or sender_name
+        defendant = filled_fields.get("defendant_name") or recipient_name
+        cause_date = filled_fields.get("cause_of_action_date") or date_val or "recently"
+        court_loc = filled_fields.get("court_location") or "District Court"
+        return {
+            "family": "pleading",
+            "sub_jurisdiction": "DISTRICT_CIVIL",
+            "parties": {"plaintiff": "plaintiff_name", "defendant": "defendant_name"},
+            "sections": [
+                {"type": "body_p", "text": f"The Plaintiff, {plaintiff}, most respectfully showeth as under:"},
+                {"type": "numbered_list", "items": [
+                    f"That the Plaintiff is a law-abiding citizen residing at {filled_fields.get('plaintiff_address', sender_addr or '__________')}.",
+                    f"That the Defendant, {defendant}, is residing / carrying on business at {filled_fields.get('defendant_address', recipient_addr or '__________')}.",
+                    f"Facts of the dispute: {clean_details or 'The Defendant defaulted on lawful obligations owed to the Plaintiff.'}",
+                    f"The cause of action arose on {cause_date} when the Defendant failed and refused to comply with the Plaintiff\'s lawful demands.",
+                    f"This Hon\'ble Court has territorial and pecuniary jurisdiction to try the present suit as the cause of action substantially arose within the local limits of {court_loc}.",
+                    f"The suit is valued at Rs. {amount or '50,000'}/- for the purpose of court fees and jurisdiction, and the appropriate court fee has been affixed."
+                ]},
+                {"type": "prayer", "items": [
+                    f"Pass a decree directing the Defendant to pay the sum of Rs. {amount or '__________'}/- along with interest at 18% per annum till realisation.",
+                    "Award costs of the present suit in favour of the Plaintiff.",
+                    "Pass any other relief that this Hon\'ble Court deems fit in the interests of justice."
+                ]},
+                {"type": "attestation", "paragraphs": [
+                    "Verified at _________ on this [DATE], that the contents of paragraphs {knowledge_range} are true to my personal knowledge, and paragraph {advice_index} is based on legal advice which I believe to be true. Nothing material has been concealed."
+                ]}
+            ]
+        }
+
+    elif family == "affidavit":
+        deponent = filled_fields.get("deponent_name") or sender_name
+        father = filled_fields.get("father_name") or "__________"
+        age = filled_fields.get("deponent_age") or "Adult"
+        addr = filled_fields.get("deponent_address") or sender_addr or "__________"
+        return {
+            "family": "affidavit",
+            "requires_stamp_paper": True,
+            "display_name": display.upper(),
+            "sections": [
+                {"type": "numbered_list", "items": [
+                    f"I say that I am the deponent herein, aged about {age} years, s/o or d/o {father}, residing at {addr}, and I am well conversant with the facts of this case.",
+                    f"I say that: {clean_details or 'the statements made herein are true and correct to the best of my knowledge and belief.'}",
+                    f"I say that the monetary amount involved in the subject matter is Rs. {amount or '__________'}/- and default occurred on or around {date_val or 'material time'}.",
+                    "I submit that the present affidavit is executed bona fide in support of the prayer made herein."
+                ]},
+                {"type": "attestation", "paragraphs": [
+                    "Verified at _________ on this [DATE], that the contents of paragraphs {knowledge_range} are true to my personal knowledge, and paragraph {advice_index} is based on legal advice which I believe to be true. Nothing material has been concealed."
+                ]}
+            ]
+        }
+
+    elif family == "agreement":
+        p1 = filled_fields.get("party1_name") or sender_name
+        p1_addr = filled_fields.get("party1_address") or sender_addr or "__________"
+        p2 = filled_fields.get("party2_name") or recipient_name
+        p2_addr = filled_fields.get("party2_address") or recipient_addr or "__________"
+        subject = filled_fields.get("agreement_subject") or display
+        return {
+            "family": "agreement",
+            "requires_stamp_paper": True,
+            "display_name": display.upper(),
+            "sections": [
+                {"type": "body_p", "text": f"WHEREAS the First Party, {p1}, residing/situated at {p1_addr}, is legally competent to enter into this Agreement;"},
+                {"type": "body_p", "text": f"WHEREAS the Second Party, {p2}, residing/situated at {p2_addr}, desires to enter into terms regarding {subject};"},
+                {"type": "body_p", "text": "NOW THEREFORE, in consideration of the mutual covenants, it is agreed as follows:"},
+                {"type": "numbered_list", "items": [
+                    f"Scope: The parties agree to the following terms regarding: {clean_details or subject}.",
+                    f"Consideration: The agreed financial consideration is Rs. {amount or '__________'}/-, payable as per mutually agreed milestones.",
+                    "Term: This agreement shall take effect from the date of execution and shall remain in force until fulfilled or terminated.",
+                    "Dispute Resolution: Subject to the exclusive jurisdiction of the competent civil courts. Any dispute shall be resolved through arbitration under the Arbitration and Conciliation Act, 1996."
+                ]}
+            ]
+        }
+
+    return {
+        "family": "generic_instrument",
+        "display_name": display,
+        "sections": [
+            {"type": "heading", "text": display.upper(), "alignment": "center"},
+            {"type": "body_p", "text": f"This legal instrument is made on behalf of {sender_name} in relation to {recipient_name}."},
+            {"type": "numbered_list", "items": [
+                f"Factual background: {clean_details or 'The parties entered into an agreement/transaction.'}",
+                f"Amount involved: Rs. {amount or '__________'}/-.",
+                f"Date of default/incident: {date_val or '__________'}."
+            ]},
+            {"type": "signature", "party1_label": sender_name, "party2_label": recipient_name}
+        ]
+    }
+
+
 def generate_document_spec(
     doc_family: str,
     doc_type: str,
@@ -373,9 +533,11 @@ def generate_document_spec(
     Ask LLM to generate a structured document spec using the family-specific prompt.
     Returns spec dict or None on failure.
     """
+    clean_prob = sanitize_narrative_text(problem_description or "")
     llm = _ensure_field_llm()
     if not llm:
-        return None
+        print(f"[InterviewState] LLM unavailable, using deterministic fallback spec for {doc_family}")
+        return build_fallback_spec(doc_family, doc_type, display_name, filled_fields, clean_prob)
 
     # Select the per-family prompt template
     family = doc_family or "letter"
@@ -391,7 +553,7 @@ def generate_document_spec(
     try:
         raw = ""
         prompt = prompt_template.format(
-            problem_description=problem_description or "",
+            problem_description=clean_prob,
             field_summary=field_summary,
         )
         resp = llm.invoke(prompt, max_tokens=1000, response_format={"type": "json_object"})
@@ -402,7 +564,6 @@ def generate_document_spec(
         try:
             spec = json.loads(raw)
         except json.JSONDecodeError:
-            # Attempt recovery: find outermost {…} block
             brace_start = raw.find("{")
             brace_end = raw.rfind("}")
             if brace_start != -1 and brace_end > brace_start:
@@ -410,16 +571,16 @@ def generate_document_spec(
                 spec = json.loads(raw)
             else:
                 raise
-        if isinstance(spec, dict) and "sections" in spec:
+        if isinstance(spec, dict) and "sections" in spec and spec["sections"]:
             return spec
         else:
-            print(f"[InterviewState] Spec missing 'sections' key. Keys: {list(spec.keys()) if isinstance(spec, dict) else 'not a dict'}")
+            print(f"[InterviewState] Spec missing 'sections' key or empty. Using fallback spec.")
     except Exception as e:
-        print(f"[InterviewState] Spec generation failed: {e}")
+        print(f"[InterviewState] Spec generation LLM call failed ({e}). Using robust fallback spec.")
         if raw:
             print(f"[InterviewState] Raw LLM output (first 500): {raw[:500]}")
 
-    return None
+    return build_fallback_spec(doc_family, doc_type, display_name, filled_fields, clean_prob)
 
 
 # ─────────────────────────────────────────────────────────────

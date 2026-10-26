@@ -1,130 +1,151 @@
-# SaulGPT Architecture
-
-## System Overview
-
-SaulGPT is an AI-powered Indian Legal Intelligence Assistant with a 6-layer RAG pipeline, 3-phase "Virtual Counsel" flow, and full document drafting capabilities. Built with Python FastAPI backend and React+Vite frontend.
+# 🏛️ SaulGPT — System Architecture & Component Specification
+**Document Version:** 2.2.0  
+**Status:** Active Production  
+**Hosting Architecture:** Hugging Face Spaces (ZeroGPU Backend) + Supabase Managed PostgreSQL + Firebase Hosting (Web SPA)
 
 ---
 
-## 1. High-Level Architecture
+## 1. High-Level Architecture Overview
+
+SaulGPT is an AI-powered Indian Legal Intelligence platform operating on a **Two-Tier Neuro-Symbolic Architecture**:
+1. **The Multi-Agent Workflow Layer (UX & Client Lifecycle):** Omni-Box Routing $\rightarrow$ 3-Phase Virtual Counsel (Discovery $\rightarrow$ Strategy $\rightarrow$ Execution) $\rightarrow$ Pre-Trial Studio & Moot Court Arena.
+2. **The 6-Layer Deterministic Substantive Legal Engine:** 6-Layer RAG $\rightarrow$ Actor-Critic Process Reward Model $\rightarrow$ 4-Family Document Drafter $\rightarrow$ Supabase PostgreSQL Cloud Persistence.
 
 ```
-┌─────────────────────────────────────────────────────────────┐
-│                    Frontend (React + Vite)                    │
-│  saulgpt-ui/src/                                             │
-│  ├── App.jsx              Core chat UI, state management      │
-│  ├── AuthPage.jsx         Login/Signup                        │
-│  ├── ConversationsSidebar.jsx  Chat history sidebar           │
-│  ├── TriageCards.jsx      Strategy option cards               │
-│  ├── VetoCard.jsx         Scrutiny result display             │
-│  ├── BNSCorrectionNotice.jsx  Repealed law notifications      │
-│  ├── JurisdictionBadge.jsx    Court jurisdiction info          │
-│  ├── UrgencyBanner.jsx    Limitation deadline alerts           │
-│  ├── LegalGlossary.js     200+ Indian legal terms              │
-│  └── usePDF.js            jsPDF-based PDF generation           │
-└──────────────┬──────────────────────────────────────────────┘
-               │ HTTP (port 5173 → 8000)
-               ▼
-┌─────────────────────────────────────────────────────────────┐
-│                   Backend (FastAPI, port 8000)               │
-│                                                               │
-│  ┌─────────────────────────────────────────────────────┐     │
-│  │              api_server.py (1708 lines)              │     │
-│  │  Request routing → auth → crisis check → triage     │     │
-│  │  → state machine → pipeline dispatch → response      │     │
-│  └──────────┬────────────────────────────────┬──────────┘     │
-│             │                                │                │
-│  ┌──────────▼──────────┐   ┌─────────────────▼────────────┐  │
-│  │  3-Phase Flow        │   │  Pass-Through (General Q&A)  │  │
-│  │  idle→discovery→     │   │  ┌─────────────────────────┐ │  │
-│  │  strategy→execution  │   │  │ 6-Layer RAG Pipeline    │ │  │
-│  │                      │   │  │ Layer 1: Understanding  │ │  │
-│  │                      │   │  │ Layer 2: Retrieval      │ │  │
-│  │                      │   │  │ Layer 3: Reasoning      │ │  │
-│  │                      │   │  │ Layer 4: Validation     │ │  │
-│  │                      │   │  │ Layer 5: External       │ │  │
-│  │                      │   │  │ Layer 6: Evaluation     │ │  │
-│  │                      │   │  └─────────────────────────┘ │  │
-│  └──────────────────────┘   └──────────────────────────────┘  │
-└─────────────────────────────────────────────────────────────┘
+┌────────────────────────────────────────────────────────────────────────┐
+│                    Frontend (React 18 + Vite 5 SPA)                    │
+│  Hosted at: https://legalgpt-india.web.app (Firebase Hosting)          │
+│                                                                        │
+│  ├── App.jsx                   Core Omni-Box chat & session state      │
+│  ├── AuthPage.jsx              JWT Auth & Guest Session Manager        │
+│  ├── ConversationsSidebar.jsx  Multi-Device Supabase chat history      │
+│  ├── TrialStudio.jsx           Pre-Trial Moot Court & Cross-Examiner   │
+│  ├── EvidenceUploader.jsx      Sec 63 BSA Digital Evidence Processor   │
+│  ├── TriageCards.jsx           Strategic SWOT Option Cards             │
+│  ├── VetoCard.jsx              Scrutiny Gatekeeper & Limitation Alert  │
+│  ├── BNSCorrectionNotice.jsx   2024 Transition Warnings (BNS/BNSS/BSA) │
+│  ├── JurisdictionBadge.jsx     Court Pecuniary / Territorial Badging   │
+│  ├── UrgencyBanner.jsx         Statutory Limitation Countdown          │
+│  ├── ApiKeyModal.jsx           BYOK Groq API Key Management            │
+│  └── usePDF.js                 Browser-Side Vector PDF Generator       │
+└───────────────────────────────────┬────────────────────────────────────┘
+                                    │ HTTPS REST (port 443 / 7860)
+                                    ▼
+┌────────────────────────────────────────────────────────────────────────┐
+│             Backend API Server (Hugging Face Spaces ZeroGPU)           │
+│  Hosted at: https://lvvbaaal-legalgpt-api.hf.space                    │
+│                                                                        │
+│  ┌──────────────────────────────────────────────────────────────────┐  │
+│  │ app.py (ZeroGPU Gradio 5.20 + FastAPI Unification)              │  │
+│  │  - demo.launch(server_port=7860, prevent_thread_lock=True)       │  │
+│  │  - server_app.include_router(fastapi_app.router)                 │  │
+│  │  - demo.block_thread() keeps server active                       │  │
+│  └─────────────────────────────────┬────────────────────────────────┘  │
+│                                    │                                   │
+│  ┌─────────────────────────────────▼────────────────────────────────┐  │
+│  │ api_server.py (Core Dispatcher & Route Handlers)                 │  │
+│  │  - Omni-Box Autonomous Intent Routing (Layer 1)                  │  │
+│  │  - 3-Phase Discovery State Machine (triage_state.py)             │  │
+│  │  - 4-Family Document Drafting Engine (interview_state.py)       │  │
+│  │  - Adversarial IRAC Advocate Mode (irac_agent.py)                │  │
+│  │  - Pre-Trial Moot Court & Precedent Engine (trial_studio/)       │  │
+│  │  - Sec 63 BSA Electronic Certificate Generator                  │  │
+│  │  - Contract Risk Evaluator (layer6_evaluator.py)                 │  │
+│  │  - Actor-Critic Fine-Grained PRM (actor_critic.py)               │  │
+│  └─────────────────────────────────┬────────────────────────────────┘  │
+└────────────────────────────────────┼───────────────────────────────────┘
+                                     │
+         ┌───────────────────────────┴───────────────────────────┐
+         ▼                                                       ▼
+┌────────────────────────────────────────┐  ┌────────────────────────────────────────┐
+│   SUPABASE POSTGRESQL CLOUD DATABASE   │  │         LOCAL CHROMADB VECTOR STORE    │
+│  Host: aws-0-ap-southeast-1.pooler...  │  │  Path: data/vector_db/                 │
+│  Port: 5432 (Session) / 6543 (Tx)      │  │  Model: all-MiniLM-L6-v2 (CPU-pinned)  │
+│  Tables: users, conversations, messages│  │  Collections: saulgpt_indian_laws,     │
+│  Engine: IPv4 Connection Pooler        │  │               landmark_precedents      │
+└────────────────────────────────────────┘  └────────────────────────────────────────┘
 ```
 
-## 2. 3-Phase Virtual Counsel Flow
+---
 
-### Phase 1: Discovery (empathic investigation)
-- Max 3-turn conversation capped by Python state machine
-- Each turn has fixed objectives (story → evidence → outcome)
-- Tone Protocol: LLM matches user's emotional state
-- Output: `discovery_profile` JSON (emotional_state, desired_outcome, evidence_quality, timeline, opponent)
-- 4-layer JSON extraction from LLM output
-- Graceful vague-answer handling (no re-asking)
+## 2. The 3-Phase Virtual Counsel Workflow
 
-### Phase 2: Strategy (SWOT + options)
-- SWOT analysis (Strengths, Weaknesses, Opportunities, Threats)
-- Exactly 4 strategic options (path_a..path_d)
-- Each option has: title, description, pros, cons, timeline, difficulty, success_probability, route_to
-- `route_to` field: "document" → drafting interview, "pathfinder" → step-by-step procedure
-- Counsel Override for exceptional cases
-- Validation strips invalid IDs, pads missing ones
+```
+[User Input] ──► Phase 1: Discovery (Max 3 Turns)
+                      │
+                      ├── Turn 1: Story & Relationship
+                      ├── Turn 2: Key Evidence & Dates
+                      └── Turn 3: Primary Desired Outcome
+                      │
+                      ▼
+                 Phase 2: Strategy (SWOT Matrix)
+                      │
+                      ├── 4 Action Paths (path_a .. path_d)
+                      ├── Success Probability & Time Horizon
+                      └── Counsel Override for Exceptional Cases
+                      │
+                      ▼
+                 Phase 3: Execution
+                      ├── Document Factory (.docx & .pdf)
+                      ├── Procedural Pathfinder Roadmap
+                      └── Pre-Trial Moot Court Rehearsal
+```
 
-### Phase 3: Execution
-- Document → interview_state field collection → scrutiny → .docx
-- Pathfinder → 6-layer pipeline in procedural mode
-- IRAC Advocate Mode → structured legal analysis
+---
 
-## 3. 6-Layer RAG Pipeline
+## 3. The 6-Layer Deterministic RAG Pipeline
 
-| Layer | File | Function | Key Tech |
-|-------|------|----------|----------|
-| 0 | pipeline_orchestrator.py | Conversation memory / sliding window | 6 turns verbatim, older summarized |
-| 1 | layer1_understanding.py | Query analysis | spaCy NER, langdetect, regex |
-| 2 | layer2_retrieval.py | Hybrid vector retrieval | ChromaDB + BM25 + cross-encoder |
-| 3 | layer3_reasoning.py | LLM response generation | Groq llama-3.1-8b-instant |
-| 4 | layer4_validation.py | Fact-checking | NLI (DeBERTa), citation verification |
-| 5 | layer5_external.py | Web fallback | DuckDuckGo, IndianKanoon scraping |
-| 6 | layer6_evaluator.py | Confidence scoring | Contract evaluation, KG insights |
+| Layer | Component | File | Key Capabilities & Device Pinning |
+| :---: | :--- | :--- | :--- |
+| **0** | Conversational Memory | `pipeline_orchestrator.py` | Sliding window of 6 verbatim turns; older turns compressed. |
+| **1** | Query Understanding | `layer1_understanding.py` | SpaCy NER, Devanagari Hindi HyDE translation, blank model fallback. |
+| **2** | Hybrid Retrieval | `layer2_retrieval.py` | Dense ChromaDB (2,449+ chunks) + BM25 + CrossEncoder (`device="cpu"`). |
+| **3** | Big Model Reasoning | `layer3_reasoning.py` | Groq `qwen/qwen3.8-27b` & `openai/gpt-oss-120b` synthesis. |
+| **4** | Validation & Guardrails | `layer4_validation.py`, `actor_critic.py` | NLI DeBERTa (`device="cpu"`), Actor-Critic FG-PRM (`max_tokens=800`), 2024 Transition concordance, SC Struck-Down Firewall. |
+| **5** | External Search & Triplifier | `layer5_external.py`, `auto_triplifier.py` | Live DuckDuckGo & IndianKanoon scraping; real-time $(h, r, t)$ ingestion. |
+| **6** | Evaluator & Relational GNN | `layer6_evaluator.py`, `gnn_engine.py` | 25K character contract review (ICA 1872), PyTorch GNN TransE/RotatE ($\mathbb{R}^{64}$). |
 
-## 4. State Machines
+---
 
-### Triage State (`triage_state.py`)
-- `current_mode`: "idle" | "discovery" | "strategy"
-- `discovery_turn_count`: Hard 3-turn cap (Python-enforced)
-- `selected_strategy_id`: User's chosen path
-- `counsel_override`: LLM-detected override flag
+## 4. Court-Grade Document Factory (4 Families)
 
-### Interview State (`interview_state.py`)
-- States: IDLE → INTERVIEWING → DRAFTING → COMPLETE
-- 5 predefined document schemas (legal_notice, cheque_bounce, employment_notice, fir, rental_agreement)
-- Unrelated query detection (resets state)
-- Interruption handling (clarification, hypothetical, pushback)
+The document drafting engine (`backend/document_generator.py` and `backend/interview_state.py`) implements a 4-Family Architecture:
 
-### Document Gate (3 layers)
-1. Triage identifies document intent
-2. User picks document path from Strategy options
-3. Explicit "Shall I draft?" confirmation
+```
+                  DOCUMENT FACTORY
+                         │
+      ┌──────────────┬───┴──────────┬──────────────┐
+      ▼              ▼              ▼              ▼
+   LETTER        PLEADING       AFFIDAVIT      AGREEMENT
+(Legal Notice, (Order VII CPC (Sworn Deponent (Commercial
+ S.138 NIA,     Plaints, Civil Declarations,   Leases, SLAs,
+ Demand RPAD)  Petitions)     Stamp Margin)    NDAs)
+```
 
-## 5. Data Layer
+### Key Technical Guardrails:
+1. **Dynamic Prompt Sanitization:** Strips all `[User Goal: document]` tags and conversational instruction artifacts before document generation.
+2. **Deterministic Fallback Spec Engine (`build_fallback_spec`):** Automatically activated if LLM generation fails or times out. Synthesizes an authentic legal document with formal statutory clauses.
+3. **Notice Elements:** RPAD header, Sender `FROM:` block with Date, Recipient `TO:` block, formal heading under Section 138 NIA / relevant Act, numbered factual recitals, statutory 15-day demand clause, enclosures, and advocate signature.
+4. **Order VII Rule 11 CPC Triad of Survival:** Mandatory limitation clause, jurisdiction clause, and court valuation clause for plaints.
+5. **Dual Cloud Storage & Delivery:** Cached in-memory in `SESSION_DOCUMENTS` and on disk in `./generated_docs/{session_id}.docx`. Delivered via Axios blob stream and browser jsPDF.
 
-| Store | Technology | Contents | Location |
-|-------|-----------|----------|----------|
-| Vector DB | ChromaDB | 2409 chunks, 9 Indian acts | data/vector_db/ |
-| Relational | SQLite (WAL mode) | users, conversations, messages | backend/saulgpt.db |
-| Raw Data | JSON files | 9 Indian legal acts | data/raw_data/ |
-| Knowledge Graph | NetworkX DiGraph | 89 nodes, 67 edges | In-memory (on startup) |
+---
 
-## 6. Authentication
+## 5. Persistence Architecture: Supabase Cloud PostgreSQL
 
-- JWT-based (30-day expiry, HS256)
-- bcrypt password hashing (passlib)
-- SQLite-backed user storage
-- Guest sessions with localStorage persistence
-- Cross-tab auth sync via storage event listener
-- 401 interceptor (auto-logout on expired token)
+To support high-concurrency cloud deployments across mobile and desktop clients without file lock errors, SaulGPT utilizes **Supabase Managed PostgreSQL** alongside local SQLite:
 
-## 7. Document Generation
+- **Connection Pooler:** Routed through `aws-0-ap-southeast-1.pooler.supabase.com:5432` (Session Mode) via IPv4, ensuring container accessibility without IPv6 requirements.
+- **Relational Tables:**
+  - `users`: User registration, bcrypt password hashes, timestamps.
+  - `conversations`: Chat sessions with titles, linked to `user_id`.
+  - `messages`: Multi-turn user and assistant messages with structured metadata JSON.
+- **Failover & Safety:** Automatic fallback to SQLite if PostgreSQL credentials are unset in local test environments.
 
-- python-docx for .docx generation
-- 5 template builders + dynamic fallback
-- Times New Roman 12pt, 1-inch margins, 1.5 spacing
-- Professional elements: header, title, recipient block, subject line, body paragraphs, signature block, enclosures, court details, verification, pagination, disclaimer footer
-- Serving: `GET /api/document/{session_id}`
+---
+
+## 6. Security, Key Isolation, & Rate Limiting
+
+- **Bring Your Own Key (BYOK):** Users provide personal Groq API keys (`gsk_...`), stored client-side in `localStorage`. Injected per-request via `X-Groq-Api-Key` headers.
+- **Token Budget Guardrails:** Critic PRM calls calibrated to `max_tokens=800` to prevent Groq free-tier 1000 OTPM rate limit exceptions (`429 rate_limit_exceeded`).
+- **Memory Stability:** Pre-initialized PyTorch and spaCy pipelines strictly isolated on CPU outside ZeroGPU calls, ensuring 0% OOM crashes.

@@ -91,14 +91,14 @@ def _ensure_models():
 
     try:
         from sentence_transformers import SentenceTransformer
-        embedder = SentenceTransformer(EMBEDDING_MODEL)
+        embedder = SentenceTransformer(EMBEDDING_MODEL, device="cpu")
     except Exception as e:
         print(f"[Layer 2 Warning] SentenceTransformer load failed: {e}")
         embedder = None
 
     try:
         from sentence_transformers import CrossEncoder
-        reranker = CrossEncoder(RERANKER_MODEL)
+        reranker = CrossEncoder(RERANKER_MODEL, device="cpu")
     except Exception as e:
         print(f"[Layer 2 Warning] CrossEncoder load skipped: {e}")
         reranker = None
