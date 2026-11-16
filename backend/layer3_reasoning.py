@@ -852,7 +852,7 @@ def generate_legal_response(
     except Exception as e:
         print(f"[Layer 3] Primary LLM call failed: {e}")
         # Graceful model fallback
-        for fb_model in ["openai/gpt-oss-120b", "qwen/qwen3.6-27b"]:
+        for fb_model in ["openai/gpt-oss-120b", "openai/gpt-oss-20b"]:
             try:
                 print(f"[Layer 3] Retrying generation with fallback model: {fb_model}...")
                 fb_llm = ChatGroq(

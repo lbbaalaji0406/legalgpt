@@ -223,7 +223,7 @@ class AdversarialCriticEngine:
         except Exception as e:
             print(f"[Critic FG-PRM] Primary model {primary_model} call failed ({e}), falling back...")
             try:
-                fallback_model = "openai/gpt-oss-120b" if primary_model != "openai/gpt-oss-120b" else "qwen/qwen3.6-27b"
+                fallback_model = "openai/gpt-oss-120b" if primary_model != "openai/gpt-oss-120b" else "qwen/qwen3.8-27b"
                 res = client.chat.completions.create(
                     model=fallback_model,
                     messages=[{"role": "user", "content": prompt}],

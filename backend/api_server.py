@@ -2588,6 +2588,10 @@ async def process_trial_studio_turn(req: TrialStudioTurnRequest):
                 coach_advice=def_resp.coach_advice
             )
 
+        # Report the net change the user sees. In moot_court two agents each move the score
+        # (coach then counsel) and scores are clamped, so an agent's own delta can contradict it.
+        resp.vulnerability_delta = resp.vulnerability_score - session_data.get("current_score", resp.vulnerability_score)
+
         # Update session
         session_data["last_question"] = resp.interrogation_content
         session_data["current_score"] = resp.vulnerability_score
