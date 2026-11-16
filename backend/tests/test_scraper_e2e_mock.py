@@ -3,7 +3,8 @@ import json
 import os
 import requests
 from unittest.mock import MagicMock
-from legal_pipeline.scraper.engine import LegalScraperEngine
+import os, sys; sys.path.insert(0, os.path.join(os.path.dirname(__file__), ".."))
+from scraper.engine import LegalScraperEngine
 
 class TestScraperE2EMock(unittest.TestCase):
     def setUp(self):

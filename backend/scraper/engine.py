@@ -97,11 +97,13 @@ class KanoonScraper(BaseScraper):
         if not content: return []
         
         links = content.find_all('a', href=True)
-        doc_links = [urljoin(KANOON_BASE_URL, a['href']) for a in links if "/doc/" in a['href'] and not a['href'].endswith("/")]
+        # Kanoon doc links end in "/" (/doc/123/); skip only the act's own page, not every link
+        doc_links = [(urljoin(KANOON_BASE_URL, a['href']), clean_text(a.get_text())) for a in links if "/doc/" in a['href']]
+        doc_links = [(u, t) for u, t in doc_links if u != act_url]
         
         if len(doc_links) > 2:
             logger.info(f"Kanoon: TOC detected for {act_name}. Following {len(doc_links)} links.")
-            for link in doc_links:
+            for link, link_text in doc_links:
                 sec_html = polite_fetch(link, self.session)
                 if not sec_html: continue
                 sec_soup = BeautifulSoup(sec_html, 'html.parser')
@@ -111,8 +113,9 @@ class KanoonScraper(BaseScraper):
                 text = clean_text(sec_div.get_text())
                 if not is_valid_section(text): continue
                 
+                # The TOC link text carries the section heading; the page title is generic
                 title_el = sec_soup.find("div", class_="doc_title") or sec_soup.find("h1")
-                title = clean_text(title_el.get_text()) if title_el else "Section Content"
+                title = link_text or (clean_text(title_el.get_text()) if title_el else "Section Content")
                 
                 match = re.search(r'(Section|Sec\.|Article)\s+(\d+[A-Z]*)', title, re.I)
                 sec_num = match.group(2) if match else str(len(sections)+1)
