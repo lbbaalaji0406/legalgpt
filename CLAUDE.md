@@ -15,6 +15,13 @@
 - **Embeddings**: sentence-transformers (`all-MiniLM-L6-v2`, CPU-pinned)
 - **NLP**: spaCy (`en_core_web_sm`, with blank English fallback)
 
+## Frontends (two, same backend)
+
+- `saulgpt-ui/` — **Classic UI** (dark mahogany & gold, hand-written CSS). Port 5173, builds to `dist/`, deployed via `firebase.json` / `Deploy_Frontend.bat`.
+- `saulgpt-ui-clean/` — **Clean UI** (Antigravity-style 3-pane layout, Tailwind, light/dark). Port 5174, builds to `dist-clean/`, deployed via `firebase.clean.json` / `Deploy_Frontend_Clean.bat`.
+- Both hit identical endpoints with identical logic. Shared feature components (TrialStudio, EvidenceUploader, VetoCard, …) live in `saulgpt-ui/src` and are copied + re-themed into `saulgpt-ui-clean/src/features/` by `python saulgpt-ui-clean/scripts/sync_features.py`. Never hand-edit `saulgpt-ui-clean/src/features/*`; edit the classic file and re-run the sync.
+- When changing API/state logic in classic `App.jsx`, mirror it in `saulgpt-ui-clean/src/App.jsx`.
+
 ## Architecture
 
 ### 6-Layer RAG Pipeline (`backend/legal_pipeline/`)

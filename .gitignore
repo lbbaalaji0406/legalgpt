@@ -60,3 +60,6 @@ scratch/
 data/certificates/
 data/temp_test/
 data/temp_evidence/
+
+# Clean UI build output
+dist-clean/
