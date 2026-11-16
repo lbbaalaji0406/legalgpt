@@ -219,3 +219,68 @@ SaulGPT ships two interchangeable web frontends over the same backend. A user ca
 - **Rule for contributors:** change feature components in `saulgpt-ui/src` and re-run the script. Mirror any API/state change in classic `App.jsx` into the clean `App.jsx`.
 
 **Security of rendered text (both UIs, v2.3).** Answer text is HTML-escaped before the light Markdown formatting is applied, and only `http(s)://` or `/api/…` links become clickable. This blocks script injection through LLM output, for example a contract containing `<img onerror=…>` that the model quotes back.
+
+---
+
+## 6. Verification Record (v2.3, 16 Nov 2026)
+
+Automated browser tests (Playwright, Chromium) drove **both** UIs through identical scripts. Every API request was recorded, normalised (session IDs) and diffed between the two UIs.
+
+### 6.1 Feature parity, Classic vs Clean (mock backend)
+| Area | Checks | Result | Requests identical? |
+| :--- | :--- | :--- | :--- |
+| Sign-in, conversation list/open/delete/new, 401 auto-logout, 429 → key modal | 8 | ✅ 8/8 in both UIs | ✅ |
+| Grievance → strategy options → pick option → drafting interview (progress bar) → `.docx` download | (included above) | ✅ | ✅ |
+| Contract upload (`/api/upload`) | (included above) | ✅ | ✅ |
+| Explain options, Advocate Mode (IRAC) | 2 | ✅ | ✅ |
+| PDF export (valid `%PDF` file produced) | 1 | ✅ | ✅ |
+| BYOK "Test connection" (`/api/keys/validate`) | 1 | ✅ | ✅ |
+| Evidence upload (`/api/evidence/upload`, multipart incl. client SHA-256) → result → *Apply to chat* | 2 | ✅ | ✅ |
+| Sample cheque → *Launch cross-exam* → Trial Studio pre-filled | 1 | ✅ | ✅ |
+| Trial Studio start → witness answer → conclude → back to chat | 5 | ✅ | ✅ |
+| **Total** | **20 per UI** | **40/40** | **✅ byte-identical** |
+
+The only request difference is that the Clean UI refreshes the conversation list more often, because its sidebar is always visible. This has no functional impact.
+
+### 6.2 Clean-UI-specific behaviour
+13/13 checks pass:
+- the contract card and sidebar entry open the file picker
+- drag-and-drop uploads a file
+- answer chips (mode, area, laws, validated) appear
+- the Sources tab shows citations with the repealed flag, confidence and repealed warnings
+- the Glossary tab shows terms found in the answer, with working search and a no-match state
+- HTML in replies is shown as text, while Markdown bold and `/api` links still work
+
+### 6.3 Live production backend (`lvvbaaal-legalgpt-api.hf.space`)
+- `/api/health` is online (v2.0.0).
+- A knowledge query ("punishment for cheating under BNS 2023") returns a correct BNS answer with 7 laws retrieved, `oral_briefing` and `infographic_data`. **Latency is 2–4 min per answer** (ZeroGPU cold start plus the pipeline).
+- The exact production payload was replayed through both UIs: BNS notice, roadmap infographic, oral briefing, mode/laws labels and PDF all render (after fixes F-1 and F-4 below).
+
+### 6.4 Defects found and fixed in v2.3
+| # | Severity | Defect | Fix | Verified |
+| :--- | :--- | :--- | :--- | :--- |
+| F-1 | **Critical** | Both UIs used `meta.meta \|\| meta`. The backend adds a nested `meta` (`remapped_laws`) whenever an answer mentions IPC/CrPC/IEA, so **all other widgets vanished** on those answers in production (citations, confidence, scrutiny, urgency, jurisdiction, Toulmin, PDF rules, infographic, briefing). | Merge both levels (`{...meta, ...meta.meta}`) in both UIs | Real production payload replayed ✅ |
+| F-2 | **Critical** | **Sign-up fails in production** ("Failed to create user account"; 9/9 attempts failed). Explicit-id inserts (guest id 1, token ids, likely the SQLite→Supabase migration) leave the Postgres `users.id` sequence behind, so new inserts hit duplicate keys. | `_pg_sync_users_id_seq()` re-aligns the sequence after explicit-id inserts and before `create_user`. This also heals affected databases. | Reproduced and fixed on local Postgres 16, including an already-broken database; SQLite path unchanged ✅. **Needs backend redeploy.** |
+| F-3 | **High (security)** | Classic UI rendered answer HTML unescaped: `<img onerror=…>` in a reply executed script (XSS via LLM echo of uploaded documents). | Escape HTML before Markdown; only linkify `http(s)`/`/api` URLs; escape `"` (both UIs) | Payload no longer executes in either UI ✅ |
+| F-4 | Medium | `oral_briefing` and `infographic_data` were produced by the backend but never displayed by either UI. | Render `AudioPillPlayer` and `LegalInfographic` in both UIs | ✅ |
+| F-5 | Medium | Cross-tab logout was documented but missing in the Classic UI. | `storage` listener added | ✅ |
+| F-6 | Low | Clean-UI re-theming: dark text on accent buttons, gradient titles, Trial Studio opening scrolled to the bottom. | Sync script made block-aware; scroll only once a session starts | Screenshots, light and dark ✅ |
+
+---
+
+## 7. Known Gaps & Road to "Masterclass" (prioritised)
+
+| ID | Priority | Gap | Recommendation |
+| :--- | :--- | :--- | :--- |
+| G-1 | **P0** | Fix F-2 is in code but not live. Until the backend is redeployed, **new users cannot register**. | Redeploy the Hugging Face Space (`deploy_hf.py`), then sign up once to confirm. |
+| G-2 | **P0 (privacy)** | Any request without a valid token is mapped to the shared guest user (id 1). Anonymous callers write to, and can list, one shared "guest" history, and a bad or expired token silently falls into it. | Return 401 for conversation endpoints without a valid token. Keep guest handling only for stateless Q&A, or give each guest a random per-browser id. |
+| G-3 | P1 (security) | `/api/trial/*`, `/api/evidence/upload`, `/api/bench/debate` and `/api/keys/validate` accept unauthenticated requests. The UIs send no token to them. | Require the Bearer token (both UIs already hold it), and rate-limit per user. |
+| G-4 | P1 (UX) | 2–4 minutes per answer, with only a typing indicator. | Keep the Space warm; stream tokens (SSE) or show pipeline stage progress (Understanding → Retrieval → Reasoning → Validation). |
+| G-5 | P1 | Live answers can report `laws_retrieved: 7` with `citations: []`, so the Sources panel has nothing to cite. | Populate `citations` from Layer 2 hits (act and section) on every answer. |
+| G-6 | P1 | Trial Studio reports failures with a browser `alert()`. | Show an inline error with a Retry button. |
+| G-7 | P2 | The JS bundle is ~800 KB (jsPDF, html2canvas). | Lazy-load PDF export and Trial Studio (`import()`). |
+| G-8 | P2 | Strategy cards lack success probability, time horizon and difficulty (described in earlier FDD versions). | Add the fields to `prompts/strategy.py` and validation, then render them as chips on each card. |
+| G-9 | P2 | `POST /api/conversations/migrate` (guest takeover) is never called; sign-in is required up front. | Either remove it, or support a real guest mode (see G-2) and call it after sign-in. |
+| G-10 | P2 | The legacy **Virtual Bench** modal is mounted but unreachable (superseded by Trial Studio). | Remove it, or expose it as a "Quick debate" mode inside Trial Studio. |
+| G-11 | P2 | Accessibility: icon-only buttons rely on `title`; the classic UI's colour contrast is low in places. | Add `aria-label`s and run an axe audit in CI. |
+| G-12 | P2 | No automated UI tests in the repository. | Commit the Playwright parity suite (§6) and run it in CI for both UIs. |

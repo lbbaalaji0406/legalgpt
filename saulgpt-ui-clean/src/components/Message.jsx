@@ -59,7 +59,14 @@ export function parseMeta(msg) {
   if (meta && typeof meta === "string") {
     try { meta = JSON.parse(meta); } catch { meta = null; }
   }
-  return { meta, effectiveMeta: meta?.meta || meta };
+  // The backend puts most fields at the top level but may ALSO add a nested
+  // `meta` (e.g. {remapped_laws} whenever IPC/CrPC/IEA is mentioned, or the
+  // drafting/veto payload). Merge both levels (nested wins) instead of
+  // choosing one, otherwise every other widget disappears.
+  const effectiveMeta = meta && typeof meta.meta === "object" && meta.meta
+    ? { ...meta, ...meta.meta }
+    : meta;
+  return { meta, effectiveMeta };
 }
 
 export default function Message({ msg, index, onTriageChoice, onOpenBench, onShowSources, isCompactBNS = false, busy }) {

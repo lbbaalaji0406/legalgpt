@@ -219,7 +219,13 @@ function Message({ msg, onTriageChoice, onOpenBench, isCompactBNS = false }) {
   if (meta && typeof meta === "string") {
     try { meta = JSON.parse(meta); } catch { meta = null; }
   }
-  const effectiveMeta = meta?.meta || meta;
+  // The backend puts most fields at the top level but may ALSO add a nested
+  // `meta` (e.g. {remapped_laws} whenever IPC/CrPC/IEA is mentioned, or the
+  // drafting/veto payload). Merge both levels (nested wins) instead of
+  // choosing one, otherwise every other widget disappears.
+  const effectiveMeta = meta && typeof meta.meta === "object" && meta.meta
+    ? { ...meta, ...meta.meta }
+    : meta;
   const triage = msg.triage || meta?.triage || effectiveMeta?.triage;
   const scrutiny = meta?.scrutiny || effectiveMeta?.scrutiny;
   const deliberation = msg.critic_deliberation || meta?.critic_deliberation || effectiveMeta?.critic_deliberation;
