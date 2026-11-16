@@ -1,6 +1,7 @@
 # ⚖️ SaulGPT — Functional Design Document (FDD)
-**Document Version:** 2.2.0  
+**Document Version:** 2.3.0 (16 Nov 2026: verified against code and live production; see §5–§7)  
 **Target Release:** Production Cloud (Hugging Face Spaces + Supabase + Firebase)  
+**Frontends:** Classic UI (`saulgpt-ui`) and Clean UI (`saulgpt-ui-clean`), with identical behaviour on one shared backend  
 **System Classification:** Neuro-Symbolic Indian Legal Intelligence Platform  
 **Governing Jurisprudence:** Republic of India (Constitution of India, BNS 2023, BNSS 2023, BSA 2023, CPC 1908, NIA 1881, ICA 1872)
 
@@ -69,10 +70,14 @@ flowchart TD
   - Objective-driven progression: Turn 1 (Factual Story) $\rightarrow$ Turn 2 (Evidence & Timeline) $\rightarrow$ Turn 3 (Desired Outcome).
   - Dynamic JSON extraction yields a `discovery_profile` (emotional state, key events, evidence strength, opponent profile).
 - **Phase 2: Strategy Advisory (SWOT & Paths):**
-  - Synthesizes a structured legal SWOT matrix (Strengths, Weaknesses, Opportunities, Threats).
-  - Presents exactly 4 strategic action cards (`path_a` to `path_d`) with estimated success probability, time horizon, and procedural difficulty.
+  - Synthesizes a structured legal SWOT matrix (Strengths, Weaknesses, Opportunities, Threats), shown on demand ("Show strengths & risks").
+  - Presents exactly 4 strategic action cards (`path_a` to `path_d`), each with a **label, a description and a `route_to`** (`document` → drafting interview, `pathfinder` → step-by-step procedure).
+  - Optional banners above the cards: **limitation warning** (`limitation_warning`) and **jurisdiction note** (`jurisdiction_note`).
+  - Two extra actions: **Explain these options** (sends `explain`) and **Advocate Mode** (sends `advocate` → IRAC deep analysis: Facts / Issues / Rule / Application arguing both sides / Conclusion).
+  - ⚠️ *Not implemented:* per-option success probability, time horizon and procedural difficulty. The strategy prompt does not produce these fields and neither UI renders them (see §7, G-8).
 - **Phase 3: Execution:**
   - Seamless 1-click execution: Selecting a card immediately triggers either document drafting or an action roadmap without re-asking established facts.
+  - Drafting runs as an interview with a progress bar (`progress_pct`). It can be cancelled at any time ("Cancel draft"), and it ends in an explicit confirmation before the `.docx` is generated.
 
 ---
 
@@ -109,20 +114,30 @@ Supports 4 structured document families with 10+1 architectural rendering primit
 ---
 
 ### 3.4 Module 4: Pre-Trial Studio & Precedent Intelligence
-- **Moot Court Simulation:** 2-column judicial chamber pitting Petitioner arguments against Respondent counter-defenses.
-- **Adversarial Cross-Examiner:** Formulates hard-hitting cross-examination questions under Section 146 of the Bharatiya Sakshya Adhiniyam, 2023.
+- **Three session modes:** *Dual Moot Court (with Coach)*, *Solo Cross-Examiner* and *Solo Defense Chambers* (`moot_court`, `cross_examiner`, `defense_fortifier`).
+- **Witness role:** the user takes the stand as *Accused / Drawer* or *Complainant / Payee*. Opposing counsel's line of questioning adapts to the role.
+- **Act filter:** all 8 acts, NI Act (Sec 138/139), BNS/BNSS/BSA 2023, Consumer Protection Act 2019, Indian Contract Act, Limitation Act (Sec 18), Arbitration Act.
+- **Adversarial Cross-Examiner:** Formulates hard-hitting cross-examination questions under Section 146 of the Bharatiya Sakshya Adhiniyam, 2023 (`POST /api/trial/start`, then `POST /api/trial/turn` per answer).
+- **Live instrumentation:** *Trial Exposure Radar* (vulnerability score and per-turn delta), *Corner Coach* (critique, objection, evidentiary plug, optimised rejoinder) and the *controlling precedent* card (title, citation, court, year, ratio decidendi, turning point).
+- **Rest Case / Conclude** (`POST /api/trial/conclude`): final record with status label, judicial outlook, admissions on record and suggested statutory motions. If the call fails, a client-side record is produced from the last score.
+- **Entry points:** sidebar/header button, the "Trial Studio" action under any answer (pre-fills the scenario), or "Launch cross-exam" from the Evidence Locker (pre-fills the scenario and attaches the grounded evidence).
 - **Precedent Engine:** Indexes over 50,000 landmark Supreme Court and High Court judgments to retrieve authoritative case citations matching the dispute.
+- *Legacy:* the older **Virtual Bench** modal (`POST /api/bench/debate`) is still mounted in both UIs, but nothing opens it any more, because Trial Studio superseded it (see §7, G-10).
 
 ---
 
 ### 3.5 Module 5: Multimodal Evidence Verification (Section 63 BSA)
-- **Forensic Evidence Ingestion:** Accepts digital audio, invoice PDFs, and scanned cheque images.
-- **Cryptographic Hashing:** Computes SHA-256 integrity hashes on upload.
+- **Forensic Evidence Ingestion:** Two tabs: *Audio & Video* (voice notes, CCTV; Whisper transcription) and *Documents & Images* (bills, invoices, cheques, chats). Max **25 MB** per file (`POST /api/evidence/upload`).
+- **Cryptographic Hashing:** SHA-256 is computed **in the browser before upload** (`client_hash`) and again on the server, so the two can be compared.
 - **Certificate Generation:** Produces a court-admissible Section 63 BSA compliance certificate detailing device hash, extraction date, and custody log.
+- **Statutory clocks:** for cheque memos, the Section 138(b) 30-day notice window is computed from the bank return date, with a manual date entry fallback.
+- **1-click samples:** "Sample Certified Cheque & Memo" and "Sample Uncertified WhatsApp Audio" demonstrate the flow without a real file.
+- **Hand-offs:** *Apply to chat* writes a structured `[EVIDENCE GROUNDED: …]` brief into the message box. *Launch cross-exam* opens Trial Studio with the evidence attached.
 
 ---
 
 ### 3.6 Module 6: Contract Risk Evaluator (Layer 6)
+- **Input:** PDF, DOCX or TXT up to **50 MB** (`POST /api/upload`), uploaded via the paperclip/"Contract" button, the "Review a contract" card, or (Clean UI) by dragging a file onto the chat.
 - **High-Capacity Analysis:** Evaluates entire agreements up to 25,000 characters in a single pass to eliminate multi-chunk fragmentation.
 - **Statutory Risk Scoring:**
   - 🔴 **High Risk:** Void/unlawful terms (Section 27 non-compete covenants, Section 28 legal proceeding restraints, Section 74 penalty liquidated damages).
@@ -134,20 +149,42 @@ Supports 4 structured document families with 10+1 architectural rendering primit
 ### 3.7 Module 7: Indian Legal Glossary & Layman Decoder
 - **Interactive Term Ribbon:** Detects over 200 Indian legal terms in responses (e.g. *Anticipatory Bail, Cognizable, Ex-Parte, Lok Adalat, Mens Rea, Quash, Res Judicata, Caveat*).
 - **Everyday Analogies:** Translates complex legal terminology into intuitive real-life explanations directly in the chat view.
+- **Glossary panel:** "Terms found in the latest answer" plus "Browse all terms" by category. The Classic UI shows it as a slide-in sidebar. The Clean UI shows it as the *Glossary* tab of the right-hand panel, with a search box.
 
 ---
 
 ### 3.8 Module 8: Multi-Device Persistence & Cloud Accounts
-- **Dual-Mode Persistence:**
-  - **Guest Litigants:** Immediate anonymous access; sessions persist in browser `localStorage` and sync to cloud.
-  - **Registered Litigants:** Email/password account creation with JWT authentication (30-day token expiry).
-- **Multi-Device History:** Chat turns, evidence uploads, and drafted documents are persisted in Supabase PostgreSQL and synced across mobile and desktop browsers.
+- **Accounts:** Email/password account creation with JWT authentication (30-day token expiry). **Both UIs require sign-in before the chat is shown.**
+  - ⚠️ *Correction (v2.3):* earlier versions described "immediate anonymous guest access with cloud sync". In practice the UIs gate everything behind sign-in. The backend still maps any request **without a valid token** to a shared guest user (id 1), and the guest-takeover endpoint `POST /api/conversations/migrate` is never called by either UI (see §7, G-2 and G-9).
+- **Conversation history:** list (paged, 25 at a time, "Load more"), open, delete and "New conversation"; titles are auto-set from the first message.
+- **Multi-Device History:** Chat turns are persisted in Supabase PostgreSQL and synced across mobile and desktop browsers.
+- **Session safety:** an expired token (401) signs the user out automatically. Signing out in one browser tab signs out every open tab (cross-tab `storage` sync).
 
 ---
 
 ### 3.9 Module 9: Bring-Your-Own-Key (BYOK) Security
 - **Compulsory User Key Isolation:** Users enter their personal Groq API key (`gsk_...`) in a secure modal.
 - **Zero Server-Side Key Storage:** Keys are saved strictly in the user's browser `localStorage` and transmitted per-request via the `X-Groq-Api-Key` HTTP header.
+- **Test connection:** the key modal can verify a key before saving (`POST /api/keys/validate` → number of models available).
+- **Rate-limit recovery:** any `429` or "rate limit" error automatically re-opens the key modal with an explanation.
+
+---
+
+### 3.10 Module 10: Response Intelligence Widgets
+Every answer can carry structured metadata, which both UIs render around the text:
+
+| Widget | Backend field(s) | What the user sees |
+| :--- | :--- | :--- |
+| BNS Correction Notice | `remapped_laws`, `scrutiny.warnings` | "Legislation Update 2024": repealed IPC/CrPC/IEA section → its BNS/BNSS/BSA replacement (compact after the first one in a chat) |
+| Urgency Banner | `urgency_flags`, `urgency_reason`, `limitation_days`, `limitation_expiry` | Red deadline alert when a limitation period is close |
+| Jurisdiction Badge | `jurisdiction_mapped` | Which court/forum the matter belongs to |
+| Veto / Scrutiny Card | `scrutiny` (`severity`, `veto_message`, `warnings`, `can_proceed`), `critic_deliberation` | Pre-flight legal scrutiny; serious issues need an explicit "I understand" before proceeding |
+| Toulmin Matrix | `toulmin_matrix` | Claim, grounds, warrant, rebuttal breakdown |
+| **Oral Case Briefing** | `oral_briefing` | 🔊 3-sentence spoken summary (browser text-to-speech). *Wired into both UIs in v2.3. The backend was already producing it.* |
+| **Procedural Roadmap Infographic** | `infographic_data` (`decision_tree` / `transition_matrix`) | Visual step-by-step or old-law → new-law roadmap. *Wired into both UIs in v2.3. The backend was already producing it.* |
+| Decoded Terms Ribbon | (client-side scan of the text) | Clickable legal terms with plain-language meanings |
+| Sources / Pipeline Meta | `mode_used`, `domain`, `laws_retrieved`, `citations[]`, `confidence_score`, `is_hallucinating`, `repealed_warnings`, `struck_down_warnings`, `elapsed_seconds` | Classic UI: collapsible bar under the answer. Clean UI: summary chips under the answer, with full details in the **Sources** tab |
+| Exports | `document_ready`, `document_url` | Copy, PDF (jsPDF, client-side), editable `.docx` (blob download) |
 
 ---
 
@@ -160,3 +197,25 @@ Supports 4 structured document families with 10+1 architectural rendering primit
    - *Navtej Singh Johar (2018)*: Section 377 IPC decriminalized for consensual acts.
    - *K.S. Puttaswamy (2018)*: Section 57 Aadhaar Act struck down for private entities.
 3. **Limitation Act 1963 Calculator:** Alerts users whenever statutory prescription periods are close to expiring.
+
+---
+
+## 5. Presentation Layer: Two Frontends, One Behaviour
+
+SaulGPT ships two interchangeable web frontends over the same backend. A user can pick either and gets the same features, data and results.
+
+| | Classic UI (`saulgpt-ui/`) | Clean UI (`saulgpt-ui-clean/`) |
+| :--- | :--- | :--- |
+| Look | Dark "courtroom": mahogany & gold, serif display type | Minimal 3-pane workspace, zinc + one blue accent, Inter type, **Light/Dark toggle** |
+| Layout | Single centred column; tools as header buttons; history in a slide-in drawer | Top bar (status, theme, log out) · **left sidebar** (New Conversation, Tools, History, API key) · centred chat with one composer · **right panel** (Sources / Glossary / Guide) |
+| Onboarding | Feature cards + suggested matters | 4 action cards + suggested matters + an always-available 4-step **Guide** tab |
+| Contract upload | Paperclip, or "Evaluate Contracts" card → drop zone | Paperclip/"Contract" button, "Review a contract" card (opens picker directly), **drag a file onto the chat** |
+| Mobile | Responsive column | Sidebar becomes a ☰ drawer; right panel becomes an overlay |
+| Dev URL / build / deploy | `:5173` · `dist/` · `firebase.json` | `:5174` · `dist-clean/` · `firebase.clean.json` (separate Firebase site) |
+
+**Parity guarantee.**
+- **Shell logic:** the Clean UI's state and API logic (sessions, conversations, drafting interview, strategy choices, uploads, BYOK checks, 401/429 handling) is carried over line for line from the Classic `App.jsx`.
+- **Feature components:** Trial Studio, Evidence Locker, Veto card, Toulmin, BNS notice, Urgency, Jurisdiction, Infographic, Audio briefing, Glossary data and the PDF engine are **copied from the Classic UI** by `saulgpt-ui-clean/scripts/sync_features.py`. The script re-colours their CSS to the new theme and leaves their logic unchanged.
+- **Rule for contributors:** change feature components in `saulgpt-ui/src` and re-run the script. Mirror any API/state change in classic `App.jsx` into the clean `App.jsx`.
+
+**Security of rendered text (both UIs, v2.3).** Answer text is HTML-escaped before the light Markdown formatting is applied, and only `http(s)://` or `/api/…` links become clickable. This blocks script injection through LLM output, for example a contract containing `<img onerror=…>` that the model quotes back.

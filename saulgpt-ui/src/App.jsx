@@ -17,6 +17,8 @@ import ConversationsSidebar from "./ConversationsSidebar";
 import TrialStudio from "./TrialStudio";
 import DecodedTermsRibbon from "./DecodedTermsRibbon";
 import ApiKeyModal from "./ApiKeyModal";
+import LegalInfographic from "./LegalInfographic";
+import AudioPillPlayer from "./AudioPillPlayer";
 
 
 function generateSessionId(convId = null) {
@@ -173,15 +175,23 @@ function PipelineMeta({ data }) {
   );
 }
 
+// Escape HTML first so text from the backend/LLM (which can echo uploaded
+// contract text) can never inject markup or scripts (XSS).
+function escapeHtml(s) {
+  return s.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
+}
+
 function formatMessageContent(rawText) {
   if (!rawText) return "";
-  return rawText
+  return escapeHtml(rawText)
     .replace(/\*\*(.*?)\*\*/g, "<strong>$1</strong>")
     .replace(/### (.*?)(\n|$)/g, "<h3>$1</h3>")
     .replace(/## (.*?)(\n|$)/g,  "<h2>$1</h2>")
     .replace(/^- (.*)/gm, "<li>$1</li>")
     .replace(/(<li>.*<\/li>)/gs, "<ul>$1</ul>")
     .replace(/\[(.*?)\]\((.*?)\)/g, (match, text, url) => {
+      // Only http(s) and API links; blocks javascript: and other schemes
+      if (!/^(https?:\/\/|\/api\/)/.test(url)) return match;
       let targetUrl = url;
       if (targetUrl.includes("localhost:8000") || targetUrl.includes("127.0.0.1:8000")) {
         targetUrl = targetUrl.replace(/https?:\/\/(localhost|127\.0\.0\.1):8000/, API_BASE);
@@ -274,6 +284,7 @@ function Message({ msg, onTriageChoice, onOpenBench, isCompactBNS = false }) {
             <BNSCorrectionNotice meta={effectiveMeta} compact={isCompactBNS} />
             <UrgencyBanner meta={effectiveMeta} />
             <JurisdictionBadge meta={effectiveMeta} />
+            {effectiveMeta.oral_briefing && <AudioPillPlayer text={effectiveMeta.oral_briefing} />}
           </>
         )}
 
@@ -287,6 +298,10 @@ function Message({ msg, onTriageChoice, onOpenBench, isCompactBNS = false }) {
             __html: formatMessageContent(content),
           }}
         />
+
+        {effectiveMeta?.infographic_data && (
+          <LegalInfographic data={effectiveMeta.infographic_data} />
+        )}
 
         {!isUser && content && (
           <DecodedTermsRibbon
@@ -432,6 +447,19 @@ export default function App() {
     };
     window.addEventListener("saulgpt-rate-limit-hit", handleRateLimit);
     return () => window.removeEventListener("saulgpt-rate-limit-hit", handleRateLimit);
+  }, []);
+
+  // Cross-tab auth sync: logging out in one tab logs out every tab
+  useEffect(() => {
+    const onStorage = (e) => {
+      if (e.key === "saulgpt_token" && !e.newValue) {
+        setToken(null);
+        setUser(null);
+        setMessages([]);
+      }
+    };
+    window.addEventListener("storage", onStorage);
+    return () => window.removeEventListener("storage", onStorage);
   }, []);
 
   const bottomRef  = useRef(null);

@@ -9,6 +9,8 @@ import JurisdictionBadge from "../features/JurisdictionBadge";
 import BNSCorrectionNotice from "../features/BNSCorrectionNotice";
 import ToulminMatrix from "../features/ToulminMatrix";
 import DecodedTermsRibbon from "../features/DecodedTermsRibbon";
+import LegalInfographic from "../features/LegalInfographic";
+import AudioPillPlayer from "../features/AudioPillPlayer";
 import StrategyCards from "./StrategyCards";
 import BrandMark from "./BrandMark";
 
@@ -24,7 +26,7 @@ export const MODES = {
 const EXPORTABLE_MODES = ["document", "evaluate", "pathfinder", "analysis", "knowledge"];
 
 function escapeHtml(s) {
-  return s.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+  return s.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
 }
 
 function resolveUrl(url) {
@@ -143,6 +145,7 @@ export default function Message({ msg, index, onTriageChoice, onOpenBench, onSho
             <BNSCorrectionNotice meta={effectiveMeta} compact={isCompactBNS} />
             <UrgencyBanner meta={effectiveMeta} />
             <JurisdictionBadge meta={effectiveMeta} />
+            {effectiveMeta.oral_briefing && <AudioPillPlayer text={effectiveMeta.oral_briefing} />}
           </>
         )}
 
@@ -150,6 +153,8 @@ export default function Message({ msg, index, onTriageChoice, onOpenBench, onSho
           className={`prose-legal ${isError ? "text-red-600 dark:text-red-400" : ""}`}
           dangerouslySetInnerHTML={{ __html: formatMessageContent(content) }}
         />
+
+        {effectiveMeta?.infographic_data && <LegalInfographic data={effectiveMeta.infographic_data} />}
 
         {triage && <StrategyCards triage={triage} onChoose={onTriageChoice} disabled={busy} />}
 
