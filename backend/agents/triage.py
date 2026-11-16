@@ -16,7 +16,7 @@ import sys
 import os
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
-from .llm_client import triage, get_triage_llm, TRIAGE_MODEL
+from .llm_client import get_triage_llm, TRIAGE_MODEL
 from langchain_core.messages import HumanMessage, AIMessage, SystemMessage
 from prompts.triage import TRIAGE_SYSTEM_PROMPT, TRIAGE_CLARIFY_PROMPT
 from typing import Optional, Dict, Any
@@ -31,8 +31,12 @@ class TriageAgent:
     4. Are all required variables collected? (intake loop)
     """
 
+    @property
+    def llm(self):
+        # built on every access: carries THIS request's Groq key, never a key captured at startup
+        return get_triage_llm()
+
     def __init__(self):
-        self.llm = triage
         self.name = "Triage"
 
     async def analyze(self, query: str, state: dict = None) -> Dict[str, Any]:

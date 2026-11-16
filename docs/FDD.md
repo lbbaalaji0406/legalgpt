@@ -155,7 +155,7 @@ Supports 4 structured document families with 10+1 architectural rendering primit
 
 ### 3.8 Module 8: Multi-Device Persistence & Cloud Accounts
 - **Accounts:** Email/password account creation with JWT authentication (30-day token expiry). **Both UIs require sign-in before the chat is shown.**
-  - ⚠️ *Correction (v2.3):* earlier versions described "immediate anonymous guest access with cloud sync". In practice the UIs gate everything behind sign-in. The backend still maps any request **without a valid token** to a shared guest user (id 1), and the guest-takeover endpoint `POST /api/conversations/migrate` is never called by either UI (see §7, G-2 and G-9).
+  - ⚠️ *Correction (v2.3):* earlier versions described "immediate anonymous guest access with cloud sync". In practice the UIs gate everything behind sign-in, and (since v2.4) so does the backend: there is no guest user, and every `/api/*` route except health, sign-up and login answers 401 without a valid login. The guest-takeover endpoint `POST /api/conversations/migrate` is never called by either UI (see §7, G-9).
 - **Conversation history:** list (paged, 25 at a time, "Load more"), open, delete and "New conversation"; titles are auto-set from the first message.
 - **Multi-Device History:** Chat turns are persisted in Supabase PostgreSQL and synced across mobile and desktop browsers.
 - **Session safety:** an expired token (401) signs the user out automatically. Signing out in one browser tab signs out every open tab (cross-tab `storage` sync).
@@ -273,8 +273,8 @@ The only request difference is that the Clean UI refreshes the conversation list
 | ID | Priority | Gap | Recommendation |
 | :--- | :--- | :--- | :--- |
 | G-1 | **P0** | Fix F-2 is in code but not live. Until the backend is redeployed, **new users cannot register**. | Redeploy the Hugging Face Space (`deploy_hf.py`), then sign up once to confirm. |
-| G-2 | **P0 (privacy)** | Any request without a valid token is mapped to the shared guest user (id 1). Anonymous callers write to, and can list, one shared "guest" history, and a bad or expired token silently falls into it. | Return 401 for conversation endpoints without a valid token. Keep guest handling only for stateless Q&A, or give each guest a random per-browser id. |
-| G-3 | P1 (security) | `/api/trial/*`, `/api/evidence/upload`, `/api/bench/debate` and `/api/keys/validate` accept unauthenticated requests. The UIs send no token to them. | Require the Bearer token (both UIs already hold it), and rate-limit per user. |
+| G-2 | ~~P0~~ | **Closed in v2.4.** There is no guest user: every route needs a valid login (default-deny), and session state is scoped per user. | See `docs/SECURITY.md`. |
+| G-3 | ~~P1~~ | **Closed in v2.4.** Trial Studio, Evidence, Bench and key validation require a login, the user's own Groq key, and are rate limited. | See `docs/SECURITY.md`. |
 | G-4 | P1 (UX) | 2–4 minutes per answer, with only a typing indicator. | Keep the Space warm; stream tokens (SSE) or show pipeline stage progress (Understanding → Retrieval → Reasoning → Validation). |
 | G-5 | P1 | Live answers can report `laws_retrieved: 7` with `citations: []`, so the Sources panel has nothing to cite. | Populate `citations` from Layer 2 hits (act and section) on every answer.  **Done on `claude/masterclass-upgrades`.** |
 | G-6 | P1 | Trial Studio reports failures with a browser `alert()`. | Show an inline error with a Retry button. |

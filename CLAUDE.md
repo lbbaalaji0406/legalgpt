@@ -174,6 +174,8 @@ npm run dev
 npm run setup
 
 ## Security
+- Public API is default-deny (see `docs/SECURITY.md`): login required, user's own Groq key required, rate limited, sessions scoped per user. New routes are protected automatically; run `backend/tests/test_security.py` after touching `api_server.py`, `security.py` or `auth.py`.
+- Never reintroduce a hardcoded JWT secret; set `JWT_SECRET`. Never build an LLM client at import time (it would pin the server key); use the `get_*_llm()` factories per request.
 
 - Never hardcode API keys in source files
 - Use environment variables for secrets

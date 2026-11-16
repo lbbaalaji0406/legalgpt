@@ -7,7 +7,7 @@ Uses layer1-6 as tools internally.
 """
 
 from typing import Optional, Dict, Any, List
-from .llm_client import researcher, get_researcher_llm
+from .llm_client import get_researcher_llm
 from langchain_core.messages import HumanMessage, AIMessage
 import sys
 import os
@@ -49,8 +49,12 @@ class ResearcherAgent:
     - Legal procedures (pathfinder mode)
     """
     
+    @property
+    def llm(self):
+        # built on every access: carries THIS request's Groq key, never a key captured at startup
+        return get_researcher_llm()
+
     def __init__(self):
-        self.llm = researcher
         self.name = "Researcher"
         self.capabilities = ["legal_qa", "case_analysis", "pathfinder"]
     

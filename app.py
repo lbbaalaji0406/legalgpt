@@ -37,9 +37,14 @@ from database import init_db
 
 # ZeroGPU decorated function bound directly to gr.Interface
 @spaces.GPU
-def predict(query: str):
+def predict(query: str, groq_key: str = ""):
     if not query or not query.strip():
         return "Please enter a legal query to analyze."
+    # Bring your own key: this public page must never spend the server's Groq quota
+    if not (groq_key or "").strip().startswith("gsk_"):
+        return "Please paste your free Groq API key (starts with gsk_) from console.groq.com/keys."
+    from key_context import set_request_groq_key
+    set_request_groq_key(groq_key)
     try:
         from pipeline_orchestrator import run_saulgpt_pipeline
         res = run_saulgpt_pipeline(query.strip(), session_id="hf-space-live")
@@ -50,11 +55,14 @@ def predict(query: str):
 # Build the Gradio interface
 demo = gr.Interface(
     fn=predict,
-    inputs=gr.Textbox(
-        lines=3,
-        placeholder="Enter your legal question under Indian Law (BNS, BNSS, BSA 2023)...",
-        label="Indian Legal Query"
-    ),
+    inputs=[
+        gr.Textbox(
+            lines=3,
+            placeholder="Enter your legal question under Indian Law (BNS, BNSS, BSA 2023)...",
+            label="Indian Legal Query"
+        ),
+        gr.Textbox(type="password", placeholder="gsk_...", label="Your Groq API key (free, never stored)"),
+    ],
     outputs=gr.Markdown(label="SaulGPT Legal Intelligence Analysis"),
     title="⚖️ SaulGPT Legal Intelligence API Server",
     description="Backend engine for SaulGPT. Integrated with Supabase PostgreSQL, ChromaDB, and ZeroGPU acceleration. Multi-device web client available at https://legalgpt-india.web.app"

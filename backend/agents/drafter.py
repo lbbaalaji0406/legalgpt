@@ -6,7 +6,7 @@ Uses: interview_state.py + dynamic_drafter.py as tools
 """
 
 from typing import Optional, Dict, Any, List
-from .llm_client import drafter, get_drafter_llm
+from .llm_client import get_drafter_llm
 import sys
 import os
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
@@ -64,8 +64,12 @@ class DrafterAgent:
     - Interactive document drafting (interviewing mode)
     """
     
+    @property
+    def llm(self):
+        # built on every access: carries THIS request's Groq key, never a key captured at startup
+        return get_drafter_llm()
+
     def __init__(self):
-        self.llm = drafter
         self.name = "Drafter"
         self.capabilities = ["legal_notice", "fir_complaint", "rental_agreement", "employment_notice"]
     

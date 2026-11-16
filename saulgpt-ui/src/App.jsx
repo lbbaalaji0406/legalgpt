@@ -521,7 +521,10 @@ export default function App() {
   function api() {
     const headers = {};
     const currentToken = token || localStorage.getItem("saulgpt_token");
-    if (currentToken) headers.Authorization = `Bearer ${currentToken}`;
+    if (currentToken) {
+      headers.Authorization = `Bearer ${currentToken}`;
+      headers["X-SaulGPT-Token"] = currentToken;
+    }
     const key = localStorage.getItem("saulgpt_user_groq_key");
     if (key && key.trim()) headers["X-Groq-Api-Key"] = key.trim();
     const instance = axios.create({ headers, baseURL: API_BASE || undefined });
@@ -533,7 +536,8 @@ export default function App() {
         }
         const status = err.response?.status;
         const detail = err.response?.data?.detail || err.response?.data?.error || "";
-        if (status === 429 || (typeof detail === "string" && detail.toLowerCase().includes("rate limit"))) {
+        const ours = typeof detail === "string" && detail.startsWith("Too many requests");
+        if (!ours && (status === 429 || (typeof detail === "string" && detail.toLowerCase().includes("rate limit")))) {
           window.dispatchEvent(new CustomEvent("saulgpt-rate-limit-hit", { detail: { error: detail } }));
         }
         return Promise.reject(err);

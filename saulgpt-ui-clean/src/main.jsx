@@ -15,6 +15,12 @@ axios.interceptors.request.use((config) => {
   if (userGroqKey && userGroqKey.trim()) {
     config.headers["X-Groq-Api-Key"] = userGroqKey.trim();
   }
+  // Login token: sent in two headers (some proxies drop Authorization)
+  const token = localStorage.getItem("saulgpt_token");
+  if (token) {
+    config.headers["X-SaulGPT-Token"] = token;
+    if (!config.headers.Authorization) config.headers.Authorization = `Bearer ${token}`;
+  }
   return config;
 });
 
@@ -24,8 +30,15 @@ axios.interceptors.response.use(
   (error) => {
     const status = error.response?.status;
     const detail = error.response?.data?.detail || error.response?.data?.error || "";
-    if (status === 429 || (typeof detail === "string" && detail.toLowerCase().includes("rate limit"))) {
+    // Our own limiter ("Too many requests...") is not a Groq quota problem: no key dialog for it
+    const ours = typeof detail === "string" && detail.startsWith("Too many requests");
+    if (!ours && (status === 429 || (typeof detail === "string" && detail.toLowerCase().includes("rate limit")))) {
       window.dispatchEvent(new CustomEvent("saulgpt-rate-limit-hit", { detail: { error: detail } }));
+    }
+    // Expired or invalid login: sign out (login/signup 401s are just a wrong password)
+    if (status === 401 && localStorage.getItem("saulgpt_token") && !String(error.config?.url || "").includes("/api/auth/")) {
+      ["saulgpt_token", "saulgpt_user", "saulgpt_conv_id"].forEach((k) => localStorage.removeItem(k));
+      window.location.reload();
     }
     return Promise.reject(error);
   }

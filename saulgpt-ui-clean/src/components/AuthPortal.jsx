@@ -135,9 +135,9 @@ export default function AuthPortal({ onAuth, migrating }) {
                   </Field>
                 )}
                 <Field label="Password" icon={Lock}>
-                  <input className={inputCls} type="password" placeholder="At least 4 characters"
+                  <input className={inputCls} type="password" placeholder={mode === "signup" ? "At least 8 characters" : "Your password"}
                     autoComplete={mode === "login" ? "current-password" : "new-password"}
-                    value={password} onChange={(e) => setPassword(e.target.value)} required minLength={4} />
+                    value={password} onChange={(e) => setPassword(e.target.value)} required minLength={mode === "signup" ? 8 : 1} maxLength={72} />
                 </Field>
 
                 <div className="pt-1">
