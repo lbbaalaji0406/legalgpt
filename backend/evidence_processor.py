@@ -40,6 +40,73 @@ CERT_DIR = os.path.join(os.path.dirname(BASE_DIR), "data", "certificates")
 os.makedirs(CERT_DIR, exist_ok=True)
 
 
+_DATE_PATTERNS = [
+    (re.compile(r"\b(\d{1,2})[/.-](\d{1,2})[/.-](\d{4})\b"), "dmy"),
+    (re.compile(r"\b(\d{1,2})(?:st|nd|rd|th)?\s+([A-Za-z]{3,9})\.?,?\s+(\d{4})\b"), "d_mon_y"),
+]
+
+
+def _parse_date(text: Any) -> Optional[datetime]:
+    """First Indian-style date (dd/mm/yyyy or '2 November 2026') in text, else None."""
+    if not isinstance(text, str):
+        return None
+    for rx, kind in _DATE_PATTERNS:
+        for m in rx.finditer(text):
+            try:
+                if kind == "dmy":
+                    return datetime(int(m.group(3)), int(m.group(2)), int(m.group(1)))
+                return datetime.strptime(f"{m.group(1)} {m.group(2)[:3]} {m.group(3)}", "%d %b %Y")
+            except ValueError:
+                continue
+    return None
+
+
+def _ground_statutory_clock(extracted: Dict[str, Any], ocr_text: str, today: Optional[datetime] = None):
+    """Recompute deadlines in code and cap confidence to what was actually read.
+
+    The LLM is good at reading the document but unreliable at date arithmetic and
+    tends to report high confidence even when it only saw the filename.
+    Returns (statutory_clock, confidence).
+    """
+    today = (today or datetime.now()).replace(hour=0, minute=0, second=0, microsecond=0)
+    clock = dict(extracted.get("statutory_clock") or {})
+    tx = extracted.get("transaction_details") or {}
+    try:
+        confidence = float(extracted.get("confidence_score"))
+    except (TypeError, ValueError):
+        confidence = 0.5
+
+    if extracted.get("category") == "cheque_dishonour":
+        # Prefer the line that mentions the return; fall back to the LLM's field
+        return_line = next((l for l in (ocr_text or "").splitlines() if re.search(r"return", l, re.I) and _parse_date(l)), "")
+        returned = _parse_date(return_line) or _parse_date(clock.get("bank_return_date"))
+        if returned:
+            deadline = returned + timedelta(days=30)
+            left = (deadline - today).days
+            clock.update({
+                "notice_clock_active": True,
+                "statute": "Section 138(b), Negotiable Instruments Act, 1881",
+                "bank_return_date": returned.strftime("%d %B %Y"),
+                "statutory_window_days": 30,
+                "notice_deadline": deadline.strftime("%d %B %Y"),
+                "days_remaining": max(left, 0),
+                "urgency_level": "EXPIRED" if left < 0 else "CRITICAL" if left <= 7 else "URGENT" if left <= 15 else "STANDARD",
+                "deadline_basis": "30 days counted from the bank return memo date. The Act counts from when you RECEIVED the bank's information, so use that date if it is later.",
+            })
+        else:
+            clock.update({"notice_clock_active": False, "bank_return_date": None, "notice_deadline": None,
+                          "days_remaining": None, "urgency_level": "UNKNOWN"})
+            confidence = min(confidence, 0.5)
+
+    # Nothing was read from the file: never claim more than a guess
+    if not (ocr_text or "").strip():
+        confidence = min(confidence, 0.3)
+    # Key facts missing: the user must confirm them
+    if not tx.get("amount") or not _parse_date(str(tx.get("date") or "")):
+        confidence = min(confidence, 0.6)
+    return clock, round(max(0.0, min(confidence, 1.0)), 2)
+
+
 class EvidenceProcessor:
     """
     Multimodal statutory evidence engine for Indian Jurisprudence.
@@ -287,7 +354,8 @@ OUTPUT STRICT JSON:
                     b64_data = base64.b64encode(img_f.read()).decode("utf-8")
                 mime = f"image/{'jpeg' if ext in ['.jpg', '.jpeg'] else ext.replace('.', '')}"
                 vision_res = client.chat.completions.create(
-                    model="llama-3.2-11b-vision-preview",
+                    # llama-3.2-11b-vision-preview was decommissioned by Groq; qwen3.8-27b reads images
+                    model=os.getenv("GROQ_VISION_MODEL", "qwen/qwen3.8-27b"),
                     messages=[{
                         "role": "user",
                         "content": [
@@ -363,11 +431,11 @@ OUTPUT STRICT JSON:
     "bank_return_date": "<Date documented or today>",
     "statutory_window_days": 730,
     "notice_deadline": "<Calculated deadline>",
-    "days_remaining": 650,
+    "days_remaining": "<leave null: computed by the server>",
     "urgency_level": "STANDARD" | "URGENT" | "CRITICAL",
     "dishonour_reason": "<Reason or transaction status>"
   }},
-  "confidence_score": 0.92,
+  "confidence_score": "<0.0-1.0: how sure you are every entity above was actually READ from the document text, not guessed>",
   "summary": "<Concise judicial evaluation of evidentiary value>"
 }}"""
 
@@ -402,10 +470,10 @@ OUTPUT STRICT JSON:
                     "statutory_clock": {
                         "notice_clock_active": True,
                         "statute": "Section 138(b), Negotiable Instruments Act, 1881",
-                        "bank_return_date": today.strftime("%d %B %Y"),
+                        "bank_return_date": None,  # unknown: never assume today
                         "statutory_window_days": 30,
-                        "notice_deadline": (today + timedelta(days=30)).strftime("%d %B %Y"),
-                        "days_remaining": 30,
+                        "notice_deadline": None,
+                        "days_remaining": None,
                         "urgency_level": "URGENT",
                         "dishonour_reason": "Funds Insufficient / Signature Mismatch"
                     },
@@ -479,8 +547,7 @@ OUTPUT STRICT JSON:
             statute_reference=f"{governing_act} & Section 63 BSA 2023"
         )
 
-        statutory_clock = extracted.get("statutory_clock", {})
-        confidence = float(extracted.get("confidence_score", 0.92))
+        statutory_clock, confidence = _ground_statutory_clock(extracted, extracted_text)
 
         return {
             "evidence_type": "document_image",
