@@ -2137,6 +2137,11 @@ async def chat_endpoint(
             if ts.get("goal") == "document":
                 doc_family = ts.get("doc_family")
                 doc_type = ts.get("doc_type")
+                # Triage often answers the generic "legal_notice" even for "bounced cheque";
+                # an explicit specific type in the user's words wins over a generic guess.
+                specific = detect_document_type(query)
+                if specific and specific != "legal_notice" and doc_type in (None, "legal_notice", "legal_document"):
+                    doc_type, doc_family = specific, map_doc_type_to_family(specific)
 
         if doc_family or doc_type:
             # ── SPEC-BASED INTERVIEW ──
@@ -2580,7 +2585,9 @@ async def process_trial_studio_turn(req: TrialStudioTurnRequest):
                 mode="moot_court",
                 turn_index=new_turn_index,
                 interrogation_content=cross_resp.interrogation_content,
-                vulnerability_score=cross_resp.vulnerability_score,
+                # The coach judges the answer; opposing counsel only asks the next question.
+                # Stacking counsel's own (always self-favouring) delta pushed good answers up.
+                vulnerability_score=def_resp.vulnerability_score,
                 vulnerability_delta=cross_resp.vulnerability_delta,
                 fatal_flaw_detected=def_resp.fatal_flaw_detected,
                 precedent_backing=cross_resp.precedent_backing,

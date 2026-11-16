@@ -63,3 +63,4 @@ data/temp_evidence/
 
 # Clean UI build output
 dist-clean/
+backend/generated_docs/
