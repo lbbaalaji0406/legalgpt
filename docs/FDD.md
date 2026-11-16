@@ -276,7 +276,7 @@ The only request difference is that the Clean UI refreshes the conversation list
 | G-2 | **P0 (privacy)** | Any request without a valid token is mapped to the shared guest user (id 1). Anonymous callers write to, and can list, one shared "guest" history, and a bad or expired token silently falls into it. | Return 401 for conversation endpoints without a valid token. Keep guest handling only for stateless Q&A, or give each guest a random per-browser id. |
 | G-3 | P1 (security) | `/api/trial/*`, `/api/evidence/upload`, `/api/bench/debate` and `/api/keys/validate` accept unauthenticated requests. The UIs send no token to them. | Require the Bearer token (both UIs already hold it), and rate-limit per user. |
 | G-4 | P1 (UX) | 2–4 minutes per answer, with only a typing indicator. | Keep the Space warm; stream tokens (SSE) or show pipeline stage progress (Understanding → Retrieval → Reasoning → Validation). |
-| G-5 | P1 | Live answers can report `laws_retrieved: 7` with `citations: []`, so the Sources panel has nothing to cite. | Populate `citations` from Layer 2 hits (act and section) on every answer. |
+| G-5 | P1 | Live answers can report `laws_retrieved: 7` with `citations: []`, so the Sources panel has nothing to cite. | Populate `citations` from Layer 2 hits (act and section) on every answer.  **Done on `claude/masterclass-upgrades`.** |
 | G-6 | P1 | Trial Studio reports failures with a browser `alert()`. | Show an inline error with a Retry button. |
 | G-7 | P2 | The JS bundle is ~800 KB (jsPDF, html2canvas). | Lazy-load PDF export and Trial Studio (`import()`). |
 | G-8 | P2 | Strategy cards lack success probability, time horizon and difficulty (described in earlier FDD versions). | Add the fields to `prompts/strategy.py` and validation, then render them as chips on each card. |
@@ -284,3 +284,5 @@ The only request difference is that the Clean UI refreshes the conversation list
 | G-10 | P2 | The legacy **Virtual Bench** modal is mounted but unreachable (superseded by Trial Studio). | Remove it, or expose it as a "Quick debate" mode inside Trial Studio. |
 | G-11 | P2 | Accessibility: icon-only buttons rely on `title`; the classic UI's colour contrast is low in places. | Add `aria-label`s and run an axe audit in CI. |
 | G-12 | P2 | No automated UI tests in the repository. | Commit the Playwright parity suite (§6) and run it in CI for both UIs. |
+
+> **Upgrade branch:** the live-tested upgrades (Evidence vision and deadline, one-message drafting, contract review on current labour law, honest citations and validation, Trial Studio score) are on `claude/masterclass-upgrades`. Before/after results are in [`docs/UPGRADE_COMPARISON.md`](UPGRADE_COMPARISON.md).

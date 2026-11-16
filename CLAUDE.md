@@ -10,7 +10,7 @@
 - **Backend**: Python 3.10/3.11 FastAPI inside Gradio 5.20 ASGI (Hosted on Hugging Face Spaces ZeroGPU: `https://lvvbaaal-legalgpt-api.hf.space`)
 - **Cloud Database**: Supabase Managed PostgreSQL via IPv4 Session Pooler (`aws-0-ap-southeast-1.pooler.supabase.com:5432`) + Local SQLite WAL fallback
 - **Vector Database**: ChromaDB (`saulgpt_indian_laws` & `landmark_precedents`, 2,449+ chunks, CPU-pinned)
-- **LLM Provider**: Groq Cloud (`llama-3.1-8b-instant`, `qwen/qwen3.8-27b`, `openai/gpt-oss-120b`)
+- **LLM Provider**: Groq Cloud (`qwen/qwen3.8-27b` primary and vision, `openai/gpt-oss-120b`, `openai/gpt-oss-20b`). `llama-3.1-8b-instant` and `llama-3.2-11b-vision-preview` are not available on the key (verified Nov 2026).
 - **Reward Model**: Actor-Critic Fine-Grained Process Reward Model (`backend/actor_critic.py`, `max_tokens=800`)
 - **Embeddings**: sentence-transformers (`all-MiniLM-L6-v2`, CPU-pinned)
 - **NLP**: spaCy (`en_core_web_sm`, with blank English fallback)
@@ -185,7 +185,7 @@ npm run setup
 - IRAC as intentional Advocate Mode: RAG-grounded, both-sides argumentation, domain guardrails.
 
 ## Constraints & Preferences
-- Free Groq models only (llama-3.1-8b-instant); no paid models.
+- Free Groq models only (currently `qwen/qwen3.8-27b`, `openai/gpt-oss-*`); no paid models. Check `GET /openai/v1/models` before adding a model name.
 - Discovery gate: personal grievances only (knowledge/off-topic skip to pipeline).
 - Tone Protocol: LLM response tone matches `emotional_state` — never overly dramatic.
 - Hard 3-turn Discovery cap enforced by Python, not just LLM prompt.
