@@ -207,6 +207,17 @@ export default function App() {
     setMessages([]);
     setConvId(null);
     setSessionId(generateSessionId());
+    // Nothing from this user may survive into the next sign-in on this browser
+    setCurrentView("chat");
+    setInput("");
+    setInterviewActive(false);
+    setShowSuggestions(true);
+    setBenchMatter("");
+    setActiveEvidence(null);
+    setShowEvidenceModal(false);
+    setShowBenchModal(false);
+    setSourceIdx(null);
+    setDrawerOpen(false);
   }
 
   async function loadConversation(id) {
