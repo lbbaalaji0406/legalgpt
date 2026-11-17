@@ -25,7 +25,9 @@ DOCUMENT_SCHEMAS = {
         "display_name": "Legal Notice",
         "fields": {
             "sender_name":     {"label": "Your Full Name",                    "example": "Ravi Kumar"},
+            "sender_address":  {"label": "Your Full Postal Address",          "example": "12, Gandhi Nagar, Adyar, Chennai – 600020"},
             "recipient_name":  {"label": "Recipient's Full Name / Company",   "example": "ABC Pvt Ltd"},
+            "recipient_address": {"label": "Recipient's Full Postal Address", "example": "5th Floor, MG Road, Bengaluru – 560001"},
             "amount":          {"label": "Amount Involved (in rupees)",        "example": "50,000"},
             "incident_date":   {"label": "Date of Incident / Default",         "example": "15 January 2025"},
             "reason":          {"label": "Reason for Notice (brief)",          "example": "3 months unpaid salary"},
@@ -35,13 +37,17 @@ DOCUMENT_SCHEMAS = {
     "cheque_bounce": {
         "display_name": "Cheque Bounce Notice (NIA Section 138)",
         "fields": {
-            "payee_name":    {"label": "Your Name (Payee)",          "example": "Ravi Kumar"},
-            "drawer_name":   {"label": "Cheque Issuer's Name",       "example": "Mohan Sharma"},
+            # sender_/recipient_ keys: the letter builder renders FROM/TO blocks from them
+            "sender_name":       {"label": "Your Name (Payee)",                  "example": "Ravi Kumar"},
+            "sender_address":    {"label": "Your Full Postal Address",           "example": "12, Gandhi Nagar, Chennai – 600020"},
+            "recipient_name":    {"label": "Cheque Issuer's (Drawer's) Name",    "example": "Mohan Sharma"},
+            "recipient_address": {"label": "Drawer's Full Postal Address",       "example": "22, Brigade Road, Bengaluru – 560025"},
             "amount":        {"label": "Cheque Amount (in rupees)",  "example": "3,00,000"},
             "cheque_number": {"label": "Cheque Number",              "example": "004521"},
             "cheque_date":   {"label": "Date on Cheque",             "example": "10 January 2025"},
             "bank_name":     {"label": "Bank Name",                  "example": "State Bank of India"},
             "return_date":   {"label": "Date Bank Returned Cheque",  "example": "12 January 2025"},
+            "return_reason": {"label": "Reason Written on Return Memo", "example": "Funds Insufficient"},
         },
         "days_to_respond": 15,
     },
@@ -100,12 +106,13 @@ DOCUMENT_TRIGGERS = {
     "consumer_complaint": ["consumer complaint", "consumer forum", "consumer court", "consumer dispute", "ncdrc", "dcdrc", "scdrc"],
     "fir_complaint":    ["fir", "police complaint", "file a complaint", "complaint to police", "fir draft", "section 154", "section 173 bnss"],
     "eviction_notice":  ["eviction notice", "evict tenant", "notice to tenant", "notice for eviction", "eviction demand"],
-    "legal_notice":     ["legal notice", "notice to", "send a notice", "formal notice", "demand notice", "advocate notice"],
     "cheque_bounce":    ["cheque bounce", "bounced cheque", "section 138", "dishonoured cheque",
                          "cheque returned", "insufficient funds notice", "138 notice"],
     "employment_notice":["salary notice", "employment notice", "hr notice", "unpaid salary notice",
                          "grievance notice", "wage notice"],
     "rental_agreement": ["rental agreement", "lease agreement", "rent agreement", "tenancy agreement", "commercial lease"],
+    # generic catch-all: must stay LAST, detect_document_type returns the first match
+    "legal_notice":     ["legal notice", "notice to", "send a notice", "formal notice", "demand notice", "advocate notice"],
 }
 
 # ─────────────────────────────────────────────────────────────
@@ -129,6 +136,39 @@ def _ensure_field_llm():
     except Exception as e:
         print(f"[InterviewState] Field LLM init failed: {e}")
         return None
+
+
+def _looks_multi_fact(text: str) -> bool:
+    """Heuristic: a reply worth an extraction call (long, or several sentences/lines)."""
+    return len(text) > 80 or len(re.findall(r"[.;\n]\s*\S", text)) >= 2
+
+
+def _extract_fields_from_text(text: str, fields: list) -> dict:
+    """One LLM call: map a free-text reply onto the remaining interview fields.
+
+    Returns {key: value} only for facts explicitly stated; {} on any failure
+    (the caller then falls back to storing the raw reply in the current field).
+    """
+    llm = _ensure_field_llm()
+    if not llm or not fields:
+        return {}
+    spec = "\n".join(f'- "{f["key"]}": {f.get("label", f["key"])}' for f in fields)
+    prompt = (
+        "Extract values for these document fields from the user's message.\n"
+        f"FIELDS:\n{spec}\n\nMESSAGE:\n\"\"\"{text}\"\"\"\n\n"
+        "Rules: use ONLY facts explicitly stated; never guess; names without addresses, addresses without names; "
+        "keep dates and amounts as written; omit fields not stated. "
+        "Reply with a single JSON object {\"field_key\": \"value\"} and nothing else."
+    )
+    try:
+        raw = llm.invoke(prompt).content
+        m = re.search(r"\{.*\}", raw, re.S)
+        data = json.loads(m.group(0)) if m else {}
+        keys = {f["key"] for f in fields}
+        return {k: str(v).strip() for k, v in data.items() if k in keys and v not in (None, "", "null") and str(v).strip()}
+    except Exception as e:
+        print(f"[InterviewState] multi-fact extraction failed: {e}")
+        return {}
 
 
 # ─────────────────────────────────────────────────────────────
@@ -781,6 +821,8 @@ class InterviewState:
 
     def _ask_next(self) -> str:
         """Return the next unanswered question."""
+        while self._field_index < len(self._pending_fields) and self._pending_fields[self._field_index]["key"] in self.collected:
+            self._field_index += 1  # already answered inside an earlier multi-fact reply
         if self._field_index >= len(self._pending_fields):
             return self._summarize()
         field = self._pending_fields[self._field_index]
@@ -839,8 +881,14 @@ class InterviewState:
             return self._summarize()
 
         # Try to extract value after colon (in case user pastes "Step 2 of 7 ...")
-        clean = re.sub(r"^\*\*Step \d+ of \d+\*\*.*?:\s*\*{0,2}", "", answer).strip()
-        self.collected[key] = clean or answer.strip()
+        clean = re.sub(r"^\*\*Step \d+ of \d+\*\*.*?:\s*\*{0,2}", "", answer).strip() or answer.strip()
+
+        # A long reply usually carries several facts ("I am X of <addr>; the drawer is Y...").
+        # Pull every remaining field out of it instead of pasting the paragraph into one field.
+        extracted = _extract_fields_from_text(clean, self._pending_fields[self._field_index:]) if _looks_multi_fact(clean) else {}
+        for k, v in extracted.items():
+            self.collected.setdefault(k, v)
+        self.collected.setdefault(key, clean)
         self._field_index += 1
         return self._ask_next()
 

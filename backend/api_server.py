@@ -27,6 +27,7 @@ load_dotenv(os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", ".env
 load_dotenv(os.path.join(os.path.dirname(os.path.abspath(__file__)), ".env"))
 
 from fastapi import FastAPI, HTTPException, UploadFile, File, Header, Depends, Request, Form
+from security import security_guard, scope_sid, limiter, client_ip
 from fastapi.responses import Response, FileResponse
 from typing import Annotated, Optional, Dict, Any, List
 from fastapi.middleware.cors import CORSMiddleware
@@ -163,7 +164,8 @@ except Exception as e:
 app = FastAPI(
     title       = "SaulGPT Legal API",
     description = "6-Layer AI pipeline + Contract Evaluation + Interactive Drafter",
-    version     = "2.0.0"
+    version     = "2.0.0",
+    dependencies = [Depends(security_guard)],   # default-deny auth, BYOK, rate limits for EVERY route
 )
 
 app.add_middleware(
@@ -1218,7 +1220,9 @@ def _generate_document_docx(session_id: str, state) -> dict:
         else:
             public_base = "https://lvvbaaal-legalgpt-api.hf.space"
 
-    doc_download_url = f"{public_base}/api/document/{session_id}"
+    from auth import make_link_token
+    _doc_path = f"/api/document/{session_id}"
+    doc_download_url = f"{public_base}{_doc_path}?t={make_link_token(_doc_path)}"
 
     response_text = (
         f"**{display_name}** has been drafted successfully.\n\n"
@@ -1619,12 +1623,12 @@ async def chat_endpoint(
     For authenticated users, persists conversations to SQLite.
     """
     try:
-        session_id = request.session_id
+        session_id = scope_sid(fastapi_request, request.session_id)
         query      = request.get_query_text()
 
-        # BYOK support — personal Groq key if provided, or server .env key
+        # BYOK: the user's own Groq key (the server key is only used if ALLOW_SERVER_GROQ_KEY=1)
         header_key = fastapi_request.headers.get("x-groq-api-key") or fastapi_request.headers.get("X-Groq-Api-Key")
-        effective_key = (header_key or "").strip() or os.getenv("GROQ_API_KEY", "").strip()
+        effective_key = (header_key or "").strip() or (os.getenv("GROQ_API_KEY", "").strip() if os.getenv("ALLOW_SERVER_GROQ_KEY") == "1" else "")
         if not effective_key or not effective_key.startswith("gsk_"):
             raise HTTPException(
                 status_code=400,
@@ -1649,7 +1653,7 @@ async def chat_endpoint(
 
         # ── Extract authenticated user (optional) ──
         authorization = fastapi_request.headers.get("authorization", "")
-        user_id = _get_user_id(authorization)
+        user_id = _get_user_id(fastapi_request)
         conv_id = request.conv_id
 
         # ── For authenticated users: resolve conversation ──
@@ -2137,6 +2141,11 @@ async def chat_endpoint(
             if ts.get("goal") == "document":
                 doc_family = ts.get("doc_family")
                 doc_type = ts.get("doc_type")
+                # Triage often answers the generic "legal_notice" even for "bounced cheque";
+                # an explicit specific type in the user's words wins over a generic guess.
+                specific = detect_document_type(query)
+                if specific and specific != "legal_notice" and doc_type in (None, "legal_notice", "legal_document"):
+                    doc_type, doc_family = specific, map_doc_type_to_family(specific)
 
         if doc_family or doc_type:
             # ── SPEC-BASED INTERVIEW ──
@@ -2308,7 +2317,8 @@ async def upload_evidence(
     file: UploadFile = File(...),
     evidence_type: str = Form("audio"),
     client_hash: Optional[str] = Form(None),
-    session_id: Optional[str] = Form(None)
+    session_id: Optional[str] = Form(None),
+    fastapi_request: Request = None,
 ):
     """
     Multimodal Evidence Grounding endpoint.
@@ -2345,8 +2355,15 @@ async def upload_evidence(
         else:
             result = EvidenceProcessor.process_document_evidence(temp_path, client_hash=client_hash)
 
+        # The PDF certificate is opened as a plain link, so sign it (expires in 24h)
+        cert = result.get("certificate") or {}
+        if cert.get("pdf_url"):
+            from auth import make_link_token
+            cert["pdf_url"] = f"{cert['pdf_url']}?t={make_link_token(cert['pdf_url'])}"
+
         # Ground evidence directly into the active session
         if session_id:
+            session_id = scope_sid(fastapi_request, session_id)
             if session_id not in SESSION_LEGAL_CONTEXT:
                 SESSION_LEGAL_CONTEXT[session_id] = {
                     "original_query": "",
@@ -2421,7 +2438,7 @@ async def simulate_courtroom_bench(req: BenchRequest):
 TRIAL_STUDIO_SESSIONS: Dict[str, Dict[str, Any]] = {}
 
 @app.post("/api/trial/start")
-async def start_trial_studio_session(req: TrialStudioStartRequest):
+async def start_trial_studio_session(req: TrialStudioStartRequest, fastapi_request: Request):
     """
     Initializes a Pre-Trial Adversarial Interrogation or Defense Fortification session.
     Automatically inherits grounded evidence from the active session.
@@ -2430,7 +2447,7 @@ async def start_trial_studio_session(req: TrialStudioStartRequest):
         raise HTTPException(status_code=500, detail="TrialStudio engine not available on server")
 
     try:
-        session_id = req.session_id
+        session_id = scope_sid(fastapi_request, req.session_id)
         # Inherit grounded evidence if passed in request or available in active session
         grounded_evidence = req.grounded_evidence
         if not grounded_evidence and session_id in SESSION_LEGAL_CONTEXT:
@@ -2502,7 +2519,7 @@ async def start_trial_studio_session(req: TrialStudioStartRequest):
 
 
 @app.post("/api/trial/turn")
-async def process_trial_studio_turn(req: TrialStudioTurnRequest):
+async def process_trial_studio_turn(req: TrialStudioTurnRequest, fastapi_request: Request):
     """
     Processes turn-by-turn witness testimony against empirical precedents,
     updates vulnerability scoring, and drives home the next punchy follow-up (cross-examiner)
@@ -2511,7 +2528,7 @@ async def process_trial_studio_turn(req: TrialStudioTurnRequest):
     if not TRIAL_STUDIO_AVAILABLE:
         raise HTTPException(status_code=500, detail="TrialStudio engine not available on server")
 
-    session_id = req.session_id
+    session_id = scope_sid(fastapi_request, req.session_id)
     session_data = TRIAL_STUDIO_SESSIONS.get(session_id)
     if not session_data:
         raise HTTPException(status_code=404, detail="Trial Studio session not found. Please start a new session.")
@@ -2580,13 +2597,19 @@ async def process_trial_studio_turn(req: TrialStudioTurnRequest):
                 mode="moot_court",
                 turn_index=new_turn_index,
                 interrogation_content=cross_resp.interrogation_content,
-                vulnerability_score=cross_resp.vulnerability_score,
+                # The coach judges the answer; opposing counsel only asks the next question.
+                # Stacking counsel's own (always self-favouring) delta pushed good answers up.
+                vulnerability_score=def_resp.vulnerability_score,
                 vulnerability_delta=cross_resp.vulnerability_delta,
                 fatal_flaw_detected=def_resp.fatal_flaw_detected,
                 precedent_backing=cross_resp.precedent_backing,
                 suggested_statutory_motions=def_resp.suggested_statutory_motions,
                 coach_advice=def_resp.coach_advice
             )
+
+        # Report the net change the user sees. In moot_court two agents each move the score
+        # (coach then counsel) and scores are clamped, so an agent's own delta can contradict it.
+        resp.vulnerability_delta = resp.vulnerability_score - session_data.get("current_score", resp.vulnerability_score)
 
         # Update session
         session_data["last_question"] = resp.interrogation_content
@@ -2601,7 +2624,7 @@ async def process_trial_studio_turn(req: TrialStudioTurnRequest):
 
 
 @app.post("/api/trial/conclude")
-async def conclude_trial_studio_session(req: TrialStudioConcludeRequest):
+async def conclude_trial_studio_session(req: TrialStudioConcludeRequest, fastapi_request: Request):
     """
     Formally closes the evidentiary record of cross-examination or defense sparring,
     evaluates final exposure score against 50,000 precedent benchmarks,
@@ -2610,7 +2633,7 @@ async def conclude_trial_studio_session(req: TrialStudioConcludeRequest):
     if not TRIAL_STUDIO_AVAILABLE:
         raise HTTPException(status_code=500, detail="TrialStudio engine not available on server")
 
-    session_id = req.session_id
+    session_id = scope_sid(fastapi_request, req.session_id)
     session_data = TRIAL_STUDIO_SESSIONS.get(session_id)
     if not session_data:
         raise HTTPException(status_code=404, detail="Trial session not found.")
@@ -2751,7 +2774,8 @@ async def get_glossary_categories_endpoint():
 # ─────────────────────────────────────────────────────────────
 
 @app.get("/api/draft/state/{session_id}")
-async def get_draft_state(session_id: str):
+async def get_draft_state(session_id: str, fastapi_request: Request):
+    session_id = scope_sid(fastapi_request, session_id)
     state = get_interview_state(session_id)
     return {
         "state":          state.state,
@@ -2763,7 +2787,8 @@ async def get_draft_state(session_id: str):
 
 
 @app.delete("/api/draft/state/{session_id}")
-async def cancel_draft(session_id: str):
+async def cancel_draft(session_id: str, fastapi_request: Request):
+    session_id = scope_sid(fastapi_request, session_id)
     state = get_interview_state(session_id)
     state.reset()
     if TRIAGE_STATE_AVAILABLE:
@@ -2776,13 +2801,15 @@ async def cancel_draft(session_id: str):
 # ─────────────────────────────────────────────────────────────
 
 @app.get("/api/history/{session_id}")
-async def get_history_endpoint(session_id: str):
+async def get_history_endpoint(session_id: str, fastapi_request: Request):
+    session_id = scope_sid(fastapi_request, session_id)
     history = get_session_history(session_id)
     return {"session_id": session_id, "turns": len(history), "history": history}
 
 
 @app.delete("/api/history/{session_id}")
-async def clear_history_endpoint(session_id: str):
+async def clear_history_endpoint(session_id: str, fastapi_request: Request):
+    session_id = scope_sid(fastapi_request, session_id)
     from pipeline_orchestrator import CONVERSATION_MEMORY
     from interview_state import INTERVIEW_STATES
     if session_id in CONVERSATION_MEMORY:
@@ -2801,10 +2828,17 @@ async def clear_history_endpoint(session_id: str):
 # ─────────────────────────────────────────────────────────────
 
 from fastapi.responses import Response
+from security import SID_RE
+SID_RE_OK = lambda v: bool(SID_RE.fullmatch(v))
 
 @app.get("/api/document/{session_id}")
-async def download_document(session_id: str):
-    """Download a previously generated .docx document."""
+async def download_document(session_id: str, fastapi_request: Request):
+    """Download a previously generated .docx document (owner login or signed link only)."""
+    uid = getattr(fastapi_request.state, "user_id", None)
+    if uid is not None and not session_id.startswith(f"u{uid}_"):
+        raise HTTPException(status_code=404, detail="No document found for this session. Generate one first via /api/chat.")
+    if not SID_RE_OK(session_id):
+        raise HTTPException(status_code=400, detail="Invalid session id.")
     docx_bytes = SESSION_DOCUMENTS.get(session_id)
     if docx_bytes is None:
         doc_file_path = os.path.join(DOC_DIR, f"{session_id}.docx")
@@ -2834,16 +2868,12 @@ async def download_document(session_id: str):
 # AUTH ENDPOINTS
 # ─────────────────────────────────────────────────────────────
 
-def _get_user_id(authorization: str = "") -> int:
-    """Extract user_id from Bearer token, or fallback to default guest user (id=1)."""
-    if authorization:
-        scheme, _, token = authorization.partition(" ")
-        if scheme.lower() == "bearer" and token:
-            uid = decode_token(token)
-            if uid:
-                return ensure_user_exists(uid)
-    # Default fallback to guest user (id=1) so conversations always persist & load seamlessly
-    return ensure_user_exists(1)
+def _get_user_id(request: Request) -> int:
+    """The signed-in user, as verified by security_guard. There is no anonymous/guest user any more."""
+    uid = getattr(request.state, "user_id", None)
+    if not uid:
+        raise HTTPException(401, "Please sign in again.")
+    return ensure_user_exists(uid)
 
 
 @app.post("/api/auth/signup")
@@ -2851,6 +2881,12 @@ async def signup(req: AuthRequest):
     if not req.email or not req.password:
         raise HTTPException(400, "Email and password required")
     norm_email = req.email.strip().lower()
+    if not re.fullmatch(r"[^@\s]{1,64}@[^@\s]+\.[^@\s]{2,}", norm_email) or len(norm_email) > 254:
+        raise HTTPException(400, "Please enter a valid email address.")
+    if not 8 <= len(req.password) <= 72:  # 72 = bcrypt's limit
+        raise HTTPException(400, "Password must be 8 to 72 characters.")
+    if req.username and len(req.username) > 50:
+        raise HTTPException(400, "Username must be at most 50 characters.")
     if not req.username:
         req.username = norm_email.split("@")[0]
     existing = get_user_by_email(norm_email)
@@ -2865,10 +2901,15 @@ async def signup(req: AuthRequest):
 
 
 @app.post("/api/auth/login")
-async def login(req: AuthRequest):
+async def login(req: AuthRequest, fastapi_request: Request):
     if not req.email or not req.password:
         raise HTTPException(400, "Email and password required")
     norm_email = req.email.strip().lower()
+    # Password guessing: tight per account+IP, loose per account (so one attacker cannot lock a user out)
+    from security import LOGIN_TRIES_PER_IP, LOGIN_TRIES_PER_ACCOUNT
+    for _k, _n in ((f"login:{norm_email}:{client_ip(fastapi_request)}", LOGIN_TRIES_PER_IP), (f"login:{norm_email}", LOGIN_TRIES_PER_ACCOUNT)):
+        if wait := limiter.retry_after(_k, _n, 900):
+            raise HTTPException(429, f"Too many requests. Please wait {wait}s and try again.", headers={"Retry-After": str(wait)})
     user = get_user_by_email(norm_email)
     if not user or not verify_password(req.password, user["password"]):
         raise HTTPException(401, "Invalid email or password")
@@ -2879,7 +2920,7 @@ async def login(req: AuthRequest):
 @app.get("/api/auth/me")
 async def get_me(fastapi_request: Request):
     authorization = fastapi_request.headers.get("authorization", "")
-    user_id = _get_user_id(authorization)
+    user_id = _get_user_id(fastapi_request)
     if not user_id:
         raise HTTPException(401, "Invalid or missing token")
     user = get_user_by_id(user_id)
@@ -2895,7 +2936,7 @@ async def get_me(fastapi_request: Request):
 @app.get("/api/conversations")
 async def list_conversations(fastapi_request: Request):
     authorization = fastapi_request.headers.get("authorization", "")
-    user_id = _get_user_id(authorization)
+    user_id = _get_user_id(fastapi_request)
     if not user_id:
         return {"conversations": [], "total": 0}
     limit = int(fastapi_request.query_params.get("limit", 50))
@@ -2910,7 +2951,7 @@ async def list_conversations(fastapi_request: Request):
 @app.post("/api/conversations")
 async def new_conversation(fastapi_request: Request):
     authorization = fastapi_request.headers.get("authorization", "")
-    user_id = _get_user_id(authorization)
+    user_id = _get_user_id(fastapi_request)
     if not user_id:
         raise HTTPException(401, "Authentication required")
     conv_id = create_conversation(user_id, "New Chat")
@@ -2920,7 +2961,7 @@ async def new_conversation(fastapi_request: Request):
 @app.get("/api/conversations/{conv_id}")
 async def get_conversation_endpoint(conv_id: int, fastapi_request: Request):
     authorization = fastapi_request.headers.get("authorization", "")
-    user_id = _get_user_id(authorization)
+    user_id = _get_user_id(fastapi_request)
     if not user_id:
         raise HTTPException(401, "Authentication required")
     conv = get_conversation(conv_id, user_id)
@@ -2933,7 +2974,7 @@ async def get_conversation_endpoint(conv_id: int, fastapi_request: Request):
 @app.delete("/api/conversations/{conv_id}")
 async def delete_conversation_endpoint(conv_id: int, fastapi_request: Request):
     authorization = fastapi_request.headers.get("authorization", "")
-    user_id = _get_user_id(authorization)
+    user_id = _get_user_id(fastapi_request)
     if not user_id:
         raise HTTPException(401, "Authentication required")
     if not delete_conversation(conv_id, user_id):
@@ -2949,7 +2990,7 @@ class MigrateRequest(BaseModel):
 @app.post("/api/conversations/migrate")
 async def migrate_conversation(req: MigrateRequest, fastapi_request: Request):
     authorization = fastapi_request.headers.get("authorization", "")
-    user_id = _get_user_id(authorization)
+    user_id = _get_user_id(fastapi_request)
     if not user_id:
         raise HTTPException(401, "Authentication required")
     if not req.turns:

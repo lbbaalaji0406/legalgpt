@@ -416,7 +416,7 @@ DO NOT lecture the user, and NEVER output internal RAG hesitation phrases (e.g. 
 STRUCTURE YOUR 3-4 BULLET POINTS AS FOLLOWS:
 • **Core Verdict / Legal Definition**: Direct 1-sentence answer to the specific question.
 • **Governing Statutory Section**: Specific Section under BNS/BNSS/BSA (post-July 2024) and IPC/CrPC/IEA (pre-July 2024) in parentheses.
-• **Classification & Punishment**: Cognizable vs Non-cognizable, Bailable vs Non-bailable, and maximum statutory penalty.
+• **Classification & Punishment**: Cognizable vs Non-cognizable, Bailable vs Non-bailable, and maximum statutory penalty. Take these ONLY from the OFFICIAL CLASSIFICATION block if present, per subsection where they differ. If no such block is present, say the classification depends on the exact subsection and the BNSS First Schedule; never guess, never say "generally".
 • **Citizen Bottom Line**: 1 practical sentence on what this means for an ordinary person.
 
 End with:
@@ -812,6 +812,16 @@ def generate_legal_response(
         formatted_context = "\n".join(tc_lines) + "\n" + formatted_context
         print("[Layer 3] Triage context injected into prompt.")
 
+    # ── Ground offence classification (the law DB has section text, not cognizable/bailable facts) ──
+    try:
+        from offence_schedule import schedule_notes
+        _notes = schedule_notes(layer1_payload.get("original_query", ""), layer2_results)
+        if _notes:
+            formatted_context = _notes + "\n\n" + formatted_context
+            print("[Layer 3] Official offence classification injected.")
+    except Exception as e:
+        print(f"[Layer 3] Offence classification skipped: {e}")
+
     # Log repealed law warning
     repealed_laws = [
         r.get("act_name") for r in layer2_results
@@ -852,7 +862,7 @@ def generate_legal_response(
     except Exception as e:
         print(f"[Layer 3] Primary LLM call failed: {e}")
         # Graceful model fallback
-        for fb_model in ["openai/gpt-oss-120b", "qwen/qwen3.6-27b"]:
+        for fb_model in ["openai/gpt-oss-120b", "openai/gpt-oss-20b"]:
             try:
                 print(f"[Layer 3] Retrying generation with fallback model: {fb_model}...")
                 fb_llm = ChatGroq(

@@ -493,8 +493,10 @@ def _build_letter(doc: Document, spec: dict, filled_fields: dict):
     sender = filled_fields.get("sender_name", filled_fields.get("sender_full_name", ""))
     _add_styled_paragraph(doc, sender if sender else "_________________",
                           bold=True, space_after=Pt(2))
-    _add_styled_paragraph(doc, "Advocate", size=Pt(10), italic=True, space_after=Pt(2))
-    _add_styled_paragraph(doc, "Enrollment No.: _________________", size=Pt(10), space_after=Pt(4))
+    # The sender is the client, not counsel: keep an optional, separate advocate line
+    _add_styled_paragraph(doc, "(Sender)", size=Pt(10), italic=True, space_after=Pt(8))
+    _add_styled_paragraph(doc, "Through Advocate (if any): _________________   Enrollment No.: _________________",
+                          size=Pt(10), space_after=Pt(4))
     _add_disclaimer(doc)
 
 

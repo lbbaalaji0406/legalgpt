@@ -6,7 +6,7 @@ Uses: scrutiny_agent.py, layer4, layer6_evaluator as tools
 """
 
 from typing import Optional, Dict, Any, List, BinaryIO
-from .llm_client import reviewer, get_reviewer_llm
+from .llm_client import get_reviewer_llm
 import sys
 import os
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
@@ -53,8 +53,12 @@ class ReviewerAgent:
     - Document validation
     """
     
+    @property
+    def llm(self):
+        # built on every access: carries THIS request's Groq key, never a key captured at startup
+        return get_reviewer_llm()
+
     def __init__(self):
-        self.llm = reviewer
         self.name = "Reviewer"
         self.capabilities = ["contract_review", "scrutiny", "validation"]
     

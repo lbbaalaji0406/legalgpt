@@ -10,10 +10,17 @@
 - **Backend**: Python 3.10/3.11 FastAPI inside Gradio 5.20 ASGI (Hosted on Hugging Face Spaces ZeroGPU: `https://lvvbaaal-legalgpt-api.hf.space`)
 - **Cloud Database**: Supabase Managed PostgreSQL via IPv4 Session Pooler (`aws-0-ap-southeast-1.pooler.supabase.com:5432`) + Local SQLite WAL fallback
 - **Vector Database**: ChromaDB (`saulgpt_indian_laws` & `landmark_precedents`, 2,449+ chunks, CPU-pinned)
-- **LLM Provider**: Groq Cloud (`llama-3.1-8b-instant`, `qwen/qwen3.8-27b`, `openai/gpt-oss-120b`)
+- **LLM Provider**: Groq Cloud (`qwen/qwen3.8-27b` primary and vision, `openai/gpt-oss-120b`, `openai/gpt-oss-20b`). `llama-3.1-8b-instant` and `llama-3.2-11b-vision-preview` are not available on the key (verified Nov 2026).
 - **Reward Model**: Actor-Critic Fine-Grained Process Reward Model (`backend/actor_critic.py`, `max_tokens=800`)
 - **Embeddings**: sentence-transformers (`all-MiniLM-L6-v2`, CPU-pinned)
 - **NLP**: spaCy (`en_core_web_sm`, with blank English fallback)
+
+## Frontends (two, same backend)
+
+- `saulgpt-ui/` — **Classic UI** (dark mahogany & gold, hand-written CSS). Port 5173, builds to `dist/`, deployed via `firebase.json` / `Deploy_Frontend.bat`.
+- `saulgpt-ui-clean/` — **Clean UI** (Antigravity-style 3-pane layout, Tailwind, light/dark). Port 5174, builds to `dist-clean/`, deployed via `firebase.clean.json` / `Deploy_Frontend_Clean.bat`.
+- Both hit identical endpoints with identical logic. Shared feature components (TrialStudio, EvidenceUploader, VetoCard, …) live in `saulgpt-ui/src` and are copied + re-themed into `saulgpt-ui-clean/src/features/` by `python saulgpt-ui-clean/scripts/sync_features.py`. Never hand-edit `saulgpt-ui-clean/src/features/*`; edit the classic file and re-run the sync.
+- When changing API/state logic in classic `App.jsx`, mirror it in `saulgpt-ui-clean/src/App.jsx`.
 
 ## Architecture
 
@@ -167,6 +174,8 @@ npm run dev
 npm run setup
 
 ## Security
+- Public API is default-deny (see `docs/SECURITY.md`): login required, user's own Groq key required, rate limited, sessions scoped per user. New routes are protected automatically; run `backend/tests/test_security.py` after touching `api_server.py`, `security.py` or `auth.py`.
+- Never reintroduce a hardcoded JWT secret; set `JWT_SECRET`. Never build an LLM client at import time (it would pin the server key); use the `get_*_llm()` factories per request.
 
 - Never hardcode API keys in source files
 - Use environment variables for secrets
@@ -178,7 +187,7 @@ npm run setup
 - IRAC as intentional Advocate Mode: RAG-grounded, both-sides argumentation, domain guardrails.
 
 ## Constraints & Preferences
-- Free Groq models only (llama-3.1-8b-instant); no paid models.
+- Free Groq models only (currently `qwen/qwen3.8-27b`, `openai/gpt-oss-*`); no paid models. Check `GET /openai/v1/models` before adding a model name.
 - Discovery gate: personal grievances only (knowledge/off-topic skip to pipeline).
 - Tone Protocol: LLM response tone matches `emotional_state` — never overly dramatic.
 - Hard 3-turn Discovery cap enforced by Python, not just LLM prompt.

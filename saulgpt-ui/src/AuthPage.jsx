@@ -69,7 +69,7 @@ export default function AuthPage({ onAuth, migrating }) {
           {mode === "signup" && (
             <input className="auth-input" type="text" placeholder="Username (optional)" value={username} onChange={e => setUsername(e.target.value)} />
           )}
-          <input className="auth-input" type="password" placeholder="Password" value={password} onChange={e => setPassword(e.target.value)} required minLength={4} />
+          <input className="auth-input" type="password" placeholder={mode === "signup" ? "Password (8+ characters)" : "Password"} value={password} onChange={e => setPassword(e.target.value)} required minLength={mode === "signup" ? 8 : 1} maxLength={72} />
 
           {/* BYOK Section — Compulsory */}
           <div className="auth-byok-box" style={{ borderColor: "var(--gold)", background: "rgba(201,168,76,0.06)" }}>

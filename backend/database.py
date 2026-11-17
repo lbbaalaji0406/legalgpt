@@ -150,6 +150,22 @@ def init_db():
         conn.close()
 
 
+def _pg_sync_users_id_seq(cur) -> None:
+    """Re-align the users.id SERIAL sequence with MAX(id).
+
+    ensure_user_exists() inserts rows with explicit ids (guest id=1 and ids
+    taken from tokens). Postgres does not advance the SERIAL sequence for
+    explicit ids, so a later plain INSERT can draw an id that already exists
+    and fail with a duplicate-key error, which made sign-ups fail
+    intermittently. Calling this after explicit-id inserts and before
+    create_user() keeps the sequence ahead of every existing id.
+    """
+    cur.execute(
+        "SELECT setval(pg_get_serial_sequence('users', 'id'), "
+        "(SELECT GREATEST(COALESCE(MAX(id), 1), 1) FROM users))"
+    )
+
+
 def ensure_user_exists(user_id: Optional[int] = None) -> int:
     """Ensures a user record exists so FOREIGN KEY constraints never fail."""
     if is_postgres():
@@ -161,6 +177,8 @@ def ensure_user_exists(user_id: Optional[int] = None) -> int:
                     VALUES (1, 'guest@saulgpt.local', 'Guest User', 'guest_mode_unrestricted')
                     ON CONFLICT (id) DO NOTHING
                 """)
+                if cur.rowcount:
+                    _pg_sync_users_id_seq(cur)
                 conn.commit()
                 if user_id and isinstance(user_id, int) and user_id > 0:
                     cur.execute("SELECT id FROM users WHERE id = %s", (user_id,))
@@ -173,6 +191,8 @@ def ensure_user_exists(user_id: Optional[int] = None) -> int:
                         VALUES (%s, %s, %s, %s)
                         ON CONFLICT (id) DO NOTHING
                     """, (user_id, f"user_{user_id}@saulgpt.local", f"User {user_id}", "token_authenticated"))
+                    if cur.rowcount:
+                        _pg_sync_users_id_seq(cur)
                     conn.commit()
                     conn.close()
                     return user_id
@@ -259,6 +279,8 @@ def create_user(email: str, username: str, password_hash: str) -> Optional[int]:
                     candidate = f"{base_username}_{counter}"
                     counter += 1
 
+                # Heal any sequence drift (also repairs databases already affected)
+                _pg_sync_users_id_seq(cur)
                 cur.execute(
                     "INSERT INTO users (email, username, password) VALUES (%s, %s, %s) RETURNING id",
                     (email.strip().lower(), candidate, password_hash)

@@ -28,6 +28,14 @@ export default function TrialStudio({
   const [copiedKey, setCopiedKey] = useState(null);
   const [selectedAct, setSelectedAct] = useState("all");
   const [scenario, setScenario] = useState("");
+  const [errorMsg, setErrorMsg] = useState("");
+
+  // Plain-language reason for a failed call (missing key, rate limit, server down)
+  const explainError = (err) => {
+    const d = err?.response?.data?.detail;
+    if (typeof d === "string" && d) return d;
+    return err?.response ? `The server could not complete this (error ${err.response.status}). Please try again.` : "Cannot reach the SaulGPT server. Check your connection and try again.";
+  };
   const [loading, setLoading] = useState(false);
   const [sessionActive, setSessionActive] = useState(false);
 
@@ -195,6 +203,7 @@ export default function TrialStudio({
 
   const handleStartSession = async () => {
     if (!scenario.trim()) return;
+    setErrorMsg("");
     setLoading(true);
     try {
       const actObj = CORE_ACTS.find((a) => a.id === selectedAct);
@@ -232,7 +241,7 @@ export default function TrialStudio({
       setSessionActive(true);
     } catch (err) {
       console.error("Failed to start trial session:", err);
-      alert("Failed to connect to Precedent Engine. Ensure backend is running.");
+      setErrorMsg(explainError(err));
     } finally {
       setLoading(false);
     }
@@ -264,6 +273,7 @@ export default function TrialStudio({
     if (!witnessInput.trim() || loading) return;
     const answer = witnessInput.trim();
     setWitnessInput("");
+    setErrorMsg("");
 
     // Append witness turn locally in the courtroom chamber
     setTurns((prev) => [
@@ -303,6 +313,10 @@ export default function TrialStudio({
       ]);
     } catch (err) {
       console.error("Failed to process witness turn:", err);
+      // Undo the optimistic witness turn and give the answer back so it can be re-sent
+      setTurns((prev) => prev.slice(0, -1));
+      setWitnessInput(answer);
+      setErrorMsg(explainError(err));
     } finally {
       setLoading(false);
     }
@@ -460,6 +474,10 @@ export default function TrialStudio({
               onChange={(e) => setScenario(e.target.value)}
               placeholder="State the facts of the case, amount, evidence produced, and what the opponent claims..."
             />
+
+            {errorMsg && !sessionActive && (
+              <div className="trial-error-banner" role="alert">⚠️ {errorMsg}</div>
+            )}
 
             <div className="scenario-action-row">
               <span className="hint-text">
@@ -664,6 +682,9 @@ export default function TrialStudio({
             </div>
 
             {/* Witness Response Input Box */}
+            {errorMsg && sessionActive && (
+              <div className="trial-error-banner" role="alert">⚠️ {errorMsg}</div>
+            )}
             {sessionActive && !concludeData && (
               <div className="witness-reply-box">
                 <input

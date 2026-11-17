@@ -231,6 +231,8 @@ STATUTORY KNOWLEDGE BASE:
 - Section 74 of the Indian Contract Act, 1872: Compensation for breach of contract / penalty vs liquidated damages.
 - Section 12(5) of the Arbitration and Conciliation Act, 1996: Unilateral appointment of an arbitrator by one party is ineligible.
 - Bharatiya Nyaya Sanhita (BNS 2023), Bharatiya Nagarik Suraksha Sanhita (BNSS 2023), and Bharatiya Sakshya Adhiniyam (BSA 2023) came into force on July 1, 2024, replacing IPC 1860, CrPC 1973, and Evidence Act 1872.
+- The four Labour Codes are in force from 21 November 2025: the Code on Wages, 2019 replaces the Payment of Wages Act 1936 and Minimum Wages Act 1948 (wages must be paid on a fixed schedule); the Industrial Relations Code, 2020 replaces the Industrial Disputes Act 1947; the Social Security Code, 2020 covers PF, ESIC and gratuity. Cite the Codes, not the repealed Acts.
+- Section 28 also voids clauses that bar a party from ALL Indian courts or statutory authorities; choosing one competent Indian court among several is valid.
 
 {chunk_info}
 
@@ -264,6 +266,9 @@ RISK SCORE CALIBRATION:
 - "Low": The document is LEGALLY SOUND, MUTUAL, FAIR, AND BALANCED with standard protections in place. Do NOT mark a fair, balanced contract as High risk simply because minor drafting polish is possible.
 
 STRICT RULES:
+- Review EVERY numbered clause one by one before answering. Name the clause number in each flaw.
+- Treat one-sided terms as flaws: unequal notice periods, termination rights for only one party, liability or costs borne by only one side.
+- "positive_aspects" may only contain terms that are fair to BOTH parties. Never list a one-sided or unusually long term (e.g. a 12-month probation) as positive.
 - If this is a chunk of a larger document, do NOT report standard clauses (like Governing Law or Arbitration) as missing if they appear in other sections.
 - Under Indian law context only.
 - Output ONLY the JSON object. No explanation. No preamble.

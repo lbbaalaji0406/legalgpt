@@ -26,7 +26,7 @@ import os
 from typing import Optional, List, Dict, Tuple, Any
 from dotenv import load_dotenv
 load_dotenv(os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), ".env"))
-GROQ_API_KEY = os.environ.get("GROQ_API_KEY")
+# (server key intentionally not captured at import: see key_context.get_effective_groq_key)
 
 # ─────────────────────────────────────────────────────────────
 # LAZY LOADING — heavy models (spaCy ~5s, langchain ~6s, langdetect)

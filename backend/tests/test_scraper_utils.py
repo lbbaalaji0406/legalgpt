@@ -1,5 +1,6 @@
 import unittest
-from legal_pipeline.scraper.utils import clean_text, get_text_hash, is_valid_section
+import os, sys; sys.path.insert(0, os.path.join(os.path.dirname(__file__), ".."))
+from scraper.utils import clean_text, get_text_hash, is_valid_section
 
 class TestScraperUtils(unittest.TestCase):
     def test_clean_text(self):

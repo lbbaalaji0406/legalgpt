@@ -13,7 +13,6 @@ load_dotenv(os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(os.path
 
 from key_context import get_effective_groq_key
 
-GROQ_API_KEY = os.environ.get("GROQ_API_KEY", "")
 
 # ============================================================
 # AVAILABLE MODELS (Active on Groq)
@@ -80,14 +79,14 @@ def get_binary_gate_llm():
     """Binary Gatekeeper - LEGAL/NON-LEGAL classification only"""
     primary = ChatGroq(
         model=TRIAGE_MODEL,
-        api_key=GROQ_API_KEY,
+        api_key=get_effective_groq_key(),
         temperature=0.0,
         top_p=0.1,
         max_completion_tokens=512
     )
     fallback = ChatGroq(
         model="openai/gpt-oss-20b",
-        api_key=GROQ_API_KEY,
+        api_key=get_effective_groq_key(),
         temperature=0.0,
         top_p=0.1,
         max_completion_tokens=512
@@ -98,20 +97,10 @@ def get_discovery_llm():
     """Discovery Agent - Empathetic investigation with structured turns"""
     return ChatGroq(
         model=TRIAGE_MODEL,
-        api_key=GROQ_API_KEY,
+        api_key=get_effective_groq_key(),
         temperature=0.1,
         max_completion_tokens=2048
     )
 
-# ============================================================
-# EXPORTS - Import these in agents
-# ============================================================
-
-# Pre-initialized instances for convenience
-researcher = get_researcher_llm()
-drafter = get_drafter_llm()
-reviewer = get_reviewer_llm()
-advocate = get_advocate_llm()
-triage = get_triage_llm()
-binary_gate = get_binary_gate_llm()
-discovery = get_discovery_llm()
+# NOTE: no LLM instances are built at import time. An instance built here would carry the
+# SERVER's Groq key for every user; call the get_*_llm() factories per request instead.

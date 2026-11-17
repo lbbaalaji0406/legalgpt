@@ -7,7 +7,7 @@ Uses layer1-6 as tools internally.
 """
 
 from typing import Optional, Dict, Any, List
-from .llm_client import researcher, get_researcher_llm
+from .llm_client import get_researcher_llm
 from langchain_core.messages import HumanMessage, AIMessage
 import sys
 import os
@@ -49,8 +49,12 @@ class ResearcherAgent:
     - Legal procedures (pathfinder mode)
     """
     
+    @property
+    def llm(self):
+        # built on every access: carries THIS request's Groq key, never a key captured at startup
+        return get_researcher_llm()
+
     def __init__(self):
-        self.llm = researcher
         self.name = "Researcher"
         self.capabilities = ["legal_qa", "case_analysis", "pathfinder"]
     
@@ -129,8 +133,9 @@ class ResearcherAgent:
                 if generate_legal_response:
                     response = generate_legal_response(layer1_result, retrieved_docs, mode, triage_context=triage_context, conversation_history=history)
 
+        validated = {}
         if validate_legal_response:
-            validated = validate_legal_response(response, retrieved_docs)
+            validated = validate_legal_response(response, retrieved_docs) or {}
             response = validated.get("final_response") or validated.get("response") or response
         
         import re
@@ -142,8 +147,16 @@ class ResearcherAgent:
             "mode_used": mode,
             "domain": layer1_result.get("domain", "general"),
             "laws_retrieved": len(retrieved_docs) if retrieved_docs else 0,
-            "is_hallucinating": False,
-            "confidence_score": 0.85
+            # same shape as pipeline_orchestrator, so the Sources panel can list them
+            "citations": [
+                {"act_name": d.get("act_name", ""), "section_number": d.get("section_number", ""), "is_repealed": d.get("is_repealed", False)}
+                for d in (retrieved_docs or []) if isinstance(d, dict) and (d.get("act_name") or d.get("section_number"))
+            ],
+            # report Layer 4's verdict instead of a hard-coded "validated, 85%"
+            "is_hallucinating": bool(validated.get("is_hallucinating", False)),
+            "confidence_score": validated.get("confidence_score", 0.85 if retrieved_docs else 0.4),
+            "flagged_citations": validated.get("flagged_citations", []),
+            "repealed_warnings": validated.get("repealed_warnings", []),
         }
     
     async def case_analysis(self, query: str, history: List = None, triage_context: dict = None) -> Dict[str, Any]:

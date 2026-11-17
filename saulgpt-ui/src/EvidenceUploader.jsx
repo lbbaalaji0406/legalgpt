@@ -475,10 +475,12 @@ export default function EvidenceUploader({ isOpen, onClose, onInjectContext, onL
 
                   {/* Statutory clock card (Cheque 30-day notice OR Consumer 2-year limitation) */}
                   {activeClock && (
-                    <div className={`notice-clock-card ${activeClock.urgency_level?.toLowerCase() || "standard"}`}>
+                    <div className={`notice-clock-card ${activeClock.urgency_level === "EXPIRED" ? "urgent" : activeClock.urgency_level?.toLowerCase() || "standard"}`}>
                       <div className="clock-header">
                         <span className="clock-badge">
-                          {activeClock.urgency_level === "URGENT" || activeClock.urgency_level === "CRITICAL"
+                          {activeClock.urgency_level === "EXPIRED"
+                            ? "⛔ DEADLINE PASSED: CONSULT AN ADVOCATE"
+                            : activeClock.urgency_level === "URGENT" || activeClock.urgency_level === "CRITICAL"
                             ? "🚨 CRITICAL TIMELINE"
                             : "⏳ STATUTORY TIMELINE"}
                         </span>
@@ -495,6 +497,7 @@ export default function EvidenceUploader({ isOpen, onClose, onInjectContext, onL
                           <div><strong>Statutory Window:</strong> {activeClock.statutory_window_days} Days ({activeClock.statute})</div>
                           <div><strong>Statutory Deadline:</strong> <span className="deadline-date">{activeClock.notice_deadline}</span></div>
                           <div><strong>Purpose:</strong> {activeClock.dishonour_reason}</div>
+                          {activeClock.deadline_basis && <div style={{ fontSize: "11px", opacity: 0.8 }}>ⓘ {activeClock.deadline_basis}</div>}
                         </div>
                       </div>
                     </div>

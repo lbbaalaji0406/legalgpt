@@ -4,16 +4,12 @@ Agents Package
 Multi-agent architecture for SaulGPT legal assistant.
 
 Usage:
-    from backend.agents import researcher, drafter, reviewer, manager
+    from backend.agents import manager
     
-    result = await researcher.run("What is Section 138 of NIA?")
+    result = await manager.run("What is Section 138 of NIA?")
 """
 
 from .llm_client import (
-    researcher,
-    drafter,
-    reviewer,
-    triage,
     get_researcher_llm,
     get_drafter_llm,
     get_reviewer_llm,
@@ -32,11 +28,6 @@ from .triage import TriageAgent
 from .manager import AgentManager
 
 __all__ = [
-    # LLM instances
-    "researcher",
-    "drafter",
-    "reviewer",
-    "triage",
     # Agent classes
     "ResearcherAgent",
     "DrafterAgent",
