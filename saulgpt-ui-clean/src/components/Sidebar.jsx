@@ -62,7 +62,7 @@ export default function Sidebar({
           <Plus className="w-4 h-4" /> New Conversation
         </button>
         {isDrawer && (
-          <button onClick={onClose} className="p-2.5 rounded-xl text-zinc-500 hover:bg-zinc-200/60 dark:hover:bg-zinc-800" title="Close menu">
+          <button onClick={onClose} className="p-2.5 rounded-xl text-zinc-500 hover:bg-zinc-200/60 dark:hover:bg-zinc-800" title="Close menu" aria-label="Close menu">
             <X className="w-4 h-4" />
           </button>
         )}
@@ -119,6 +119,7 @@ export default function Sidebar({
                       onClick={(e) => { e.stopPropagation(); onDelete(c.id); }}
                       className="hidden group-hover:block p-0.5 text-zinc-400 hover:text-red-500"
                       title="Delete conversation"
+                      aria-label={`Delete conversation ${displayTitle(c)}`}
                     >
                       <Trash2 className="w-3.5 h-3.5" />
                     </button>

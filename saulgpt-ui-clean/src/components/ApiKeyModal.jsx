@@ -87,7 +87,7 @@ export default function ApiKeyModal({ isOpen, onClose, rateLimitAlert = false, o
               <p className="text-xs text-zinc-500 dark:text-zinc-400">Free · stays in this browser only</p>
             </div>
           </div>
-          <button onClick={onClose} className="p-1.5 rounded-lg text-zinc-400 hover:text-zinc-700 hover:bg-zinc-100 dark:hover:bg-zinc-800 dark:hover:text-zinc-200" title="Close">
+          <button onClick={onClose} className="p-1.5 rounded-lg text-zinc-400 hover:text-zinc-700 hover:bg-zinc-100 dark:hover:bg-zinc-800 dark:hover:text-zinc-200" title="Close" aria-label="Close">
             <X className="w-4 h-4" />
           </button>
         </div>
@@ -136,6 +136,7 @@ export default function ApiKeyModal({ isOpen, onClose, rateLimitAlert = false, o
                 onClick={() => setShowKey(!showKey)}
                 className="absolute right-2 top-1/2 -translate-y-1/2 p-1.5 text-zinc-400 hover:text-zinc-700 dark:hover:text-zinc-200"
                 title={showKey ? "Hide key" : "Show key"}
+                aria-label={showKey ? "Hide key" : "Show key"}
               >
                 {showKey ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
               </button>

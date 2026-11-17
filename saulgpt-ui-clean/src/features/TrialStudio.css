@@ -1277,5 +1277,17 @@
   transform: translateY(-1px);
 }
 
+/* Inline error (replaces the old browser alert) */
+.trial-error-banner {
+  margin: 10px 0;
+  padding: 10px 14px;
+  border-radius: 8px;
+  border: 1px solid rgba(239, 68, 68, 0.4);
+  background: rgba(239, 68, 68, 0.12);
+  color: color-mix(in srgb, #fca5a5 55%, rgb(var(--t-fg)));
+  font-size: 13px;
+  line-height: 1.5;
+}
+
 /* ── Clean UI: Trial Studio lives inside the main panel ── */
 .trial-studio-container { height: 100% !important; min-height: 0 !important; }

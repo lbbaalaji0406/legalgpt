@@ -277,12 +277,13 @@ The only request difference is that the Clean UI refreshes the conversation list
 | G-3 | ~~P1~~ | **Closed in v2.4.** Trial Studio, Evidence, Bench and key validation require a login, the user's own Groq key, and are rate limited. | See `docs/SECURITY.md`. |
 | G-4 | P1 (UX) | 2–4 minutes per answer, with only a typing indicator. | Keep the Space warm; stream tokens (SSE) or show pipeline stage progress (Understanding → Retrieval → Reasoning → Validation). |
 | G-5 | P1 | Live answers can report `laws_retrieved: 7` with `citations: []`, so the Sources panel has nothing to cite. | Populate `citations` from Layer 2 hits (act and section) on every answer.  **Done on `claude/masterclass-upgrades`.** |
-| G-6 | P1 | Trial Studio reports failures with a browser `alert()`. | Show an inline error with a Retry button. |
-| G-7 | P2 | The JS bundle is ~800 KB (jsPDF, html2canvas). | Lazy-load PDF export and Trial Studio (`import()`). |
+| G-6 | ~~done~~ | **Closed in v2.4.** Trial Studio shows the server's reason inline (missing key, rate limit, offline) and gives a failed answer back for retry; no browser alerts. | |
+| G-7 | ~~done~~ | **Closed in v2.4 (Clean UI).** First download 804 KB → 373 KB; PDF tools and Trial Studio load on first use. | |
 | G-8 | P2 | Strategy cards lack success probability, time horizon and difficulty (described in earlier FDD versions). | Add the fields to `prompts/strategy.py` and validation, then render them as chips on each card. |
 | G-9 | P2 | `POST /api/conversations/migrate` (guest takeover) is never called; sign-in is required up front. | Either remove it, or support a real guest mode (see G-2) and call it after sign-in. |
 | G-10 | P2 | The legacy **Virtual Bench** modal is mounted but unreachable (superseded by Trial Studio). | Remove it, or expose it as a "Quick debate" mode inside Trial Studio. |
-| G-11 | P2 | Accessibility: icon-only buttons rely on `title`; the classic UI's colour contrast is low in places. | Add `aria-label`s and run an axe audit in CI. |
+| G-11 | ~~done~~ | **Closed in v2.4 (Clean UI).** Icon-only buttons labelled; automated axe scan (button, label, link and image names): 0 violations. | |
+| G-13 | ~~done~~ | **Closed in v2.4.** Knowledge answers guessed cognizable/bailable status (the law DB has section text only). `offence_schedule.py` grounds the most-asked offences in the BNSS First Schedule, per subsection. | Extend the table as needed. |
 | G-12 | P2 | No automated UI tests in the repository. | Commit the Playwright parity suite (§6) and run it in CI for both UIs. |
 
 > **Upgrade branch:** the live-tested upgrades (Evidence vision and deadline, one-message drafting, contract review on current labour law, honest citations and validation, Trial Studio score) are on `claude/masterclass-upgrades`. Before/after results are in [`docs/UPGRADE_COMPARISON.md`](UPGRADE_COMPARISON.md).

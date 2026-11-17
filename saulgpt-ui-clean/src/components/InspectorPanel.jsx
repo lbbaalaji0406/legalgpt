@@ -32,7 +32,7 @@ export default function InspectorPanel({ tab, onTab, sourceMeta, lastBotText, on
             <Icon className="w-3.5 h-3.5" /> {label}
           </button>
         ))}
-        <button onClick={onClose} className="p-2 rounded-lg text-zinc-400 hover:text-zinc-700 dark:hover:text-zinc-200 hover:bg-zinc-200/50 dark:hover:bg-zinc-800" title="Close panel">
+        <button onClick={onClose} className="p-2 rounded-lg text-zinc-400 hover:text-zinc-700 dark:hover:text-zinc-200 hover:bg-zinc-200/50 dark:hover:bg-zinc-800" title="Close panel" aria-label="Close side panel">
           <X className="w-3.5 h-3.5" />
         </button>
       </div>

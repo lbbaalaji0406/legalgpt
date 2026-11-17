@@ -2,7 +2,8 @@ import { useState } from "react";
 import axios from "axios";
 import { Copy, Check, Gavel, FileDown, Download, Library, AlertTriangle, CircleCheck } from "lucide-react";
 import { API_BASE } from "../apiConfig";
-import { downloadAsPDF, copyToClipboard } from "../features/usePDF";
+// PDF tooling (jsPDF + html2canvas, ~500 KB) is loaded only when someone exports or copies
+const pdfTools = () => import("../features/usePDF");
 import UrgencyBanner from "../features/UrgencyBanner";
 import VetoCard from "../features/VetoCard";
 import JurisdictionBadge from "../features/JurisdictionBadge";
@@ -102,7 +103,7 @@ export default function Message({ msg, index, onTriageChoice, onOpenBench, onSho
     : null;
 
   async function handleCopy() {
-    await copyToClipboard(content);
+    await (await pdfTools()).copyToClipboard(content);
     setCopied(true);
     setTimeout(() => setCopied(false), 2000);
   }
@@ -202,7 +203,7 @@ export default function Message({ msg, index, onTriageChoice, onOpenBench, onSho
               <Gavel className="w-3.5 h-3.5" /> Trial Studio
             </ActionBtn>
             {showPDF && (
-              <ActionBtn onClick={() => downloadAsPDF(content, effectiveMeta || meta || {})} title="Download as formatted PDF">
+              <ActionBtn onClick={async () => (await pdfTools()).downloadAsPDF(content, effectiveMeta || meta || {})} title="Download as formatted PDF">
                 <FileDown className="w-3.5 h-3.5" /> PDF
               </ActionBtn>
             )}

@@ -1,4 +1,4 @@
-import { useState, useRef, useEffect } from "react";
+import { useState, useRef, useEffect, lazy, Suspense } from "react";
 import axios from "axios";
 import {
   Menu, Sun, Moon, LogOut, PanelRightOpen, PanelRightClose, Paperclip, ShieldCheck, ArrowUp,
@@ -12,8 +12,9 @@ import InspectorPanel from "./components/InspectorPanel";
 import ApiKeyModal from "./components/ApiKeyModal";
 import BrandMark from "./components/BrandMark";
 import EvidenceUploader from "./features/EvidenceUploader";
-import VirtualBench from "./features/VirtualBench";
-import TrialStudio from "./features/TrialStudio";
+// Loaded on first use: most visitors never open these, so they stay out of the first download
+const VirtualBench = lazy(() => import("./features/VirtualBench"));
+const TrialStudio = lazy(() => import("./features/TrialStudio"));
 
 /* ─────────────────────────────────────────────────────────────────
    SaulGPT — Clean UI
@@ -495,7 +496,7 @@ export default function App() {
 
       {/* ═══ Top bar ═══ */}
       <header className="h-14 shrink-0 flex items-center gap-3 px-3 sm:px-5 border-b border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-950">
-        <button onClick={() => setDrawerOpen(true)} className="lg:hidden p-2 -ml-1 rounded-lg text-zinc-500 hover:bg-zinc-100 dark:hover:bg-zinc-800" title="Menu">
+        <button onClick={() => setDrawerOpen(true)} className="lg:hidden p-2 -ml-1 rounded-lg text-zinc-500 hover:bg-zinc-100 dark:hover:bg-zinc-800" title="Menu" aria-label="Open menu">
           <Menu className="w-5 h-5" />
         </button>
         <div className="flex items-center gap-3 min-w-0">
@@ -527,14 +528,14 @@ export default function App() {
               <Moon className="w-3.5 h-3.5" /> Dark
             </button>
           </div>
-          <button onClick={() => setDark(!dark)} className="sm:hidden p-2 rounded-lg text-zinc-500 hover:bg-zinc-100 dark:hover:bg-zinc-800" title="Toggle theme">
+          <button onClick={() => setDark(!dark)} className="sm:hidden p-2 rounded-lg text-zinc-500 hover:bg-zinc-100 dark:hover:bg-zinc-800" title="Toggle theme" aria-label="Toggle light or dark theme">
             {dark ? <Sun className="w-4 h-4" /> : <Moon className="w-4 h-4" />}
           </button>
 
           <span className="hidden lg:block max-w-[160px] truncate text-xs text-zinc-500 dark:text-zinc-400" title={user?.email}>
             {user?.username || user?.email || "User"}
           </span>
-          <button onClick={logout} className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-medium text-red-600 dark:text-red-400 border border-red-200 dark:border-red-500/30 hover:bg-red-50 dark:hover:bg-red-500/10" title="Sign out">
+          <button onClick={logout} className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-medium text-red-600 dark:text-red-400 border border-red-200 dark:border-red-500/30 hover:bg-red-50 dark:hover:bg-red-500/10" title="Sign out" aria-label="Log out">
             <LogOut className="w-3.5 h-3.5" /> <span className="hidden sm:inline">Log Out</span>
           </button>
         </div>
@@ -558,6 +559,7 @@ export default function App() {
         <main className="flex-1 min-w-0 flex flex-col">
           {currentView === "trial_studio" ? (
             <div className="flex-1 min-h-0 overflow-auto">
+              <Suspense fallback={<div className="p-8 text-sm text-zinc-500 flex items-center gap-2"><Loader2 className="w-4 h-4 animate-spin" /> Opening Trial Studio…</div>}>
               <TrialStudio
                 sessionId={sessionId}
                 token={token}
@@ -566,6 +568,7 @@ export default function App() {
                 onBack={() => setCurrentView("chat")}
                 onAttachEvidence={() => setShowEvidenceModal(true)}
               />
+              </Suspense>
             </div>
           ) : (
             <>
@@ -576,6 +579,7 @@ export default function App() {
                   onClick={() => setInspectorOpen(!inspectorOpen)}
                   className="p-1.5 rounded-lg text-zinc-400 hover:text-zinc-700 dark:hover:text-zinc-200 hover:bg-zinc-100 dark:hover:bg-zinc-800"
                   title={inspectorOpen ? "Hide side panel" : "Show sources, glossary & guide"}
+                  aria-label={inspectorOpen ? "Hide side panel" : "Show sources, glossary and guide"}
                 >
                   {inspectorOpen ? <PanelRightClose className="w-4 h-4" /> : <PanelRightOpen className="w-4 h-4" />}
                 </button>
@@ -675,6 +679,7 @@ export default function App() {
                         disabled={loading || !input.trim()}
                         className="ml-auto sm:ml-0 w-9 h-9 rounded-full flex items-center justify-center bg-brand-500 hover:bg-brand-600 disabled:bg-zinc-200 dark:disabled:bg-zinc-800 disabled:text-zinc-400 text-white shadow-sm transition-colors"
                         title="Send"
+                        aria-label="Send message"
                       >
                         {loading ? <Loader2 className="w-4 h-4 animate-spin" /> : <ArrowUp className="w-4 h-4" />}
                       </button>
@@ -715,13 +720,13 @@ export default function App() {
         onLaunchCrossExam={handleLaunchCrossExamFromEvidence}
         sessionId={sessionId}
       />
-      <VirtualBench
+      {showBenchModal && (<Suspense fallback={null}><VirtualBench
         isOpen={showBenchModal}
         onClose={() => setShowBenchModal(false)}
         initialMatter={benchMatter}
         connectedEvidence={activeEvidence}
         onOpenEvidenceUploader={() => { setShowBenchModal(false); setShowEvidenceModal(true); }}
-      />
+      /></Suspense>)}
       <ApiKeyModal
         isOpen={showApiKeyModal}
         onClose={() => { setShowApiKeyModal(false); setRateLimitAlert(false); }}
@@ -738,6 +743,7 @@ function ComposerBtn({ children, onClick, disabled, title }) {
       onClick={onClick}
       disabled={disabled}
       title={title}
+      aria-label={title}
       className="inline-flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg text-xs font-medium text-zinc-500 dark:text-zinc-400 hover:bg-zinc-100 dark:hover:bg-zinc-800 hover:text-zinc-800 dark:hover:text-zinc-200 disabled:opacity-50 transition-colors"
     >
       {children}
