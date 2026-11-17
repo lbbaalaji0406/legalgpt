@@ -9,7 +9,7 @@ routes copied into another app by app.py (a plain @app.middleware would not be c
  * the user's own Groq key (X-Groq-Api-Key) is applied per request and REQUIRED on AI routes;
    the server's key is never used unless ALLOW_SERVER_GROQ_KEY=1
  * rate limits: by IP on login/signup, by user on everything else (AI routes much lower)
- * downloads (document / certificate) also accept a signed, expiring ?t= link
+ * document downloads: owner login or a signed, expiring ?t= link; certificates: signed link only
 """
 import ipaddress
 import os
@@ -25,11 +25,15 @@ from auth import decode_token, link_token_ok
 from key_context import set_request_groq_key
 
 PUBLIC_ROUTES = {("GET", "/api/health"), ("POST", "/api/auth/signup"), ("POST", "/api/auth/login")}
-LINK_PREFIXES = ("/api/document/", "/api/certificates/")
+LINK_PREFIXES = ("/api/document/",)          # owner login OR signed link
+LINK_ONLY_PREFIXES = ("/api/certificates/",)  # signed link only: certificate names are not tied to a user
 AI_PREFIXES = ("/api/chat", "/api/upload", "/api/evidence/upload", "/api/bench/", "/api/trial/", "/api/test/")
 SID_RE = re.compile(r"^[A-Za-z0-9_\-]{1,100}$")
 
 AUTH_PER_MIN = 20       # login/signup per IP
+SIGNUPS_PER_HOUR = 10   # new accounts per IP
+LOGIN_TRIES_PER_IP = 10     # per account+IP per 15 min: stops guessing from one machine
+LOGIN_TRIES_PER_ACCOUNT = 50  # per account per 15 min from all IPs: one attacker cannot lock a user out
 AI_PER_MIN = 20         # AI routes per user (each answer takes minutes, so this is generous)
 GENERAL_PER_MIN = 120   # everything else per user
 KEY_MSG = ("Groq API Key is required. Please provide your free Groq API Key (starts with 'gsk_') "
@@ -103,11 +107,18 @@ async def security_guard(request: Request) -> None:
     if (request.method, path) in PUBLIC_ROUTES:
         if path != "/api/health" and (wait := limiter.retry_after(f"auth:{client_ip(request)}", AUTH_PER_MIN, 60)):
             _too_many(wait)
+        if path == "/api/auth/signup" and (wait := limiter.retry_after(f"signup:{client_ip(request)}", SIGNUPS_PER_HOUR, 3600)):
+            _too_many(wait)
         return
+
+    t = request.query_params.get("t", "")
+    if path.startswith(LINK_ONLY_PREFIXES):  # only the uploader ever received this signed link
+        if t and link_token_ok(t, path):
+            return
+        raise HTTPException(401, "This link has expired. Upload the evidence again to get a new certificate link.")
 
     uid = decode_token(_token(request))
     if uid is None:
-        t = request.query_params.get("t", "")
         if path.startswith(LINK_PREFIXES) and t and link_token_ok(t, path):
             return  # signed download link
         print(f"[Auth] 401 {request.method} {path} token_header={'yes' if _token(request) else 'no'}")

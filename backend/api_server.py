@@ -2901,12 +2901,15 @@ async def signup(req: AuthRequest):
 
 
 @app.post("/api/auth/login")
-async def login(req: AuthRequest):
+async def login(req: AuthRequest, fastapi_request: Request):
     if not req.email or not req.password:
         raise HTTPException(400, "Email and password required")
     norm_email = req.email.strip().lower()
-    if wait := limiter.retry_after(f"login:{norm_email}", 10, 900):  # blocks password guessing on one account
-        raise HTTPException(429, f"Too many requests. Please wait {wait}s and try again.", headers={"Retry-After": str(wait)})
+    # Password guessing: tight per account+IP, loose per account (so one attacker cannot lock a user out)
+    from security import LOGIN_TRIES_PER_IP, LOGIN_TRIES_PER_ACCOUNT
+    for _k, _n in ((f"login:{norm_email}:{client_ip(fastapi_request)}", LOGIN_TRIES_PER_IP), (f"login:{norm_email}", LOGIN_TRIES_PER_ACCOUNT)):
+        if wait := limiter.retry_after(_k, _n, 900):
+            raise HTTPException(429, f"Too many requests. Please wait {wait}s and try again.", headers={"Retry-After": str(wait)})
     user = get_user_by_email(norm_email)
     if not user or not verify_password(req.password, user["password"]):
         raise HTTPException(401, "Invalid email or password")

@@ -114,15 +114,34 @@ def test_signup_input_rules():
         assert client.post("/api/auth/signup", json=body, headers=_ip()).status_code == 400, body
 
 
-def test_login_is_limited_per_account_and_signup_per_ip():
+def test_password_guessing_is_limited_but_cannot_lock_out_the_real_user():
     email = "victim@x.in"
-    signup(email)
-    codes = [client.post("/api/auth/login", json={"email": email, "password": "wrong-pass"}, headers=_ip()).status_code
-             for _ in range(12)]  # a different IP each time: the account itself must lock
-    assert codes[:10] == [401] * 10 and codes[10:] == [429, 429]
+    signup(email, "Victim-pass-1")
+    attacker = _ip()
+    codes = [client.post("/api/auth/login", json={"email": email, "password": "wrong-pass"}, headers=attacker).status_code for _ in range(12)]
+    assert codes[:security.LOGIN_TRIES_PER_IP] == [401] * security.LOGIN_TRIES_PER_IP and codes[-1] == 429
+    ok = client.post("/api/auth/login", json={"email": email, "password": "Victim-pass-1"}, headers=_ip())
+    assert ok.status_code == 200  # the real user, from their own IP, is not locked out
+    spread = [client.post("/api/auth/login", json={"email": email, "password": "wrong"}, headers=_ip()).status_code
+              for _ in range(security.LOGIN_TRIES_PER_ACCOUNT + 2)]  # botnet: one try per IP
+    assert spread[-1] == 429  # still capped per account
+
+
+def test_auth_and_signups_are_limited_per_ip():
     ip = _ip()
     codes = [client.post("/api/auth/login", json={"email": f"u{i}@x.in", "password": "p"}, headers=ip).status_code for i in range(22)]
     assert codes[-1] == 429 and 429 not in codes[:security.AUTH_PER_MIN]
+    ip = _ip()
+    codes = [client.post("/api/auth/signup", json={"email": f"many{i}@x.in", "password": "Str0ng-pass"}, headers=ip).status_code
+             for i in range(security.SIGNUPS_PER_HOUR + 1)]
+    assert codes[:-1] == [200] * security.SIGNUPS_PER_HOUR and codes[-1] == 429
+
+
+def test_certificates_need_the_uploaders_signed_link_not_just_a_login():
+    _, h = signup()
+    path = "/api/certificates/BSA63-DOC-ABCDEF12.pdf"
+    assert client.get(path, headers=h).status_code == 401                     # another signed-in user, no link
+    assert client.get(f"{path}?t={auth.make_link_token(path)}", headers=_ip()).status_code != 401
 
 
 def test_ai_routes_are_rate_limited_per_user():
